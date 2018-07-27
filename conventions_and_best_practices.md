@@ -21,6 +21,5 @@
 ### Comments
 
 * Well documented classes, interfaces, and public methods (JavaDoc)
-* Use single line comments sparingly
 * Use single/multi-line comments (not JavaDoc) for code explanations and private methods
 
