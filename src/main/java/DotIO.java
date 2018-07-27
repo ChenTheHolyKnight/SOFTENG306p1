@@ -21,7 +21,7 @@ public class DotIO {
      * @param path the path to the Dot file to be read in.
      */
     public DotIO(String path){
-        this.file = path
+        this.file = path;
         try {
             Graph g = DotIn();
         } catch (IOException e) {
