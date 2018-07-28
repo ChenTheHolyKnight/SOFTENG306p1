@@ -1,3 +1,5 @@
+package controller;
+
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.SingleGraph;
 
@@ -6,7 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 /**
- * The beginnings of a DotIO class that will read in a .dot file and create a Graph object that can be used in the
+ * The beginnings of a controller.DotIO class that will read in a .dot file and create a Graph object that can be used in the
  * algorithm. This class will also produce a dot file from the resultant graph after the algorithm has been run.
  * (obviously) still in very early stages so subject to change.
  *
@@ -17,7 +19,7 @@ public class DotIO {
     private BufferedReader br;
 
     /**
-     * Constructor for a new DotIO.
+     * Constructor for a new controller.DotIO.
      * @param path the path to the Dot file to be read in.
      */
     public DotIO(String path){
