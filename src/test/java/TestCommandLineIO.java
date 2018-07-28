@@ -1,5 +1,5 @@
 import controller.CommandLineIO;
-import model.Command;
+import model.Arguments;
 import model.InvalidUserInputException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,7 +12,7 @@ import org.junit.Test;
 public class TestCommandLineIO {
 
     /**
-     * Tests that CommandLineIO returns a Command object with correct field values when given a valid user input with
+     * Tests that CommandLineIO returns a Arguments object with correct field values when given a valid user input with
      * all options defined.
      */
     @Test
@@ -30,16 +30,16 @@ public class TestCommandLineIO {
         args[6] = "output.dot";
 
         try {
-            Command command = commandLineIO.parseArgs(args.clone());
+            Arguments arguments = commandLineIO.parseArgs(args.clone());
             assertCommandIsCorrect(args[0], Integer.parseInt(args[1]), Integer.parseInt(args[3]),
-                    true, args[6], command);
+                    true, args[6], arguments);
         } catch (InvalidUserInputException e) {
             Assert.fail();
         }
     }
 
     /**
-     * Tests that CommandLineIO returns a correct Command object when given a valid user input with only mandatory
+     * Tests that CommandLineIO returns a correct Arguments object when given a valid user input with only mandatory
      * options defined.
      */
     @Test
@@ -52,16 +52,16 @@ public class TestCommandLineIO {
         args[1] = "10";
 
         try {
-            Command command = commandLineIO.parseArgs(args.clone());
+            Arguments arguments = commandLineIO.parseArgs(args.clone());
             assertCommandIsCorrect(args[0], Integer.parseInt(args[1]), 1, false,
-                    "INPUT-output.dot", command);
+                    "INPUT-output.dot", arguments);
         } catch (InvalidUserInputException e) {
             Assert.fail();
         }
     }
 
     /**
-     * Tests that CommandLineIO returns a correct Command object when options are input in a new order.
+     * Tests that CommandLineIO returns a correct Arguments object when options are input in a new order.
      */
     @Test
     public void testValidInputNewOrder() {
@@ -78,27 +78,27 @@ public class TestCommandLineIO {
         args[6] = "90";
 
         try {
-            Command command = commandLineIO.parseArgs(args.clone());
+            Arguments arguments = commandLineIO.parseArgs(args.clone());
             assertCommandIsCorrect(args[0], Integer.parseInt(args[1]), Integer.parseInt(args[6]),
-                    true, args[4], command);
+                    true, args[4], arguments);
         } catch (InvalidUserInputException e) {
             Assert.fail();
         }
     }
 
     private void assertCommandIsCorrect(String expectedInputFilename, int expectedNumProcessors, int expectedNumCores,
-                         boolean expectedToVisualise, String expectedOutputFilename, Command command) {
+                         boolean expectedToVisualise, String expectedOutputFilename, Arguments arguments) {
 
-        Assert.assertEquals("Command object returns incorrect input filename", expectedInputFilename,
-                command.getInputFilename());
-        Assert.assertEquals("Command object returns incorrect number of processors",
-                expectedNumProcessors, command.getNumProcessors());
-        Assert.assertEquals("Command object returns incorrect number of cores",
-                expectedNumCores, command.getNumCores());
-        Assert.assertEquals("Command object does not return that visualisation has been turned on",
-                expectedToVisualise, command.getToVisualize());
-        Assert.assertEquals("Command object returns incorrect output filename", expectedOutputFilename,
-                command.getOutputFilename());
+        Assert.assertEquals("Arguments object returns incorrect input filename", expectedInputFilename,
+                arguments.getInputGraphFilename());
+        Assert.assertEquals("Arguments object returns incorrect number of processors",
+                expectedNumProcessors, arguments.getNumProcessors());
+        Assert.assertEquals("Arguments object returns incorrect number of cores",
+                expectedNumCores, arguments.getNumCores());
+        Assert.assertEquals("Arguments object does not return that visualisation has been turned on",
+                expectedToVisualise, arguments.getToVisualize());
+        Assert.assertEquals("Arguments object returns incorrect output filename", expectedOutputFilename,
+                arguments.getOutputGraphFilename());
     }
 
     /**

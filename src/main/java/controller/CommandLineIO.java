@@ -1,6 +1,6 @@
 package controller;
 
-import model.Command;
+import model.Arguments;
 import model.InvalidUserInputException;
 import org.apache.commons.cli.*;
 
@@ -44,10 +44,10 @@ public class CommandLineIO {
     }
 
     /**
-     * Sets options for user and reads input into a Command object
+     * Sets options for user and reads input into a Arguments object
      * @throws InvalidUserInputException if the user has entered invalid input
      */
-    public Command parseArgs(String[] args) throws InvalidUserInputException {
+    public Arguments parseArgs(String[] args) throws InvalidUserInputException {
         setOptions();
         CommandLine cmd = null;
 
@@ -95,10 +95,10 @@ public class CommandLineIO {
     /**
      * Interprets user input from command line arguments
      * @param cmd represents the command line
-     * @return a Command object, which represents the user's command
+     * @return a Arguments object, which represents the user's command
      * @throws InvalidUserInputException if the user has entered invalid input
      */
-    private Command interpret(CommandLine cmd) throws InvalidUserInputException {
+    private Arguments interpret(CommandLine cmd) throws InvalidUserInputException {
 
         checkCorrectNumArguments(cmd);
 
@@ -108,8 +108,8 @@ public class CommandLineIO {
         String inputFilename = getInputFilename(cmd);
         int numProcessors = getNumProcessors(cmd);
 
-        Command userCommand = new Command(inputFilename, numProcessors, numCores, toVisualize, outputFilename);
-        return userCommand;
+        Arguments userArguments = new Arguments(inputFilename, numProcessors, numCores, toVisualize, outputFilename);
+        return userArguments;
     }
 
     private int getNumCores(CommandLine cmd) throws InvalidUserInputException {
@@ -174,7 +174,7 @@ public class CommandLineIO {
      */
     private void printHelpAndThrowError() throws InvalidUserInputException {
         formatter.printHelp(HELP_MESSAGE, options);
-        throw new InvalidUserInputException("Command line arguments missing, of wrong type or in wrong order.");
+        throw new InvalidUserInputException("Arguments line arguments missing, of wrong type or in wrong order.");
     }
 
 }

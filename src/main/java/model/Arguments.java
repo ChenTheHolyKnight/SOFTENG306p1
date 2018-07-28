@@ -1,53 +1,71 @@
 package model;
 
 /**
- * Represents a command that the user has input to run an instance of this program
+ * Represents the arguments that the user has input to run the program with
  *
  * @author Victoria Skeggs
  */
-public class Command {
-    private String inputFilename;
+public class Arguments {
+    private String inputGraphFilename;
     private int numProcessors;
     private int numCores;
     private boolean toVisualize;
-    private String outputFilename;
+    private String outputGraphFilename;
 
     /**
-     * Creates a Command object
+     * Creates an Arguments object
      *
-     * TO DO: finish commenting this class
-     *
-     * @param inputFilename
-     * @param numProcessors
-     * @param numCores
-     * @param toVisualize
-     * @param outputFilename
+     * @param inputFilename the filename/path to the existing input graph
+     * @param numProcessors the number of processors to schedule the tasks on
+     * @param numCores the number of cores to run the program on
+     * @param toVisualize specifies whether the user has turned visualization on
+     * @param outputFilename the desired filename/path to the output graph
      */
-    public Command(String inputFilename, int numProcessors, int numCores, boolean toVisualize, String outputFilename) {
-        this.inputFilename = inputFilename;
+    public Arguments(String inputFilename, int numProcessors, int numCores, boolean toVisualize, String outputFilename) {
+        this.inputGraphFilename = inputFilename;
         this.numProcessors = numProcessors;
         this.numCores = numCores;
         this.toVisualize = toVisualize;
-        this.outputFilename = outputFilename;
+        this.outputGraphFilename = outputFilename;
     }
 
-    public String getInputFilename() {
-        return inputFilename;
+    /**
+     *
+     * @return the filename/path to the existing input graph
+     */
+    public String getInputGraphFilename() {
+        return inputGraphFilename;
     }
 
+    /**
+     *
+     * @return the number of processors to schedule the tasks on
+     */
     public int getNumProcessors() {
         return numProcessors;
     }
 
+    /**
+     *
+     * @return the number of cores to run the program on
+     */
     public int getNumCores() {
         return numCores;
     }
 
+    /**
+     *
+     * @return specifies whether the user has turned visualization on
+     */
     public boolean getToVisualize() {
         return toVisualize;
     }
 
-    public String getOutputFilename() {
-        return outputFilename;
+    /**
+     *
+     * @return the desired filename/path to the output graph
+     */
+    public String getOutputGraphFilename() {
+        return outputGraphFilename;
     }
 }
