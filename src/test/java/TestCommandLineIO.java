@@ -1,6 +1,6 @@
-import controller.CommandLineIO;
-import model.Arguments;
-import model.InvalidUserInputException;
+import op.io.Arguments;
+import op.io.exceptions.InvalidUserInputException;
+import op.io.CommandLineIO;
 import org.junit.Assert;
 import org.junit.Test;
 

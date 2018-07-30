@@ -1,4 +1,4 @@
-package model;
+package op.io;
 
 /**
  * Represents the arguments that the user has input to run the program with
