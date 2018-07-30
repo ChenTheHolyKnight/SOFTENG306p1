@@ -196,3 +196,7 @@ gradle-app.setting
 
 *.iml
 /.idea/
+
+gradlew
+gradlew.bat
+/gradle/wrapper/*
