@@ -58,7 +58,8 @@ public class DotIO {
                 line = line.replaceAll("\\s","");
                 String [] parts = line.split("\\[");
                 parts[1] = parts[1].replaceAll("[^0-9]+","");
-                System.out.println("New edge with id: "+parts[0]+" and weight: "+parts[1]);
+                System.out.println("New task with id: "+parts[0]+" and weight: "+parts[1]);
+                taskList.add(new Task(Integer.parseInt(parts[0]), Integer.parseInt(parts[1])));
             }
         }
         TaskGraph tg = new TaskGraph();
