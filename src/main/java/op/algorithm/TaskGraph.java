@@ -10,8 +10,10 @@ import java.util.List;
 public class TaskGraph {
 	private List<Task> Tasks;
 	private List<Dependency> Dependencies;
-	
+	private String title;
+
 	public TaskGraph (){
+		this.title = title;
 	}
 	
 	/**
@@ -62,7 +64,7 @@ public class TaskGraph {
 	/**
 	 * Adds specified Task to the graph
 	 * @param Task the Task to add
-	 */
+	 *
 	public void addTask(Task Task) {
 		Tasks.add(Task);
 	}
@@ -70,10 +72,10 @@ public class TaskGraph {
 	/**
 	 * adds specified Dependency to the graph.
 	 * @param Dependency the Dependency to add.
-	 */
+	 *
 	public void addDependency(Dependency Dependency) {
 		Dependencies.add(Dependency);
 	}
+	*/
 
-	
 }

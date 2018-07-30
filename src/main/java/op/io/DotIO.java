@@ -1,11 +1,14 @@
 package op.io;
 
-import org.graphstream.graph.Graph;
-import org.graphstream.graph.implementations.SingleGraph;
+import op.algorithm.Dependency;
+import op.algorithm.Task;
+import op.algorithm.TaskGraph;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The beginnings of a DotIO class that will read in a .dot file and create a Graph object that can be used in the
@@ -16,7 +19,10 @@ import java.io.IOException;
  */
 public class DotIO {
     private String file;
+    private String title;
     private BufferedReader br;
+    private List<Task> taskList;
+    private List<Dependency> depList;
 
     /**
      * Constructor for a new DotIO.
@@ -24,11 +30,6 @@ public class DotIO {
      */
     public DotIO(String path){
         this.file = path;
-        try {
-            Graph g = DotIn();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -36,33 +37,38 @@ public class DotIO {
      * @return g - a graph that represents the dot file.
      * @throws IOException if the file can't be found
      */
-    public Graph DotIn() throws IOException {
-        Graph g = new SingleGraph("graph"); //"stub" so a graph is returned
+    public TaskGraph dotIn() throws IOException {
+        title = "";
+        taskList = new ArrayList<Task>();
+        depList = new ArrayList<Dependency>();
         br = new BufferedReader(new FileReader(file));
         String line = "";
         while((line = br.readLine()) != null){
-            if(line.contains("{")||line.contains("}")){
-                //end or beginning of graph
-                continue;
+            if(line.contains("{")) {
+                //beginning of graph
+                String [] parts = line.split("\"");
+                System.out.println(parts[1]);
+                title = parts[1];
+            } else if (line.contains("}")){
+                //end of graph
             }else if(line.contains("−>")){
-                //do stuff for a vertice here
+                //Dependency
             }else{
-                //edge
+                //Task
                 line = line.replaceAll("\\s","");
                 String [] parts = line.split("\\[");
                 parts[1] = parts[1].replaceAll("[^0-9]+","");
                 System.out.println("New edge with id: "+parts[0]+" and weight: "+parts[1]);
             }
         }
-        return g;
+        TaskGraph tg = new TaskGraph();
+        return tg;
     }
 
     /**
      * method that writes out the scheduled graph to a dot file
-     * @param name optional name flag of the dot file
-     * @param g the graph to be written out
      */
-    public void DotOut(Graph g, String name){
+    public void dotOut(){
 
     }
 }
