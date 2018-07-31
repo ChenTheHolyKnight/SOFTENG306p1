@@ -62,7 +62,6 @@ public class TaskGraph {
 		}
 		return null;
 	}
-
 	/**
 	 * Gets all the tasks in the graph
 	 * @return The all the tasks in the graph.
