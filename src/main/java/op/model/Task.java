@@ -18,7 +18,7 @@ public class Task {
 		return id;
 	}
 
-	public int getWeight() {
+	public int getDuration() {
 		return weight;
 	}
 	

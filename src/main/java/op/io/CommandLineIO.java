@@ -17,7 +17,7 @@ public class CommandLineIO {
 
     // Default values for user options
     private static final int NUM_CORES_DEFAULT = 1;
-    private static final String OUTPUT_FILENAME_DEFAULT = "INPUT-output.dot";
+    private static final String OUTPUT_FILENAME_APPENDER_DEFAULT = "-output.dot";
 
     // Order of command line arguments with no flags
     private static final short INPUT_FILENAME_POSITION = 0;
@@ -31,6 +31,8 @@ public class CommandLineIO {
 
     private static final String HELP_MESSAGE =
             "<INPUT GRAPH FILENAME> <NUMBER OF PROCESSORS> [OPTIONS]";
+
+    private static final String FILENAME_EXTENSION_INDICATOR = ".";
 
     private HelpFormatter formatter;
     private Options options;
@@ -65,9 +67,9 @@ public class CommandLineIO {
      * 3. what to name the output graph file
      */
     private void setOptions() {
-        addOption(NUM_CORES_FLAG, true, NUM_CORES_DESCRIPTION, false, Integer.class);
+        addOption(NUM_CORES_FLAG, true, NUM_CORES_DESCRIPTION, false);
         addOption(TO_VISUALIZE_FLAG, false, TO_VISUALIZE_DESCRIPTION, false);
-        addOption(OUTPUT_FILENAME_FLAG, true, OUTPUT_FILENAME_DESCRIPTION, false, String.class);
+        addOption(OUTPUT_FILENAME_FLAG, true, OUTPUT_FILENAME_DESCRIPTION, false);
     }
 
     /**
@@ -77,13 +79,7 @@ public class CommandLineIO {
      * @param hasArg specifies whether the option takes an argument
      * @param description describes the function of the option
      * @param isRequired specifies whether the option is mandatory
-     * @param type the type of the expected user input
      */
-    private void addOption(String flag, boolean hasArg, String description, boolean isRequired, Class type) {
-        Option option = addOption(flag, hasArg, description, isRequired);
-        option.setType(type);
-    }
-
     private Option addOption(String flag, boolean hasArg, String description, boolean isRequired) {
         Option option = new Option(flag, hasArg, description);
         option.setRequired(isRequired);
@@ -102,9 +98,9 @@ public class CommandLineIO {
         checkCorrectNumArguments(cmd);
 
         int numCores = getNumCores(cmd);
-        String outputFilename = getOutputFilename(cmd);
         boolean toVisualize = getToVisualize(cmd);
         String inputFilename = getInputFilename(cmd);
+        String outputFilename = getOutputFilename(inputFilename, cmd);
         int numProcessors = getNumProcessors(cmd);
 
         Arguments userArguments = new Arguments(inputFilename, numProcessors, numCores, toVisualize, outputFilename);
@@ -125,10 +121,17 @@ public class CommandLineIO {
         return numCores;
     }
 
-    private String getOutputFilename(CommandLine cmd) {
+    private String getOutputFilename(String inputFilename, CommandLine cmd) {
         String outputFilename = cmd.getOptionValue(OUTPUT_FILENAME_FLAG);
         if (outputFilename == null) {
-            outputFilename = OUTPUT_FILENAME_DEFAULT;
+
+            // Drop the filename extension from the input filename if one has been specified
+            if (inputFilename.contains(FILENAME_EXTENSION_INDICATOR)) {
+                outputFilename = inputFilename.substring(0, inputFilename.lastIndexOf(FILENAME_EXTENSION_INDICATOR))
+                        + OUTPUT_FILENAME_APPENDER_DEFAULT;
+            } else {
+                outputFilename = inputFilename + OUTPUT_FILENAME_APPENDER_DEFAULT;
+            }
         }
         return outputFilename;
     }
