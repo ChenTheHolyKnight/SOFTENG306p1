@@ -14,7 +14,7 @@ public class Schedule {
 
     // to be implemented
        private HashMap<Integer,List<ScheduledTask>> processorTasksMap=new HashMap<>();
-       private HashMap<Task,Integer> taskProcessorMap=new HashMap<>();
+       private HashMap<ScheduledTask,Integer> taskProcessorMap=new HashMap<>();
 
     /**
      * Tells whether or not this Schedule instance is a complete schedule (all tasks allocated)
@@ -34,7 +34,10 @@ public class Schedule {
         return false;
     }
 
-    public void addTask(Task task, Integer processorNum){
+    /**
+     * Add the */
+    public void addTask(ScheduledTask task){
+        int processorNum=task.getProcessor();
         this.taskProcessorMap.put(task,processorNum);
     }
 
@@ -47,7 +50,7 @@ public class Schedule {
         return processorTasksMap.get(processorNum);
     }
 
-    public int getProcessorNum(Task task){
+    public int getProcessorNum(ScheduledTask task){
         return taskProcessorMap.get(task);
     }
 
