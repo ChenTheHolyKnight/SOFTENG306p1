@@ -1,10 +1,12 @@
 package op.algorithm;
 
 import op.model.Schedule;
+import op.model.Task;
 import op.model.TaskGraph;
 import op.visualization.Visualiser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -39,4 +41,14 @@ public abstract class Scheduler {
      * @return a valid schedule containing the specified number of processors and respecting task dependencies
      */
     public abstract Schedule produceSchedule(TaskGraph tg, int numProcessors);
+
+    /**
+     * Maps number of incoming edges for a task against tasks.
+     * @param tasks
+     * @return
+     */
+    protected HashMap<Integer, List<Task>> orderTasksByIncomingEdges(List<Task> tasks) {
+        // TO DO
+        return null;
+    }
 }
