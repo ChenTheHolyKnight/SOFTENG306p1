@@ -19,7 +19,7 @@ public class TaskGraph {
 	 * @param n the Task to get the incoming Dependencys for.
 	 * @return the list of Dependencys incoming to that Task.
 	 */
-	public List<Dependency> getIncomingDependencys (Task n){
+	public List<Dependency> getIncomingDependencys (Task n) {
 		List<Dependency> incomingDependencys = new ArrayList<Dependency>();
 		for (Dependency Dependency : Dependencies) {
 			if (Dependency.getEndTask().equals(n)){
