@@ -36,16 +36,15 @@ public class DotIO {
      * Constructor for a new DotIO.
      * @param path the path to the Dot file to be read in.
      */
-    public DotIO(String path){
-        this.file = path;
-    }
+    public DotIO(){    }
 
     /**
      * method that reads the dot file in
      * @return g - a graph that represents the dot file.
      * @throws IOException if the file can't be found
      */
-    public TaskGraph dotIn() throws IOException {
+    public TaskGraph dotIn(String path) throws IOException {
+        this.file = path;
         title = "";
         depList = new ArrayList<Dependency>();
         taskMap = new HashMap<Integer, Task>();
