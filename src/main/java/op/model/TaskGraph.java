@@ -75,5 +75,8 @@ public class TaskGraph {
 		Dependencies.add(Dependency);
 	}
 
-	
+
+    public List<Task> getAllTasks() {
+        return Tasks;
+    }
 }
