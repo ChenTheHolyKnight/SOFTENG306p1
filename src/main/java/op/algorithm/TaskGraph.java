@@ -8,27 +8,29 @@ import java.util.List;
  * real time updating graph of our algorithm.
  */
 public class TaskGraph {
-	private List<Task> Tasks;
-	private List<Dependency> Dependencies;
+	private List<Task> tasks;
+	private List<Dependency> dependencies;
 	private String title;
 
-	public TaskGraph (){
+	public TaskGraph (List<Task> tasks, List<Dependency> dependencies, String title){
 		this.title = title;
+		this.tasks = tasks;
+		this.dependencies = dependencies;
 	}
 	
 	/**
-	 * Gets all incoming Dependencys to a specified Task.
-	 * @param n the Task to get the incoming Dependencys for.
-	 * @return the list of Dependencys incoming to that Task.
+	 * Gets all incoming Dependenceis to a specified Task.
+	 * @param n the Task to get the incoming Dependencies for.
+	 * @return the list of Dependencies incoming to that Task.
 	 */
-	public List<Dependency> getIncomingDependencys (Task n){
-		List<Dependency> incomingDependencys = new ArrayList<Dependency>();
-		for (Dependency Dependency : Dependencies) {
+	public List<Dependency> getIncomingDependencies (Task n){
+		List<Dependency> incomingDependencies = new ArrayList<Dependency>();
+		for (Dependency dep : dependencies) {
 			if (Dependency.getEndTask().equals(n)){
-				incomingDependencys.add(Dependency);
+				incomingDependencies.add(dep);
 			}
 		}
-		return incomingDependencys;
+		return incomingDependencies;
 	}
 	
 	/**
