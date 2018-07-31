@@ -1,5 +1,8 @@
 package op.algorithm;
 
+import op.model.Schedule;
+import op.model.TaskGraph;
+
 /**
  * Class containing logic to produce the simplest valid schedule. Used as a fall-back option.
  */
