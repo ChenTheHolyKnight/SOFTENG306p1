@@ -22,10 +22,15 @@ import java.util.Map;
 public class DotIO {
     private String file;
     private String title;
+    private String line;
     private BufferedReader br;
     private List<Task> taskList;
     private List<Dependency> depList;
     private Map<Integer, Task> taskMap;
+    private static final String WHITE_SPACE = "\\s";
+    private static final String ID_WEIGHT_SPLIT = "\\[";
+    private static final String NON_NUMBERS = "[^0-9]+";
+
 
     /**
      * Constructor for a new DotIO.
@@ -45,7 +50,6 @@ public class DotIO {
         depList = new ArrayList<Dependency>();
         taskMap = new HashMap<Integer, Task>();
         br = new BufferedReader(new FileReader(file));
-        String line = "";
         while((line = br.readLine()) != null){
             if(line.contains("{")) {
                 //beginning of graph
@@ -57,21 +61,24 @@ public class DotIO {
                 continue;
             }else if(line.contains("−>")){
                 //Dependency
-                line = line.replaceAll("\\s","");
-                String [] parts = line.split("\\[");
-                String [] tasks = parts[0].split("−>");
-                parts[1] = parts[1].replaceAll("[^0-9]+","");
-                int startTask = Integer.parseInt(tasks[0]);
+                line = line.replaceAll(WHITE_SPACE,""); // get rid of spaces and tabs
+                String [] parts = line.split(ID_WEIGHT_SPLIT); // split between the tasks and the weight
+                String [] tasks = parts[0].split("−>"); // split the two tasks
+                parts[1] = parts[1].replaceAll(NON_NUMBERS,""); //strip everything not a number from the
+                // weight string to get weight
+                int startTask = Integer.parseInt(tasks[0]); // parse strings to int for Dependency object
                 int endTask = Integer.parseInt(tasks[1]);
                 int depWeight = Integer.parseInt(parts[1]);
-                System.out.println("New dependency with Start Task: " + tasks[0] + " End Task: " + tasks[1] + " Weight: " + parts[1]);
-                depList.add(new Dependency(taskMap.get(startTask), taskMap.get(endTask), depWeight));
+                System.out.println("New dependency with Start Task: " + tasks[0] + " End Task: " + tasks[1] +
+                        " Weight: " + parts[1]);
+                depList.add(new Dependency(taskMap.get(startTask), taskMap.get(endTask), depWeight)); // create a
+                // dependency object and add it to the last of dependencies
             }else{
                 //Task
-                line = line.replaceAll("\\s","");
-                String [] parts = line.split("\\[");
-                parts[1] = parts[1].replaceAll("[^0-9]+","");
-                System.out.println("New task with id: "+parts[0]+" and weight: "+parts[1]);
+                line = line.replaceAll(WHITE_SPACE,"");
+                String [] parts = line.split(ID_WEIGHT_SPLIT);
+                parts[1] = parts[1].replaceAll(NON_NUMBERS,"");
+                System.out.println("New task with id: " + parts[0] + " and weight: "+ parts[1]);
                 int taskID = Integer.parseInt(parts[0]);
                 int taskWeight = Integer.parseInt(parts[1]);
                 taskMap.put(taskID,new Task(taskID, taskWeight));
@@ -79,8 +86,7 @@ public class DotIO {
             }
         }
         taskList = new ArrayList<Task>(taskMap.values());
-        TaskGraph tg = new TaskGraph(taskList, depList, title);
-        return tg;
+        return new TaskGraph(taskList, depList, title);
     }
 
     /**
