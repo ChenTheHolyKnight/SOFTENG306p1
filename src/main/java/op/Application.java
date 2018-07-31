@@ -2,7 +2,11 @@ package op;
 
 import op.io.Arguments;
 import op.io.CommandLineIO;
+import op.io.DotIO;
 import op.io.exceptions.InvalidUserInputException;
+import op.model.TaskGraph;
+
+import java.io.IOException;
 
 /**
  * Entry point for the optimal scheduling program
@@ -20,7 +24,12 @@ public class Application {
         System.out.println("Output graph filename: " + arguments.getOutputGraphFilename());
         System.out.println("Visualization on: " + arguments.getToVisualize());
 
-     //   DotIO iotest = new DotIO("src/main/resources/sample_inputs/test.dot");
+        DotIO iotest = new DotIO();
+        try {
+            TaskGraph tg = iotest.dotIn(arguments.getInputGraphFilename());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static int returnTwo() {
