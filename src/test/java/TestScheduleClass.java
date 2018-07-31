@@ -46,6 +46,9 @@ public class TestScheduleClass {
         this.mockTaskGraph.setTasks(tasks);
     }
 
+    /**
+     * Test the isCompleted method in Schedule class
+     */
     @Test
     public void testCompleteScheduled(){
         //set up the scheduled tasks in two different lists

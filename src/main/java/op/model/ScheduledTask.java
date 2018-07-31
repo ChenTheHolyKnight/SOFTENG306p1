@@ -1,5 +1,8 @@
 package op.model;
 
+/**
+ * A sub class of Task that indicates the scheduled tasks in the graph
+ */
 public class ScheduledTask extends Task{
     private int startTime;
     private int processor;
