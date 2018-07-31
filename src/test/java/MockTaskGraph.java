@@ -1,4 +1,7 @@
-package op.model;
+
+
+import op.model.Dependency;
+import op.model.Task;
 
 import java.util.List;
 
