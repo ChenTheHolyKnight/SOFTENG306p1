@@ -4,8 +4,8 @@ public class ScheduledTask extends Task{
     private int startTime;
     private int processor;
 
-    public ScheduledTask(int id, int weight,int startTime,int processor){
-        super(id,weight);
+    public ScheduledTask(Task task,int startTime,int processor){
+        super(task.getId(),task.getWeight());
         this.startTime=startTime;
         this.processor=processor;
     }
