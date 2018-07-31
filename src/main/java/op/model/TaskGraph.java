@@ -1,4 +1,4 @@
-package op.algorithm;
+package op.model;
 
 import java.util.ArrayList;
 import java.util.List;
