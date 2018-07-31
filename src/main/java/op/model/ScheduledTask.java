@@ -1,24 +1,28 @@
 package op.model;
 
 /**
- * A sub class of Task that indicates the scheduled tasks in the graph
+ * Represents a task that has been scheduled.
+ *
+ * @author Victoria Skeggs
  */
-public class ScheduledTask extends Task{
-    private int startTime;
+public class ScheduledTask {
+
+    private Task task;
+    private double startTime;
     private int processor;
 
-    public ScheduledTask(Task task,int startTime,int processor){
-        super(task.getId(),task.getWeight());
-        this.startTime=startTime;
-        this.processor=processor;
+    public ScheduledTask (Task task, double startTime, int processor) {
+        this.task = task;
+        this.startTime = startTime;
+        this.processor = processor;
     }
 
-    public int getStartTime(){
-        return this.startTime;
-    }
-
-    public int getProcessor(){
-        return this.processor;
+    /**
+     *
+     * @return the number of the processor the task has been scheduled on
+     */
+    public int getProcessor() {
+        return processor;
     }
 
 }
