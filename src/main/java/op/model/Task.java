@@ -1,15 +1,15 @@
-package model;
+package op.model;
 
 /**
  * 
  * @author Ravid
  * Class used to represent Node of a graph for graph visualization.
  */
-public class Node {
+public class Task {
 	private int id;
 	private int weight;
 	
-	public Node (int id, int weight) {
+	public Task (int id, int weight) {
 		this.id = id;
 		this.weight = weight;
 	}
@@ -23,7 +23,7 @@ public class Node {
 	}
 	
 	@Override
-	public boolean equals(Object node) {
-		return ((Node) node).getId() == id;
+	public boolean equals(Object task) {
+		return ((Task) task).getId() == id;
 	}
 }
