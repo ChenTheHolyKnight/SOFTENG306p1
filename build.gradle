@@ -53,7 +53,7 @@ jar {
 	manifest {
 		attributes (
 				// entry point to the program
-				'Main-Class': 'controller.Main'
+				'Main-Class': 'op.Application'
 		)
 	}
 }
