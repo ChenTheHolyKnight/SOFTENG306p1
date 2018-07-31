@@ -20,7 +20,7 @@ public class Application {
         System.out.println("Output graph filename: " + arguments.getOutputGraphFilename());
         System.out.println("Visualization on: " + arguments.getToVisualize());
 
-        //   DotIO iotest = new DotIO("src/main/resources/sample_inputs/test.dot");
+     //   DotIO iotest = new DotIO("src/main/resources/sample_inputs/test.dot");
     }
 
     public static int returnTwo() {
