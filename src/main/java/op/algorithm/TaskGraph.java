@@ -26,7 +26,7 @@ public class TaskGraph {
 	public List<Dependency> getIncomingDependencies (Task n){
 		List<Dependency> incomingDependencies = new ArrayList<Dependency>();
 		for (Dependency dep : dependencies) {
-			if (Dependency.getEndTask().equals(n)){
+			if (dep.getEndTask().equals(n)){
 				incomingDependencies.add(dep);
 			}
 		}
@@ -38,14 +38,14 @@ public class TaskGraph {
 	 * @param n the Task to get the outgoing Dependencys for.
 	 * @return the list of Dependencys outgoing from that Task.
 	 */
-	public List<Dependency> getOutgoingDependencys(Task n) {
-		List<Dependency> outgoingDependencys = new ArrayList<Dependency>();
-		for (Dependency Dependency : Dependencies) {
-			if (Dependency.getStartTask().equals(n)){
-				outgoingDependencys.add(Dependency);
+	public List<Dependency> getOutgoingDependencies(Task n) {
+		List<Dependency> outgoingDependencies = new ArrayList<Dependency>();
+		for (Dependency dep : dependencies) {
+			if (dep.getStartTask().equals(n)){
+				outgoingDependencies.add(dep);
 			}
 		}
-		return outgoingDependencys;
+		return outgoingDependencies;
 	}
 	
 	/**
@@ -55,9 +55,9 @@ public class TaskGraph {
 	 * @return The Task with the specified ID.
 	 */
 	public Task getTaskById(int id) {
-		for (Task Task : Tasks) {
-			if (Task.getId() == id) {
-				return Task;
+		for (Task task : tasks) {
+			if (task.getId() == id) {
+				return task;
 			}
 		}
 		return null;		

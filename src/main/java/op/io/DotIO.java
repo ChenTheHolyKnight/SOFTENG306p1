@@ -79,7 +79,7 @@ public class DotIO {
             }
         }
         taskList = new ArrayList<Task>(taskMap.values());
-        TaskGraph tg = new TaskGraph();
+        TaskGraph tg = new TaskGraph(taskList, depList, title);
         return tg;
     }
 
