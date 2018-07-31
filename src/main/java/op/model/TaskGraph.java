@@ -75,5 +75,13 @@ public class TaskGraph {
 		Dependencies.add(Dependency);
 	}
 
+	/**
+	 *
+	 * @return all tasks in the TaskGraph
+	 */
+	public List<Task> getAllTasks() {
+		return Tasks;
+	}
+
 	
 }
