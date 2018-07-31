@@ -62,22 +62,4 @@ public class TaskGraph {
 		}
 		return null;		
 	}
-
-	/**
-	 * Adds specified Task to the graph
-	 * @param Task the Task to add
-	 *
-	public void addTask(Task Task) {
-		Tasks.add(Task);
-	}
-
-	/**
-	 * adds specified Dependency to the graph.
-	 * @param Dependency the Dependency to add.
-	 *
-	public void addDependency(Dependency Dependency) {
-		Dependencies.add(Dependency);
-	}
-	*/
-
 }
