@@ -1,8 +1,8 @@
 package op.io;
 
-import op.algorithm.Dependency;
-import op.algorithm.Task;
-import op.algorithm.TaskGraph;
+import op.model.Dependency;
+import op.model.Task;
+import op.model.TaskGraph;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
