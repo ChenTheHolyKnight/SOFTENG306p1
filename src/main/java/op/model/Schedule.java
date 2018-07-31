@@ -9,15 +9,24 @@ import java.util.List;
 public class Schedule {
 
     // to be implemented
-        HashMap<Integer,List<ScheduledTask>> processorTasksMap=new HashMap<>();
-        HashMap<ScheduledTask,Integer> taskProcessorMap=new HashMap<>();
+       private HashMap<Integer,List<ScheduledTask>> processorTasksMap=new HashMap<>();
+       private HashMap<Task,Integer> taskProcessorMap=new HashMap<>();
 
     /**
      * Tells whether or not this Schedule instance is a complete schedule (all tasks allocated)
      * @return true if this Schedule is complete, false otherwise
      */
     public boolean isComplete() {
+        
         return false;
+    }
+
+    public void addTask(Task task, Integer processorNum){
+        this.taskProcessorMap.put(task,processorNum);
+    }
+
+    public void addProcessor(Integer processNum,List<ScheduledTask> scheduledTasks){
+        this.processorTasksMap.put(processNum,scheduledTasks);
     }
 
 
@@ -25,8 +34,8 @@ public class Schedule {
         return processorTasksMap.get(processorNum);
     }
 
-    public int getProcessorNum(ScheduledTask scheduledTask){
-        return taskProcessorMap.get(scheduledTask);
+    public int getProcessorNum(Task task){
+        return taskProcessorMap.get(task);
     }
 
 
