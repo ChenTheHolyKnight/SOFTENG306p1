@@ -19,7 +19,7 @@ public class TaskGraph {
 	}
 	
 	/**
-	 * Gets all incoming Dependenceis to a specified Task.
+	 * Gets all incoming Dependencies to a specified Task.
 	 * @param n the Task to get the incoming Dependencies for.
 	 * @return the list of Dependencies incoming to that Task.
 	 */
