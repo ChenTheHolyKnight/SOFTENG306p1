@@ -15,7 +15,7 @@ public class ScheduledTask extends Task{
     }
 
     public int getProcessor(){
-        return this.getProcessor();
+        return this.processor;
     }
 
 }
