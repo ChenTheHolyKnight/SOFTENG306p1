@@ -15,7 +15,7 @@ public class Schedule {
     //a HashMap to indicate the list of scheduled tasks assigned to each processor
     private HashMap<Integer,List<ScheduledTask>> processorTasksMap=new HashMap<>();
 
-    //a HashMap to indicate which processor each scheduled task in.
+    //a HashMap to indicate which processor each scheduled task in it.
     private HashMap<ScheduledTask,Integer> taskProcessorMap=new HashMap<>();
 
     /**
