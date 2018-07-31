@@ -1,5 +1,7 @@
 package op.algorithm;
 
+import op.model.Schedule;
+import op.model.TaskGraph;
 import op.visualization.Visualiser;
 
 import java.util.ArrayList;

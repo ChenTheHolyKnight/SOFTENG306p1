@@ -48,13 +48,56 @@ public class TestCommandLineIO {
 
         // Define user input
         String[] args = new String[2];
-        args[0] = "input.dot";
+        args[0] = "inputq9837.dot";
         args[1] = "10";
 
         try {
             Arguments arguments = commandLineIO.parseArgs(args.clone());
             assertCommandIsCorrect(args[0], Integer.parseInt(args[1]), 1, false,
-                    "INPUT-output.dot", arguments);
+                    "inputq9837-output.dot", arguments);
+        } catch (InvalidUserInputException e) {
+            Assert.fail();
+        }
+    }
+
+    /**
+     * Tests that the correct output filename is generated if not specified and the input filename does not contain
+     * a file type extension.
+     */
+    @Test
+    public void testDefaultOutputFilenameRemovesExtension() {
+        CommandLineIO commandLineIO = new CommandLineIO();
+
+        // Define user input
+        String[] args = new String[2];
+        args[0] = "inputkjsherkjaf";
+        args[1] = "10";
+
+        try {
+            Arguments arguments = commandLineIO.parseArgs(args.clone());
+            assertCommandIsCorrect(args[0], Integer.parseInt(args[1]), 1, false,
+                    "inputkjsherkjaf-output.dot", arguments);
+        } catch (InvalidUserInputException e) {
+            Assert.fail();
+        }
+    }
+
+    /**
+     * Tests that the correct output filename is generated if not specified and the input filename contains a dot.
+     */
+    @Test
+    public void testDefaultOutputFilenameCanHaveDot() {
+        CommandLineIO commandLineIO = new CommandLineIO();
+
+        // Define user input
+        String[] args = new String[2];
+        args[0] = "inpu.tkjsh.erkjaf.dot";
+        args[1] = "10";
+
+        try {
+            Arguments arguments = commandLineIO.parseArgs(args.clone());
+            assertCommandIsCorrect(args[0], Integer.parseInt(args[1]), 1, false,
+                    "inpu.tkjsh.erkjaf-output.dot", arguments);
         } catch (InvalidUserInputException e) {
             Assert.fail();
         }
@@ -87,7 +130,7 @@ public class TestCommandLineIO {
     }
 
     private void assertCommandIsCorrect(String expectedInputFilename, int expectedNumProcessors, int expectedNumCores,
-                         boolean expectedToVisualise, String expectedOutputFilename, Arguments arguments) {
+                                        boolean expectedToVisualise, String expectedOutputFilename, Arguments arguments) {
 
         Assert.assertEquals("Arguments object returns incorrect input filename", expectedInputFilename,
                 arguments.getInputGraphFilename());

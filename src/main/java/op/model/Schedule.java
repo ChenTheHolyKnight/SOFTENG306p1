@@ -1,4 +1,4 @@
-package op.algorithm;
+package op.model;
 
 /**
  * Representation of a schedule, which is an allocation of tasks to processors over a certain time.
@@ -14,5 +14,7 @@ public class Schedule {
     public boolean isComplete() {
         return false;
     }
+
+
 
 }
