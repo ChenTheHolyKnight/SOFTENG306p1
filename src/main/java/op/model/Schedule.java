@@ -14,7 +14,7 @@ public class Schedule {
 
     // to be implemented
     private HashMap<Integer,List<ScheduledTask>> processorTasksMap = new HashMap<>();
-    private HashMap<ScheduledTask,Integer> taskProcessorMap = new HashMap<>();
+    private HashMap<Task,ScheduledTask> taskMap = new HashMap<>();
 
 
     /**
@@ -38,11 +38,13 @@ public class Schedule {
     }
 
     /**
-     * Add the task to the Hashmap with its processor number as its value
-     * @param task represents the scheduled task by the algorithm
+     * Gets a task's corresponding scheduled task in this schedule
+     * 
+     * @param t the task 
+     * @return the scheduled task representing the task in this schedule
      */
-    public void addScheduledTask(ScheduledTask task){
-        this.taskProcessorMap.put(task,task.getProcessor());
+    public ScheduledTask getScheduledTask(Task t) {
+    	return taskMap.get(t);
     }
 
     /**
@@ -64,11 +66,11 @@ public class Schedule {
     }
 
     /**
-     * Get the processor number that the task scheduled on
-     * @param task a scheduled task that needs to find which processor it is scheduled
-     * @return the processor number of the processor that the task scheduled on.
+     * Adds a scheduled task to the schedule
+     * @param scheduledTask the scheduled task to add
      */
-    public int getProcessorNum(ScheduledTask task){
-        return taskProcessorMap.get(task);
-    }
+	public void addScheduledTask(ScheduledTask scheduledTask) {
+		taskMap.put(scheduledTask.getTask(), scheduledTask);
+		//TODO: Implement this such that it adds this task to the processorTasksMap
+	}
 }
