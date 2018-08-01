@@ -7,7 +7,7 @@ package op.model;
  */
 public class ScheduledTask {
 
-    private Task task;
+    public Task task;
     private double startTime;
     private int processor;
 

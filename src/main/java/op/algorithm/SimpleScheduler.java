@@ -35,12 +35,13 @@ public class SimpleScheduler extends Scheduler {
     @Override
     public Schedule produceSchedule(int numProcessors) {
         Schedule schedule = new Schedule();
-
-        for (Task task: createTopologicalOrder(TaskGraph.getInstance().getAllTasks())) {
+        SchedulerUtil su=new SchedulerUtil();
+        for (Task task: su.createTopologicalOrder(TaskGraph.getInstance().getAllTasks())) {
             ScheduledTask scheduledTask = new ScheduledTask(task, startTime, DEFAULT_PROCESSOR);
             schedule.addScheduledTask(scheduledTask);
             startTime = startTime + task.getDuration();
         }
+
         return schedule;
     }
 
@@ -49,10 +50,10 @@ public class SimpleScheduler extends Scheduler {
      * @param tasks to be ordered
      * @return
      */
-    protected List<Task> createTopologicalOrder(List<Task> tasks) {
+    public List<Task> createTopologicalOrder(List<Task> tasks) {
         List<Task> sorted = new ArrayList<Task>();
-        HashMap<Integer, List<Task>> taskMap = orderTasksByIncomingEdges(tasks);
-        taskMap.forEach((numIncomingEdges, theseTasks) -> theseTasks.forEach((task) -> sorted.add(task)));
+        /*HashMap<Integer, List<Task>> taskMap = orderTasksByIncomingEdges(tasks);
+        taskMap.forEach((numIncomingEdges, theseTasks) -> theseTasks.forEach((task) -> sorted.add(task)));*/
 
         return sorted;
     }

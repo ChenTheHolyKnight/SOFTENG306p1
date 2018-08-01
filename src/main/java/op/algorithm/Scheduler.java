@@ -1,5 +1,6 @@
 package op.algorithm;
 
+import op.model.Dependency;
 import op.model.Schedule;
 import op.model.Task;
 import op.model.TaskGraph;
@@ -44,10 +45,27 @@ public abstract class Scheduler {
     /**
      * Maps number of incoming edges for a task against tasks.
      * @param tasks
-     * @return
-     */
-    protected HashMap<Integer, List<Task>> orderTasksByIncomingEdges(List<Task> tasks) {
-        // TO DO
+     * @return a hash map that maps between the number of incoming edges and tasks
+     *
+    protected HashMap<Integer, List<Task>> createTopologicalOrder(List<Task> tasks) {
+
+        HashMap<Integer,List<Task>> map=new HashMap<>();
+        TaskGraph tg=TaskGraph.getInstance();
+        tasks.forEach(task -> {
+            List<Dependency> comingDependencies=tg.getIncomingDependencies(task);
+            int numEdges=comingDependencies.size();
+            if(map.get(numEdges)==null){
+                List<Task> tasks1=new ArrayList<>();
+                tasks1.add(task);
+                map.put(numEdges,tasks1);
+            }else {
+                List<Task> tasks1=map.get(numEdges);
+                tasks1.add(task);
+                map.put(numEdges,tasks1);
+            }
+        });
+
+        
         return null;
-    }
+    }*/
 }
