@@ -8,6 +8,7 @@ import java.util.List;
  * real time updating graph of our algorithm.
  */
 public class TaskGraph {
+
     private List<Task> tasks;
     private List<Dependency> dependencies;
     private String title;
