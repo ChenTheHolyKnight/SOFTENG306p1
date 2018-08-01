@@ -1,9 +1,6 @@
 package op.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Representation of a schedule, which is an allocation of tasks to processors over a certain time.
@@ -11,11 +8,9 @@ import java.util.Set;
 
 public class Schedule {
 
-    // to be implemented
     private HashMap<Integer,List<ScheduledTask>> processorTasksMap = new HashMap<>();
     private HashMap<Task,ScheduledTask> taskMap = new HashMap<>();
-
-    
+  
     /**
      * Tells whether or not this Schedule instance is a complete schedule (all tasks allocated)
      * @return true if this Schedule is complete, false otherwise
@@ -63,4 +58,19 @@ public class Schedule {
 		processorTasksMap.get(scheduledTask.getProcessor()).add(scheduledTask);		
 		taskMap.put(scheduledTask.getTask(), scheduledTask);
 	}
+
+    /**
+     * Calculates the length of the schedule or partial schedule
+     * @return the time it would take for all scheduled tasks to be completed
+     */
+	public double getLength() {
+        double length = 0;
+        for (List<ScheduledTask> tasks: processorTasksMap.values()) {
+            ScheduledTask lastTask = tasks.get(tasks.size()-1);
+            if (lastTask.getStartTime() + lastTask.getTask().getDuration() > length) {
+                length = lastTask.getStartTime() + lastTask.getTask().getDuration();
+            }
+        }
+        return length;
+    }
 }
