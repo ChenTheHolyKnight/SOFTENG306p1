@@ -37,7 +37,12 @@ public class Schedule {
         return false;
     }
 
-    
+    /**
+     * Gets a task's corresponding scheduled task in this schedule
+     * 
+     * @param t the task 
+     * @return the scheduled task representing the task in this schedule
+     */
     public ScheduledTask getScheduledTask(Task t) {
     	return taskMap.get(t);
     }
@@ -59,4 +64,13 @@ public class Schedule {
     public List<ScheduledTask> getScheduledTasks(int processorNum){
         return processorTasksMap.get(processorNum);
     }
+
+    /**
+     * Adds a scheduled task to the schedule
+     * @param scheduledTask the scheduled task to add
+     */
+	public void addScheduledTask(ScheduledTask scheduledTask) {
+		taskMap.put(scheduledTask.getTask(), scheduledTask);
+		//TODO: Implement this such that it adds this task to the processorTasksMap
+	}
 }
