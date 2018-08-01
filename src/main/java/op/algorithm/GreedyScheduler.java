@@ -9,7 +9,7 @@ import op.model.TaskGraph;
 public class GreedyScheduler extends Scheduler {
 
     @Override
-    public Schedule produceSchedule(TaskGraph tg, int numProcessors) {
+    public Schedule produceSchedule(int numProcessors) {
         return null;
     }
 }

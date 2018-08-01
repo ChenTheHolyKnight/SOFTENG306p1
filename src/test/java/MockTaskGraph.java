@@ -9,14 +9,14 @@ import java.util.List;
 /**
  * This is a mocking class for setting values to the mocked graph. This class is used for testing only
  */
-public class MockTaskGraph extends TaskGraph{
+public class MockTaskGraph {
     private List<Task> tasks;
     private List<Dependency> dependencies;
     private String title;
 
 
     public MockTaskGraph(){
-        super(null,null,null);
+
     }
     /**
      * set the lists in the mock task graph class

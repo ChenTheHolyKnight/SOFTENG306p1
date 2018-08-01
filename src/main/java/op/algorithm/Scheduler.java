@@ -34,13 +34,12 @@ public abstract class Scheduler {
     }
 
     /**
-     * Produces a valid schedule of a task graph by allocating each task to a given number of processors,
+     * Produces a valid schedule of the task graph by allocating each task to a given number of processors,
      * while respecting task dependencies.
-     * @param tg the task graph to produce the schedule for
      * @param numProcessors the number of processors available to schedule tasks onto
      * @return a valid schedule containing the specified number of processors and respecting task dependencies
      */
-    public abstract Schedule produceSchedule(TaskGraph tg, int numProcessors);
+    public abstract Schedule produceSchedule(int numProcessors);
 
     /**
      * Maps number of incoming edges for a task against tasks.

@@ -42,7 +42,9 @@ public class Application {
         //   DotIO iotest = new DotIO("src/main/resources/sample_inputs/test.dot");
 
         Application application = new Application();
-        Arguments arguments = application.getArguments(args);
+        application.initArguments(args);
+
+        Arguments arguments = Arguments.getInstance();
 
         // To test jar from command line:
         System.out.println("Here are the arguments you entered:");
@@ -54,7 +56,7 @@ public class Application {
 
         DotIO iotest = new DotIO();
         try {
-            TaskGraph tg = iotest.dotIn(arguments.getInputGraphFilename());
+            iotest.dotIn(arguments.getInputGraphFilename());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -66,17 +68,15 @@ public class Application {
     }
 
     /**
-     * Retrieve the command line arguments in an easy to read format
+     * Initialize the global Arguments object
      * @param args command line arguments
-     * @return an Arguments object representing the information contained in the command line arguments
      */
-    private Arguments getArguments(String[] args) {
+    private void initArguments(String[] args) {
         Arguments arguments = null;
         try {
-            arguments = (new CommandLineIO()).parseArgs(args);
+            new CommandLineIO().parseArgs(args);
         } catch (InvalidUserInputException e) {
             System.exit(1);
         }
-        return arguments;
     }
 }
