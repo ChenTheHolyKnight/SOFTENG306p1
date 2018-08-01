@@ -10,7 +10,7 @@ public class Schedule {
 
     private HashMap<Integer,List<ScheduledTask>> processorTasksMap = new HashMap<>();
     private HashMap<Task,ScheduledTask> taskMap = new HashMap<>();
-
+  
     /**
      * Tells whether or not this Schedule instance is a complete schedule (all tasks allocated)
      * @return true if this Schedule is complete, false otherwise
@@ -42,15 +42,6 @@ public class Schedule {
     }
 
     /**
-     * Add the processor to the Hashmap with a list of tasks scheduled on this processor
-     * @param processNum the number indicates the processor
-     * @param scheduledTasks a list of tasks scheduled on the processor
-     */
-    public void addProcessor(Integer processNum,List<ScheduledTask> scheduledTasks){
-        this.processorTasksMap.put(processNum,scheduledTasks);
-    }
-
-    /**
      * Get the list of tasks allocated on the processor
      * @param processorNum the number indicates the processor
      * @return a list of scheduled tasks that scheduled on the processor
@@ -64,8 +55,8 @@ public class Schedule {
      * @param scheduledTask the scheduled task to add
      */
 	public void addScheduledTask(ScheduledTask scheduledTask) {
+		processorTasksMap.get(scheduledTask.getProcessor()).add(scheduledTask);		
 		taskMap.put(scheduledTask.getTask(), scheduledTask);
-		//TODO: Implement this such that it adds this task to the processorTasksMap
 	}
 
     /**
