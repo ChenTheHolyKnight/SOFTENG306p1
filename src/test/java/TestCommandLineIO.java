@@ -1,6 +1,7 @@
 import op.io.Arguments;
 import op.io.exceptions.InvalidUserInputException;
 import op.io.CommandLineIO;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -10,6 +11,20 @@ import org.junit.Test;
  * @author Victoria Skeggs
  */
 public class TestCommandLineIO {
+
+    /*
+    Required so that each instance of Arguments is only initialized once
+     */
+    @After
+    public void resetArguments() {
+        try {
+            SingletonTesting.resetArguments();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Tests that CommandLineIO returns a Arguments object with correct field values when given a valid user input with
@@ -30,9 +45,9 @@ public class TestCommandLineIO {
         args[6] = "output.dot";
 
         try {
-            Arguments arguments = commandLineIO.parseArgs(args.clone());
+            commandLineIO.parseArgs(args.clone());
             assertCommandIsCorrect(args[0], Integer.parseInt(args[1]), Integer.parseInt(args[3]),
-                    true, args[6], arguments);
+                    true, args[6], Arguments.getInstance());
         } catch (InvalidUserInputException e) {
             Assert.fail();
         }
@@ -52,9 +67,9 @@ public class TestCommandLineIO {
         args[1] = "10";
 
         try {
-            Arguments arguments = commandLineIO.parseArgs(args.clone());
+            commandLineIO.parseArgs(args.clone());
             assertCommandIsCorrect(args[0], Integer.parseInt(args[1]), 1, false,
-                    "inputq9837-output.dot", arguments);
+                    "inputq9837-output.dot", Arguments.getInstance());
         } catch (InvalidUserInputException e) {
             Assert.fail();
         }
@@ -74,9 +89,9 @@ public class TestCommandLineIO {
         args[1] = "10";
 
         try {
-            Arguments arguments = commandLineIO.parseArgs(args.clone());
+            commandLineIO.parseArgs(args.clone());
             assertCommandIsCorrect(args[0], Integer.parseInt(args[1]), 1, false,
-                    "inputkjsherkjaf-output.dot", arguments);
+                    "inputkjsherkjaf-output.dot", Arguments.getInstance());
         } catch (InvalidUserInputException e) {
             Assert.fail();
         }
@@ -95,9 +110,9 @@ public class TestCommandLineIO {
         args[1] = "10";
 
         try {
-            Arguments arguments = commandLineIO.parseArgs(args.clone());
+            commandLineIO.parseArgs(args.clone());
             assertCommandIsCorrect(args[0], Integer.parseInt(args[1]), 1, false,
-                    "inpu.tkjsh.erkjaf-output.dot", arguments);
+                    "inpu.tkjsh.erkjaf-output.dot", Arguments.getInstance());
         } catch (InvalidUserInputException e) {
             Assert.fail();
         }
@@ -121,9 +136,9 @@ public class TestCommandLineIO {
         args[6] = "90";
 
         try {
-            Arguments arguments = commandLineIO.parseArgs(args.clone());
+            commandLineIO.parseArgs(args.clone());
             assertCommandIsCorrect(args[0], Integer.parseInt(args[1]), Integer.parseInt(args[6]),
-                    true, args[4], arguments);
+                    true, args[4], Arguments.getInstance());
         } catch (InvalidUserInputException e) {
             Assert.fail();
         }

@@ -14,7 +14,7 @@ public class TestDotIO {
     @After
     public void resetSingleton() {
         try {
-            SingletonTesting.resetSingleton();
+            SingletonTesting.resetTaskGraph();
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {

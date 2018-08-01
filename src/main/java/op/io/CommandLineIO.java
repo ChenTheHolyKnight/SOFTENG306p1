@@ -45,10 +45,10 @@ public class CommandLineIO {
     }
 
     /**
-     * Sets options for user and reads input into a Arguments object
+     * Sets options for user and reads input into the global Arguments object
      * @throws InvalidUserInputException if the user has entered invalid input
      */
-    public Arguments parseArgs(String[] args) throws InvalidUserInputException {
+    public void parseArgs(String[] args) throws InvalidUserInputException {
         setOptions();
         CommandLine cmd = null;
 
@@ -57,7 +57,7 @@ public class CommandLineIO {
         } catch (ParseException e) {
             printHelpAndThrowError();
         }
-        return interpret(cmd);
+        interpret(cmd);
     }
 
     /**
@@ -88,12 +88,11 @@ public class CommandLineIO {
     }
 
     /**
-     * Interprets user input from command line arguments
+     * Interprets user input from command line arguments and stores the input in the global arguments object
      * @param cmd represents the command line
-     * @return a Arguments object, which represents the user's command
      * @throws InvalidUserInputException if the user has entered invalid input
      */
-    private Arguments interpret(CommandLine cmd) throws InvalidUserInputException {
+    private void interpret(CommandLine cmd) throws InvalidUserInputException {
 
         checkCorrectNumArguments(cmd);
 
@@ -103,8 +102,7 @@ public class CommandLineIO {
         String outputFilename = getOutputFilename(inputFilename, cmd);
         int numProcessors = getNumProcessors(cmd);
 
-        Arguments userArguments = new Arguments(inputFilename, numProcessors, numCores, toVisualize, outputFilename);
-        return userArguments;
+        Arguments.initialize(inputFilename, numProcessors, numCores, toVisualize, outputFilename);
     }
 
     private int getNumCores(CommandLine cmd) throws InvalidUserInputException {

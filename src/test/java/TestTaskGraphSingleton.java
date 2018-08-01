@@ -11,12 +11,12 @@ import static org.junit.Assert.fail;
  * Test class to ensure the TaskGraph singleton works as expected
  * @author Darcy Cox
  */
-public class TestTaskGraph {
+public class TestTaskGraphSingleton {
 
     @After
     public void resetSingleton() {
         try {
-            SingletonTesting.resetSingleton();
+            SingletonTesting.resetTaskGraph();
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -29,7 +29,7 @@ public class TestTaskGraph {
         try {
             TaskGraph.getInstance();
             fail();
-        } catch(TaskGraphUninitializedException e) {}
+        } catch(UninitializedException e) {}
 
         try {
             List<Task> tasks = new ArrayList<>();
@@ -39,7 +39,7 @@ public class TestTaskGraph {
             TaskGraph.getInstance();
             TaskGraph.initialize(null, null, null);
             fail();
-        } catch (TaskGraphAlreadyInitializedException e) {}
+        } catch (AlreadyInitializedException e) {}
     }
 
     @Test
