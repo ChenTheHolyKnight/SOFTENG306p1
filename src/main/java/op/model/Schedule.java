@@ -41,9 +41,7 @@ public class Schedule {
         this.taskProcessorMap.put(task,task.getProcessor());
         int processorNum=task.getProcessor();
         if(processorTasksMap.get(processorNum)!=null){
-            List<ScheduledTask> tasks=processorTasksMap.get(processorNum);
-            tasks.add(task);
-            processorTasksMap.put(processorNum,tasks);
+	    processorTasksMap.get(processorNum).add(task);
         }else{
             List<ScheduledTask> tasks=new ArrayList<>();
             tasks.add(task);
@@ -63,15 +61,6 @@ public class Schedule {
     public List<ScheduledTask> getScheduledTasks(int processorNum){
         return processorTasksMap.get(processorNum);
     }
-
-    /**
-     * Adds a scheduled task to the schedule
-     * @param scheduledTask the scheduled task to add
-     */
-	public void addScheduledTask(ScheduledTask scheduledTask) {
-		processorTasksMap.get(scheduledTask.getProcessor()).add(scheduledTask);		
-		taskMap.put(scheduledTask.getTask(), scheduledTask);
-	}
 
     /**
      * Calculates the length of the schedule or partial schedule
