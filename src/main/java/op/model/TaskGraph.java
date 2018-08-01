@@ -21,13 +21,13 @@ public class TaskGraph {
 
     /**
      * Returns the TaskGraph global instance
-     * @throws TaskGraphUninitializedException if TaskGraph has not been initialized
+     * @throws UninitializedException if TaskGraph has not been initialized
      * @return The global TaskGraph instance
      */
-    public static TaskGraph getInstance() throws TaskGraphUninitializedException {
+    public static TaskGraph getInstance() throws UninitializedException {
 
         if (!initialized) {
-            throw new TaskGraphUninitializedException();
+            throw new UninitializedException();
         }
 
         return instance;
@@ -38,16 +38,16 @@ public class TaskGraph {
      * @param tasks A list of all tasks in the task graph
      * @param dependencies A list of all dependencies in the task graph
      * @param title The name of the task graph
-     * @throws TaskGraphAlreadyInitializedException if TaskGraph has already been initialized
+     * @throws AlreadyInitializedException if TaskGraph has already been initialized
      */
     public static void initialize(
             List<Task> tasks,
             List<Dependency> dependencies,
             String title
-    ) throws TaskGraphAlreadyInitializedException {
+    ) throws AlreadyInitializedException {
 
         if (initialized) {
-            throw new TaskGraphAlreadyInitializedException();
+            throw new AlreadyInitializedException();
         }
 
         initialized = true;

@@ -50,7 +50,7 @@ public class TestScheduleClass {
     @After
     public void resetGraph() {
         try {
-            SingletonTesting.resetSingleton();
+            SingletonTesting.resetTaskGraph();
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
