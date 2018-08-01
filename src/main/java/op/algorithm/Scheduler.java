@@ -47,9 +47,9 @@ public abstract class Scheduler {
      * @param tasks
      * @return a hash map that maps between the number of incoming edges and tasks
      */
-    protected HashMap<Integer, List<Task>> orderTasksByIncomingEdges(List<Task> tasks) {
+    protected HashMap<Integer, List<Task>> createTopologicalOrder(List<Task> tasks) {
 
-        HashMap<Integer,List<Task>> map=new HashMap<>();
+        /*HashMap<Integer,List<Task>> map=new HashMap<>();
         TaskGraph tg=TaskGraph.getInstance();
         tasks.forEach(task -> {
             List<Dependency> comingDependencies=tg.getIncomingDependencies(task);
@@ -65,7 +65,7 @@ public abstract class Scheduler {
             }
         });
 
-
-        return map;
+        */
+        return null;
     }
 }
