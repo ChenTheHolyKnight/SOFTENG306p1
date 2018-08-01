@@ -46,10 +46,10 @@ public class SimpleScheduler extends Scheduler {
 
     /**
      * Creates an arbitrary topological order of the tasks.
-     * @param tasks
+     * @param tasks to be ordered
      * @return
      */
-    public List<Task> createTopologicalOrder(List<Task> tasks) {
+    protected List<Task> createTopologicalOrder(List<Task> tasks) {
         List<Task> sorted = new ArrayList<Task>();
         HashMap<Integer, List<Task>> taskMap = orderTasksByIncomingEdges(tasks);
         taskMap.forEach((numIncomingEdges, theseTasks) -> theseTasks.forEach((task) -> sorted.add(task)));
