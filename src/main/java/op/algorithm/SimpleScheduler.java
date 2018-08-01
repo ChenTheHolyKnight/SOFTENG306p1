@@ -47,7 +47,7 @@ public class SimpleScheduler extends Scheduler {
 
     /**
      * Creates an arbitrary topological order of the tasks.
-     * @param tasks
+     * @param tasks to be ordered
      * @return
      */
     /*public List<Task> createTopologicalOrder(List<Task> tasks) {

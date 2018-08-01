@@ -25,4 +25,12 @@ public class ScheduledTask {
         return processor;
     }
 
+	public double getStartTime() {
+		return startTime;
+	}
+
+	public Task getTask() {
+		return task;
+	}
+
 }
