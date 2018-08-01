@@ -39,11 +39,10 @@ public class DotIO {
     public DotIO(){    }
 
     /**
-     * method that reads the dot file in
-     * @return g - a graph that represents the dot file.
+     * method that reads the dot file in and initializes the TaskGraph instance
      * @throws IOException if the file can't be found
      */
-    public TaskGraph dotIn(String path) throws IOException {
+    public void dotIn(String path) throws IOException {
         this.file = path;
         title = "";
         depList = new ArrayList<Dependency>();
@@ -85,7 +84,8 @@ public class DotIO {
             }
         }
         taskList = new ArrayList<Task>(taskMap.values());
-        return new TaskGraph(taskList, depList, title);
+
+        TaskGraph.initialize(taskList, depList, title);
     }
 
     /**

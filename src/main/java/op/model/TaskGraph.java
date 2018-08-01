@@ -1,22 +1,69 @@
 package op.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
- * An adapter class used to communicate with the GraphDisplay class to display a
- * real time updating graph of our algorithm.
+ * Class representing information about the task graph and providing global access
+ * @author Darcy Cox
  */
 public class TaskGraph {
 
-    private List<Task> tasks;
-    private List<Dependency> dependencies;
-    private String title;
+    // becomes true once TaskGraph has been initialized and becomes accessible
+    private static boolean initialized = false;
 
-    public TaskGraph (List<Task> tasks, List<Dependency> dependencies, String title){
-        this.title = title;
-        this.tasks = tasks;
-        this.dependencies = dependencies;
+    private static TaskGraph instance;
+
+    private final List<Task> TASKS;
+    private final List<Dependency> DEPENDENCIES;
+    private final String TITLE;
+
+    /**
+     * Returns the TaskGraph global instance
+     * @throws TaskGraphUninitializedException if TaskGraph has not been initialized
+     * @return The global TaskGraph instance
+     */
+    public static TaskGraph getInstance() throws TaskGraphUninitializedException {
+
+        if (!initialized) {
+            throw new TaskGraphUninitializedException();
+        }
+
+        return instance;
+    }
+
+    /**
+     * Creates the TaskGraph instance
+     * @param tasks A list of all tasks in the task graph
+     * @param dependencies A list of all dependencies in the task graph
+     * @param title The name of the task graph
+     * @throws TaskGraphAlreadyInitializedException if TaskGraph has already been initialized
+     */
+    public static void initialize(
+            List<Task> tasks,
+            List<Dependency> dependencies,
+            String title
+    ) throws TaskGraphAlreadyInitializedException {
+
+        if (initialized) {
+            throw new TaskGraphAlreadyInitializedException();
+        }
+
+        initialized = true;
+
+        // constructs the instance with lists that cannot be added to or removed from etc. for safety
+        instance = new TaskGraph(
+                Collections.unmodifiableList(tasks),
+                Collections.unmodifiableList(dependencies),
+                title
+        );
+    }
+
+    private TaskGraph (List<Task> tasks, List<Dependency> dependencies, String title){
+        this.TASKS = Collections.unmodifiableList(tasks);
+        this.DEPENDENCIES = Collections.unmodifiableList(dependencies);
+        this.TITLE = title;
     }
 
     /**
@@ -26,7 +73,7 @@ public class TaskGraph {
      */
     public List<Dependency> getIncomingDependencies (Task n){
         List<Dependency> incomingDependencies = new ArrayList<Dependency>();
-        for (Dependency dep : dependencies) {
+        for (Dependency dep : DEPENDENCIES) {
             if (dep.getEndTask().equals(n)){
                 incomingDependencies.add(dep);
             }
@@ -41,7 +88,7 @@ public class TaskGraph {
      */
     public List<Dependency> getOutgoingDependencies(Task n) {
         List<Dependency> outgoingDependencies = new ArrayList<Dependency>();
-        for (Dependency dep : dependencies) {
+        for (Dependency dep : DEPENDENCIES) {
             if (dep.getStartTask().equals(n)){
                 outgoingDependencies.add(dep);
             }
@@ -56,7 +103,7 @@ public class TaskGraph {
      * @return The Task with the specified ID.
      */
     public Task getTaskById(int id) {
-        for (Task task : tasks) {
+        for (Task task : TASKS) {
             if (task.getId() == id) {
                 return task;
             }
@@ -68,6 +115,13 @@ public class TaskGraph {
 	 * @return The all the tasks in the graph.
 	 */
 	public List<Task> getAllTasks() {
-		return tasks;
+		return TASKS;
 	}
+
+    /**
+     * Gets the title of the TaskGraph instance
+     */
+	public String getTitle() {
+	    return TITLE;
+    }
 }

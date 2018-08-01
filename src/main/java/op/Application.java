@@ -54,7 +54,7 @@ public class Application {
 
         DotIO iotest = new DotIO();
         try {
-            TaskGraph tg = iotest.dotIn(arguments.getInputGraphFilename());
+            iotest.dotIn(arguments.getInputGraphFilename());
         } catch (IOException e) {
             e.printStackTrace();
         }

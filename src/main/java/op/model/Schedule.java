@@ -19,12 +19,11 @@ public class Schedule {
 
     /**
      * Tells whether or not this Schedule instance is a complete schedule (all tasks allocated)
-     * @param graph represents the input graph with tasks and dependencies
      * @return true if this Schedule is complete, false otherwise
      */
-    public boolean isComplete(TaskGraph graph) {
+    public boolean isComplete() {
 
-        List<Task> tasks=graph.getAllTasks();
+        List<Task> tasks=TaskGraph.getInstance().getAllTasks();
         Set<Integer> scheduledProcessor=processorTasksMap.keySet();
         List<ScheduledTask> scheduledTasks=new ArrayList<>();
 

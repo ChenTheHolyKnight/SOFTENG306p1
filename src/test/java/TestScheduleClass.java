@@ -1,4 +1,5 @@
 import op.model.*;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -40,10 +41,21 @@ public class TestScheduleClass {
         List<Dependency> dependencies=new ArrayList<>();
         dependencies.add(dependency);
 
-        //Create the mock graph
-        this.mockTaskGraph=new MockTaskGraph();
-        this.mockTaskGraph.setDependencies(dependencies);
-        this.mockTaskGraph.setTasks(tasks);
+        TaskGraph.initialize(tasks, dependencies, null);
+    }
+
+    /**
+     * Reset the TaskGraph instance
+     */
+    @After
+    public void resetGraph() {
+        try {
+            SingletonTesting.resetSingleton();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -60,7 +72,7 @@ public class TestScheduleClass {
         schedule.addProcessor(1,scheduledTasks);
         schedule.addProcessor(2,scheduledTasks1);
 
-        boolean isCompleted=schedule.isComplete(mockTaskGraph);
+        boolean isCompleted=schedule.isComplete();
         assertTrue(isCompleted);
     }
 
