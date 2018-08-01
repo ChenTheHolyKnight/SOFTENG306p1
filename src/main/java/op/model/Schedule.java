@@ -38,7 +38,6 @@ public class Schedule {
      * @return the scheduled task representing the task in this schedule
      */
     public void addScheduledTask(ScheduledTask task){
-        this.taskProcessorMap.put(task,task.getProcessor());
         int processorNum=task.getProcessor();
         if(processorTasksMap.get(processorNum)!=null){
 	    processorTasksMap.get(processorNum).add(task);
