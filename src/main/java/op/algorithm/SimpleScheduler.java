@@ -41,6 +41,7 @@ public class SimpleScheduler extends Scheduler {
             schedule.addScheduledTask(scheduledTask);
             startTime = startTime + task.getDuration();
         }
+
         return schedule;
     }
 

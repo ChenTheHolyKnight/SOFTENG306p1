@@ -43,6 +43,16 @@ public class Schedule {
      */
     public void addScheduledTask(ScheduledTask task){
         this.taskProcessorMap.put(task,task.getProcessor());
+        int processorNum=task.getProcessor();
+        if(processorTasksMap.get(processorNum)!=null){
+            List<ScheduledTask> tasks=processorTasksMap.get(processorNum);
+            tasks.add(task);
+            processorTasksMap.put(processorNum,tasks);
+        }else{
+            List<ScheduledTask> tasks=new ArrayList<>();
+            tasks.add(task);
+            processorTasksMap.put(task.getProcessor(),tasks);
+        }
     }
 
     /**
