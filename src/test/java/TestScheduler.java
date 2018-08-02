@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import op.algorithm.Scheduler;
 import op.algorithm.SimpleScheduler;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,13 +30,26 @@ public class TestScheduler {
 	 */
 	@Before
 	public void setup() throws IOException {
+			//TaskGraph tg=TaskGraph.getInstance();
+			Arguments.initialize(PATH_TO_DOT,1,1,false,"test.dot");
 			new DotIO().dotIn(PATH_TO_DOT);
 	}
 
+	@After
+	public void reset() {
+		try {
+			SingletonTesting.resetTaskGraph();
+			SingletonTesting.resetArguments();
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+	}
     /**
      * Tests if the schedule produced by SimpleScheduler is valid.
      */
-	//@Test
+	@Test
     public void testSimpleSchedulerSchedule() {
         s = (new SimpleScheduler()).produceSchedule(NUM_PROCESSORS);
         checkScheduleIsValid();
@@ -45,7 +59,7 @@ public class TestScheduler {
      * Tests if the schedule produced by GreedyScheduler is valid and at least as good as the schedule produced by
      *  SimpleScheduler.
      */
-    //@Test
+    @Test
     public void testGreedySchedulerSchedule() {
         s = (new SimpleScheduler()).produceSchedule(NUM_PROCESSORS);
         checkScheduleIsValid();
@@ -83,10 +97,11 @@ public class TestScheduler {
 				}
 			}
 		}
-		
+
 		// Checks if all dependencies for all tasks respect each other
 		for (Task task : tg.getAllTasks()) { 
 			for (Dependency d : tg.getOutgoingDependencies(task)) {
+
 				if (s.getScheduledTask(task).getProcessor() != s.getScheduledTask(d.getEndTask()).getProcessor()){
 					assertTrue(s.getScheduledTask(task).getStartTime() + task.getDuration() + d.getWeight()
 						<= s.getScheduledTask(d.getEndTask()).getStartTime());
