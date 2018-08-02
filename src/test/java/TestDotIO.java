@@ -1,3 +1,4 @@
+import op.algorithm.SimpleScheduler;
 import op.io.DotIO;
 import op.model.TaskGraph;
 import org.junit.After;
@@ -27,7 +28,13 @@ public class TestDotIO {
         DotIO testio = new DotIO();
         try {
             testio.dotIn("src/main/resources/sample_inputs/test.dot");
+
+            // this is commented because we don't want the repo/travis to write files. need to figure out
+            // a good way of testing File output operations. Feel free to uncomment and check the output file but
+            // make sure it's not committed to the repo.
+            //testio.dotOut("out.dot", new SimpleScheduler().produceSchedule(1));
         } catch (IOException e) {
+            e.printStackTrace();
             fail();
         }
     }
