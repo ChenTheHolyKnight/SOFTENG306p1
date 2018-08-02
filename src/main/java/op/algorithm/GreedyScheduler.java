@@ -12,7 +12,7 @@ import java.util.Map;
  *
  * @author Victoria Skeggs
  */
-public class GreedyScheduler extends SimpleScheduler {
+public class GreedyScheduler extends Scheduler {
 
     private HashMap<Integer, Double> processorNextTime;
     private int FIRST_PROCESSOR = 1;
@@ -34,8 +34,8 @@ public class GreedyScheduler extends SimpleScheduler {
     @Override
     public Schedule produceSchedule(int numProcessors) {
         Schedule schedule = new Schedule();
-
-        for (Task task: createTopologicalOrder(TaskGraph.getInstance().getAllTasks())) {
+        SchedulerUtil su=new SchedulerUtil();
+        for (Task task: su.createTopologicalOrder(TaskGraph.getInstance().getAllTasks())) {
 
             int bestProcessor = FIRST_PROCESSOR;
             double earliestStartTime = Double.POSITIVE_INFINITY;
