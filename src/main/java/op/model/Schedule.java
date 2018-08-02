@@ -34,18 +34,19 @@ public class Schedule {
     /**
      * Gets a task's corresponding scheduled task in this schedule
      * 
-     * @param t the task 
+     * @param scheduledTask the task
      * @return the scheduled task representing the task in this schedule
      */
-    public void addScheduledTask(ScheduledTask task){
-        int processorNum=task.getProcessor();
+    public void addScheduledTask(ScheduledTask scheduledTask){
+        int processorNum=scheduledTask.getProcessor();
         if(processorTasksMap.get(processorNum)!=null){
-	    processorTasksMap.get(processorNum).add(task);
+	    processorTasksMap.get(processorNum).add(scheduledTask);
         }else{
             List<ScheduledTask> tasks=new ArrayList<>();
-            tasks.add(task);
-            processorTasksMap.put(task.getProcessor(),tasks);
+            tasks.add(scheduledTask);
+            processorTasksMap.put(scheduledTask.getProcessor(),tasks);
         }
+        taskMap.put(scheduledTask.getTask(), scheduledTask);
     }
 
     public ScheduledTask getScheduledTask(Task t) {
