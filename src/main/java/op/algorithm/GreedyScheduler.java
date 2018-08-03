@@ -17,7 +17,7 @@ public class GreedyScheduler extends SimpleScheduler {
     private HashMap<Integer, Double> processorNextTime;
     private int FIRST_PROCESSOR = 1;
 
-    private GreedyScheduler() {
+    public GreedyScheduler() {
         int numProcessors = Arguments.getInstance().getNumProcessors();
         processorNextTime = new HashMap<>();
 
@@ -28,11 +28,10 @@ public class GreedyScheduler extends SimpleScheduler {
 
     /**
      * Produces a schedule by ordering the tasks and scheduling them individually by making the best local choice.
-     * @param numProcessors the number of processors available to schedule tasks onto
      * @return a decent schedule
      */
     @Override
-    public Schedule produceSchedule(int numProcessors) {
+    public Schedule produceSchedule() {
         Schedule schedule = new Schedule();
 
         for (Task task: createTopologicalOrder(TaskGraph.getInstance().getAllTasks())) {
@@ -40,7 +39,7 @@ public class GreedyScheduler extends SimpleScheduler {
             int bestProcessor = FIRST_PROCESSOR;
             double earliestStartTime = Double.POSITIVE_INFINITY;
 
-            for (int processor = FIRST_PROCESSOR; processor < numProcessors; processor++) {
+            for (int processor = FIRST_PROCESSOR; processor < Arguments.getInstance().getNumProcessors(); processor++) {
                 double newEarliest = getEarliestStartTime(schedule, task, processor);
                 if (newEarliest < earliestStartTime) {
                     earliestStartTime = newEarliest;

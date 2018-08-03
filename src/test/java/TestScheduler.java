@@ -35,7 +35,7 @@ public class TestScheduler {
     /**
      * Tests if the schedule produced by SimpleScheduler is valid.
      */
-	//@Test
+	@Test
     public void testSimpleSchedulerSchedule() {
         s = (new SimpleScheduler()).produceSchedule(NUM_PROCESSORS);
         checkScheduleIsValid();
@@ -45,7 +45,7 @@ public class TestScheduler {
      * Tests if the schedule produced by GreedyScheduler is valid and at least as good as the schedule produced by
      *  SimpleScheduler.
      */
-    //@Test
+    @Test
     public void testGreedySchedulerSchedule() {
         s = (new SimpleScheduler()).produceSchedule(NUM_PROCESSORS);
         checkScheduleIsValid();

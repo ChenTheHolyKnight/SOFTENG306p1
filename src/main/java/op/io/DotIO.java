@@ -1,6 +1,7 @@
 package op.io;
 
 import op.model.Dependency;
+import op.model.Schedule;
 import op.model.Task;
 import op.model.TaskGraph;
 
@@ -34,7 +35,6 @@ public class DotIO {
 
     /**
      * Constructor for a new DotIO.
-     * @param path the path to the Dot file to be read in.
      */
     public DotIO(){    }
 
@@ -91,7 +91,7 @@ public class DotIO {
     /**
      * method that writes out the scheduled graph to a dot file
      */
-    public void dotOut(){
+    public void dotOut(Schedule schedule){
 
     }
 }

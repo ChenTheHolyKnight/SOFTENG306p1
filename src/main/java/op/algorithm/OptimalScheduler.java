@@ -9,7 +9,7 @@ import op.model.TaskGraph;
 public class OptimalScheduler extends Scheduler {
 
     @Override
-    public Schedule produceSchedule(int numProcessors) {
+    public Schedule produceSchedule() {
         return null;
     }
 }
