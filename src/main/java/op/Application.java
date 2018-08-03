@@ -1,15 +1,14 @@
 package op;
 
-
+import op.algorithm.GreedyScheduler;
+import op.algorithm.Scheduler;
+import op.model.Schedule;
 import op.visualization.Visualiser;
-import op.visualization.messages.MessageAddNode;
-import op.visualization.messages.MessageEliminateChildren;
 
 import op.io.Arguments;
 import op.io.CommandLineIO;
 import op.io.DotIO;
 import op.io.exceptions.InvalidUserInputException;
-import op.model.TaskGraph;
 
 import java.io.IOException;
 
@@ -19,46 +18,89 @@ import java.io.IOException;
 public class Application {
     public static void main(String[] args) {
 
-        System.out.println("it works!");
-
-        //   DotIO iotest = new DotIO("src/main/resources/sample_inputs/test.dot");
-
         Application application = new Application();
+
+        // Read from command line
         application.initArguments(args);
 
-        Arguments arguments = Arguments.getInstance();
+        // Read dot file
+        DotIO dotParser = new DotIO();
+        application.readDot(dotParser);
 
-        // To test jar from command line:
-        System.out.println("Here are the arguments you entered:");
-        System.out.println("Input graph filename: " + arguments.getInputGraphFilename());
-        System.out.println("Number of cores: " + arguments.getNumCores());
-        System.out.println("Number of processors: " + arguments.getNumProcessors());
-        System.out.println("Output graph filename: " + arguments.getOutputGraphFilename());
-        System.out.println("Visualization on: " + arguments.getToVisualize());
+        // Produce a schedule
+        Schedule schedule = application.produceSchedule();
 
-        DotIO iotest = new DotIO();
-        try {
-            iotest.dotIn(arguments.getInputGraphFilename());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // Start visualization
+        application.startVisualization();
 
-    }
-
-    public static int returnTwo() {
-        return 2;
+        // Write out the schedule
+        application.writeDot(dotParser, schedule);
     }
 
     /**
-     * Initialize the global Arguments object
+     * Initializes the global Arguments object, which provides an easy way for all parts of the program to access
+     * the user's command line arguments
+     * To be run as an IO_Task with ParallelIT
      * @param args command line arguments
      */
     private void initArguments(String[] args) {
-        Arguments arguments = null;
         try {
             new CommandLineIO().parseArgs(args);
         } catch (InvalidUserInputException e) {
-            System.exit(1);
+            fatalError("Could not read command line input.");
         }
     }
+
+    /**
+     * Reads in the DOT file the user has specified
+     * To be run as an IO_Task with ParallelIT
+     * @param dotParser
+     */
+    private void readDot(DotIO dotParser) {
+
+        try {
+            dotParser.dotIn(Arguments.getInstance().getInputGraphFilename());
+        } catch (IOException e) {
+            fatalError("Could not find file: " + Arguments.getInstance().getInputGraphFilename());
+        }
+    }
+
+    /**
+     * Schedules tasks on processors
+     * To be run concurrently with startVisualization()
+     * @return a schedule
+     */
+    private Schedule produceSchedule() {
+        Scheduler scheduler = new GreedyScheduler();
+        return scheduler.produceSchedule();
+    }
+
+    /**
+     * Visualizes the search for a solution schedule
+     * To be run concurrently with produceSchedule()
+     */
+    private void startVisualization() {
+        if (Arguments.getInstance().getToVisualize()) {
+            Visualiser visualiser = new Visualiser();
+        }
+    }
+
+    /**
+     * Writes out a schedule to DOT format
+     * @param dotParser writes the schedule
+     * @param schedule to be written
+     */
+    private void writeDot(DotIO dotParser, Schedule schedule){
+        try {
+            dotParser.dotOut(schedule);
+        } catch (IOException e) {
+            fatalError("Could not write dot graph output.");
+        }
+    }
+
+    private void fatalError(String message) {
+        System.out.println(message);
+        System.exit(1);
+    }
+
 }
