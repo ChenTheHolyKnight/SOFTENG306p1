@@ -7,13 +7,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
- * The beginnings of a DotIO class that will read in a .dot file and create a Graph object that can be used in the
+ * A class that will read in a .dot file and create a Graph object that can be used in the
  * algorithm. This class will also produce a dot file from the resultant graph after the algorithm has been run.
- * (obviously) still in very early stages so subject to change.
- *
- * @author Sam Broadhead (dotIn()) Darcy Cox (dotOut())
  */
 public class DotIO {
 
@@ -34,12 +32,49 @@ public class DotIO {
     private static final String STATEMENT_END = ";";
     private static final String DEP_SPECIFIER = "−>";
 
+    /*
+        things to look for are as follows:
+        - name of graph
+        - task (id(String) and weight(int), potentially 2 separate things)
+        - dependency (src task, dest task, weight(int))
+        - end of graph ( } )
+        use Strings for line matches and patterns where data needs to be extracted from the line..
+        please don't ask me to explain the regex patterns
+     */
+    private static final String TASK_LINE_MATCH = "[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=]*[\\p{Digit}]*[\\s]*][\\s]*;";
+    private static final String DEP_LINE_MATCH = "[\\s]*[\\p{Alnum}]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=]*[\\s]*[\\p{Digit}]*[\\s]*][\\s]*;";
+    private static final String GRAPH_NAME_LINE_MATCH = "";
+    private static final String END_OF_GRAPH_MATCH = "[\\s]*}[\\s]*";
+
+    private static final Pattern GRAPH_NAME_MATCH = Pattern.compile("");
+    private static final Pattern TASK_NAME_MATCH = Pattern.compile("");
+    private static final Pattern TASK_WEIGHT_MATCH = Pattern.compile("");
+    private static final Pattern DEP_SRC_TASK_MATCH = Pattern.compile("");
+    private static final Pattern DEP_DST_TASK_MATCH = Pattern.compile("");
+    private static final Pattern DEP_WEIGHT_MATCH = Pattern.compile("");
 
     /**
      * Constructor for a new DotIO.
      */
     public DotIO(){    }
 
+    /**
+     * New devised dotIn method that will replace previous implementation. Major upgrades for robustness.
+     * @param path the path of the dot file to read.
+     * @throws IOException
+     * @author Sam Broadhead
+     */
+    public void newDotIn(String path) throws IOException {
+        String file = path;
+        String title = "";
+        List<Dependency> depList = new ArrayList<Dependency>();
+        List<Task> taskList;
+        Map<Integer, Task> taskMap = new HashMap<Integer, Task>();
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        String line;
+        while ((line = br.readLine()) != null && !line.contains(END_OF_GRAPH_MATCH)) {
+        }
+    }
     /**
      * method that reads the dot file in and initializes the TaskGraph instance
      * @throws IOException if the file can't be found
@@ -97,6 +132,7 @@ public class DotIO {
      * Writes out a dot file of a complete schedule based on the task graph
      * @param path The path of the file to be written to
      * @throws IOException if anything with File IO goes wrong
+     * @author Darcy Cox
      */
     public void dotOut(String path, Schedule s) throws IOException {
 
