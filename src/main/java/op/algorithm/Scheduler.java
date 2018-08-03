@@ -1,5 +1,6 @@
 package op.algorithm;
 
+import op.model.Dependency;
 import op.model.Schedule;
 import op.model.Task;
 import op.model.TaskGraph;
@@ -40,13 +41,4 @@ public abstract class Scheduler {
      */
     public abstract Schedule produceSchedule();
 
-    /**
-     * Maps number of incoming edges for a task against tasks.
-     * @param tasks
-     * @return
-     */
-    protected HashMap<Integer, List<Task>> orderTasksByIncomingEdges(List<Task> tasks) {
-        // TO DO
-        return null;
-    }
 }

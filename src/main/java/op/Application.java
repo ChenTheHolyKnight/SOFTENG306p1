@@ -1,6 +1,5 @@
 package op;
 
-
 import op.algorithm.GreedyScheduler;
 import op.algorithm.Scheduler;
 import op.model.Schedule;
@@ -48,7 +47,7 @@ public class Application {
         try {
             new CommandLineIO().parseArgs(args);
         } catch (InvalidUserInputException e) {
-            System.exit(1);
+            fatalError("Could not read command line input.");
         }
     }
 
@@ -62,8 +61,7 @@ public class Application {
         try {
             dotParser.dotIn(Arguments.getInstance().getInputGraphFilename());
         } catch (IOException e) {
-            System.out.println("Could not find file: " + Arguments.getInstance().getInputGraphFilename());
-            System.exit(1);
+            fatalError("Could not find file: " + Arguments.getInstance().getInputGraphFilename());
         }
     }
 
@@ -93,7 +91,16 @@ public class Application {
      * @param schedule to be written
      */
     private void writeDot(DotIO dotParser, Schedule schedule){
-        dotParser.dotOut(schedule);
+        try {
+            dotParser.dotOut(schedule);
+        } catch (IOException e) {
+            fatalError("Could not write dot graph output.");
+        }
+    }
+
+    private void fatalError(String message) {
+        System.out.println(message);
+        System.exit(1);
     }
 
 }

@@ -10,7 +10,7 @@ public class Schedule {
 
     private HashMap<Integer,List<ScheduledTask>> processorTasksMap = new HashMap<>();
     private HashMap<Task,ScheduledTask> taskMap = new HashMap<>();
-
+  
     /**
      * Tells whether or not this Schedule instance is a complete schedule (all tasks allocated)
      * @return true if this Schedule is complete, false otherwise
@@ -34,20 +34,23 @@ public class Schedule {
     /**
      * Gets a task's corresponding scheduled task in this schedule
      * 
-     * @param t the task 
+     * @param scheduledTask the task
      * @return the scheduled task representing the task in this schedule
      */
-    public ScheduledTask getScheduledTask(Task t) {
-    	return taskMap.get(t);
+    public void addScheduledTask(ScheduledTask scheduledTask){
+        int processorNum=scheduledTask.getProcessor();
+        if(processorTasksMap.get(processorNum)!=null){
+	    processorTasksMap.get(processorNum).add(scheduledTask);
+        }else{
+            List<ScheduledTask> tasks=new ArrayList<>();
+            tasks.add(scheduledTask);
+            processorTasksMap.put(scheduledTask.getProcessor(),tasks);
+        }
+        taskMap.put(scheduledTask.getTask(), scheduledTask);
     }
 
-    /**
-     * Add the processor to the Hashmap with a list of tasks scheduled on this processor
-     * @param processNum the number indicates the processor
-     * @param scheduledTasks a list of tasks scheduled on the processor
-     */
-    public void addProcessor(Integer processNum,List<ScheduledTask> scheduledTasks){
-        this.processorTasksMap.put(processNum,scheduledTasks);
+    public ScheduledTask getScheduledTask(Task t) {
+    	return taskMap.get(t);
     }
 
     /**
@@ -58,15 +61,6 @@ public class Schedule {
     public List<ScheduledTask> getScheduledTasks(int processorNum){
         return processorTasksMap.get(processorNum);
     }
-
-    /**
-     * Adds a scheduled task to the schedule
-     * @param scheduledTask the scheduled task to add
-     */
-	public void addScheduledTask(ScheduledTask scheduledTask) {
-		taskMap.put(scheduledTask.getTask(), scheduledTask);
-		//TODO: Implement this such that it adds this task to the processorTasksMap
-	}
 
     /**
      * Calculates the length of the schedule or partial schedule
