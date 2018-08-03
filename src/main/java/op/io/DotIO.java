@@ -72,7 +72,8 @@ public class DotIO {
         Map<Integer, Task> taskMap = new HashMap<Integer, Task>();
         BufferedReader br = new BufferedReader(new FileReader(file));
         String line;
-        while ((line = br.readLine()) != null && !line.contains(END_OF_GRAPH_MATCH)) {
+        while (((line = br.readLine()) != null) && (!line.contains(END_OF_GRAPH_MATCH))) {
+            System.out.println(line);
         }
     }
     /**
