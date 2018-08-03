@@ -34,8 +34,7 @@ public class SimpleScheduler extends Scheduler {
     @Override
     public Schedule produceSchedule() {
         Schedule schedule = new Schedule();
-        SchedulerUtil su=new SchedulerUtil();
-        for (Task task: su.createTopologicalOrder(TaskGraph.getInstance().getAllTasks())) {
+        for (Task task: SchedulerUtil.createTopologicalOrder(TaskGraph.getInstance().getAllTasks())) {
             ScheduledTask scheduledTask = new ScheduledTask(task, startTime, DEFAULT_PROCESSOR);
             schedule.addScheduledTask(scheduledTask);
             startTime = startTime + task.getDuration();

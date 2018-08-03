@@ -33,8 +33,7 @@ public class GreedyScheduler extends Scheduler {
     @Override
     public Schedule produceSchedule() {
         Schedule schedule = new Schedule();
-        SchedulerUtil su=new SchedulerUtil();
-        for (Task task: su.createTopologicalOrder(TaskGraph.getInstance().getAllTasks())) {
+        for (Task task: SchedulerUtil.createTopologicalOrder(TaskGraph.getInstance().getAllTasks())) {
 
             int bestProcessor = FIRST_PROCESSOR;
             double earliestStartTime = Double.POSITIVE_INFINITY;
