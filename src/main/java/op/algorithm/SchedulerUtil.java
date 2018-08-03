@@ -9,7 +9,15 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * A util class can be used by all the schedulers
+ */
 public class SchedulerUtil {
+    /**
+     * A method to create a topological order for a given graph
+     * @param tasks all the tasks in the input graph
+     * @return a list of tasks that sorted in topological order
+     */
     public static List<Task> createTopologicalOrder(List<Task> tasks){
         TaskGraph tg= TaskGraph.getInstance();
         List<Dependency> dependencies=new ArrayList<>();
