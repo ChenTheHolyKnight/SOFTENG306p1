@@ -43,7 +43,7 @@ public class DotIO {
      */
     private static final String TASK_LINE_MATCH = "[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=]*[\\p{Digit}]*[\\s]*][\\s]*;";
     private static final String DEP_LINE_MATCH = "[\\s]*[\\p{Alnum}]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=]*[\\s]*[\\p{Digit}]*[\\s]*][\\s]*;";
-    private static final String GRAPH_NAME_LINE_MATCH = "";
+    private static final String GRAPH_NAME_LINE_MATCH = "[\\s]*digraph[\\s]*\".*\"[\\s]*\\{[\\s]*";
     private static final String END_OF_GRAPH_MATCH = "[\\s]*}[\\s]*";
 
     private static final Pattern GRAPH_NAME_MATCH = Pattern.compile("");
