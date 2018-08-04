@@ -53,7 +53,7 @@ public class TestScheduler {
     /**
      * Tests if the schedule produced by SimpleScheduler is valid.
      */
-	//@Test
+	@Test
     public void testSimpleScheduler() {
 	    try {
             setup(PATH_TO_TEST);
@@ -86,7 +86,7 @@ public class TestScheduler {
     /**
      * Tests GreedyScheduler is valid with test.dot as the input graph.
      */
-    //@Test
+    @Test
     public void testGreedySchedulerWithTestGraph() {
         checkGreedyScheduler(PATH_TO_TEST);
     }
@@ -94,7 +94,7 @@ public class TestScheduler {
     /**
      * Tests GreedyScheduler is valid with Nodes_7_OutTree.dot as the input graph.
      */
-    //@Test
+    @Test
     public void testGreedySchedulerWithNodes7Graph() {
         checkGreedyScheduler(PATH_TO_NODES_7);
     }
@@ -102,7 +102,7 @@ public class TestScheduler {
     /**
      * Tests GreedyScheduler is valid with Nodes_8_Random.dot as the input graph.
      */
-    //@Test
+    @Test
     public void testGreedySchedulerWithNodes8Graph() {
         checkGreedyScheduler(PATH_TO_NODES_8);
     }

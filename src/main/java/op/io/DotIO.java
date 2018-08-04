@@ -107,7 +107,7 @@ public class DotIO {
             if (!taskList.contains(dstTask)){
                 taskList.add(dstTask);
             }
-            depList.add(new Dependency(srcTask,dstTask,depMap.get(keys)));
+            depList.add(new Dependency(taskList.get(taskList.indexOf(srcTask)),taskList.get(taskList.indexOf(dstTask)),depMap.get(keys)));
         }
         for (String key : taskMap.keySet()){ // build any tasks that have no ingoing or outgoing dependencies
             Task t = new Task(key,taskMap.get(key));
