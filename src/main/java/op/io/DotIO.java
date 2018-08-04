@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -30,7 +31,7 @@ public class DotIO {
     private static final String START_ATTR_SPECIFIER = "Start=";
     private static final String PROC_ATTR_SPECIFIER = "Processor=";
     private static final String STATEMENT_END = ";";
-    private static final String DEP_SPECIFIER = "−>";
+    private static final String DEP_SPECIFIER = "->";
 
     /*
         things to look for are as follows:
@@ -45,13 +46,17 @@ public class DotIO {
     private static final String TASK_LINE_MATCH = "[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=]*[\\p{Digit}]*[\\s]*][\\s]*;";
     private static final String DEP_LINE_MATCH = "[\\s]*[\\p{Alnum}]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=]*[\\s]*[\\p{Digit}]*[\\s]*][\\s]*;";
     private static final String END_OF_GRAPH_MATCH = "[\\s]*}[\\s]*";
+    private static final String BEGINNING_OF_GRAPH_MATCH = "[\\s]*{[\\s]*";
 
     private static final Pattern GRAPH_NAME_MATCH = Pattern.compile("[\\s]*digraph[\\s]*\"(.*)\"[\\s]*\\{[\\s]*");
-    private static final Pattern TASK_NAME_MATCH = Pattern.compile("");
-    private static final Pattern TASK_WEIGHT_MATCH = Pattern.compile("");
-    private static final Pattern DEP_SRC_TASK_MATCH = Pattern.compile("");
-    private static final Pattern DEP_DST_TASK_MATCH = Pattern.compile("");
-    private static final Pattern DEP_WEIGHT_MATCH = Pattern.compile("");
+    private static final Pattern TASK_NAME_MATCH = Pattern.compile("[\\s]*([\\p{Alnum}]*)[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*][\\s]*;");
+    private static final Pattern TASK_WEIGHT_MATCH = Pattern.compile("[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*([\\p{Digit}]*)[\\s]*][\\s]*;");
+    private static final Pattern DEP_SRC_TASK_MATCH = Pattern.compile("[\\s]*([\\p{Alnum}]*)[\\s]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*][\\s]*;");
+    private static final Pattern DEP_DST_TASK_MATCH = Pattern.compile("[\\s]*[\\p{Alnum}]*[\\s]*.>[\\s]*([\\p{Alnum}]*)[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*][\\s]*;");
+    private static final Pattern DEP_WEIGHT_MATCH = Pattern.compile("[\\s]*[\\p{Alnum}]*[\\s]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*([\\p{Digit}]*)[\\s]*][\\s]*;");
+
+    private static final int MATCHER_GROUP = 1;
+    private static final int DEFAULT_WEIGHT = 0;
 
     /**
      * Constructor for a new DotIO.
@@ -59,7 +64,7 @@ public class DotIO {
     public DotIO(){    }
 
     /**
-     * New devised dotIn method that will replace previous implementation. Major upgrades for robustness.
+     * New revised dotIn method that will replace previous implementation. Major upgrades for robustness.
      * @param path the path of the dot file to read.
      * @throws IOException
      * @author Sam Broadhead
@@ -69,13 +74,47 @@ public class DotIO {
         String title = "";
         List<Dependency> depList = new ArrayList<Dependency>();
         List<Task> taskList;
-        Map<Integer, Task> taskMap = new HashMap<Integer, Task>();
+        Map<String, Integer> taskMap = new HashMap<String, Integer>();
+        Map<String[], Integer> depMap = new HashMap<String[], Integer>();
         BufferedReader br = new BufferedReader(new FileReader(file));
         String line;
         while (((line = br.readLine()) != null) && (!line.contains(END_OF_GRAPH_MATCH))) {
             System.out.println(line);
+            if (line.matches(GRAPH_NAME_LINE_MATCH)) {
+                title = getStringMatch(GRAPH_NAME_MATCH, line);
+            } else if (line.matches(TASK_LINE_MATCH)) {
+                String  name = getStringMatch(TASK_NAME_MATCH, line);
+                int weight = Integer.parseInt(getStringMatch(TASK_WEIGHT_MATCH, line));
+                taskMap.put(name, weight);
+            } else if (line.matches(DEP_LINE_MATCH)) {
+                String src = getStringMatch(DEP_SRC_TASK_MATCH, line);
+                String dst = getStringMatch(DEP_DST_TASK_MATCH, line);
+                if (!taskMap.containsKey(src)) {
+                    taskMap.put(src, DEFAULT_WEIGHT);
+                }
+                if (!taskMap.containsKey(dst)) {
+                    taskMap.put(dst, DEFAULT_WEIGHT);
+                }
+                String [] tasks = {src,dst};
+                int weight = Integer.parseInt(getStringMatch(DEP_WEIGHT_MATCH, line));
+            }
         }
+        //TaskGraph.initialize(taskList, depList, title);
     }
+
+    /**
+     * Helper method to find matches
+     * @param toMatch
+     * @param str
+     * @return
+     * @author Sam Broadhead
+     */
+    public String getStringMatch(Pattern toMatch, String str){
+        Matcher m = toMatch.matcher(str);
+        m.find();
+        return m.group(MATCHER_GROUP);
+    }
+
     /**
      * method that reads the dot file in and initializes the TaskGraph instance
      * @throws IOException if the file can't be found
