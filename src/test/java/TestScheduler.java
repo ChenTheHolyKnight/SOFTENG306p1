@@ -3,6 +3,7 @@ import static org.junit.Assert.fail;
 
 import java.io.IOException;
 
+import op.algorithm.GreedyScheduler;
 import op.algorithm.Scheduler;
 import op.algorithm.SimpleScheduler;
 import org.junit.After;
@@ -58,10 +59,10 @@ public class TestScheduler {
      * Tests if the schedule produced by GreedyScheduler is valid and at least as good as the schedule produced by
      *  SimpleScheduler.
      */
-    //@Test
+    @Test
     public void testGreedySchedulerSchedule() {
-        s = (new SimpleScheduler()).produceSchedule();
-        //checkScheduleIsValid();
+        s = (new GreedyScheduler()).produceSchedule();
+        checkScheduleIsValid();
 
         // Ensure schedule is at least as good as schedule produced by simple scheduler
         if (s.getLength() > (new SimpleScheduler()).produceSchedule().getLength()){
@@ -71,23 +72,22 @@ public class TestScheduler {
 	
 	/**
 	 * Checks if a schedule is valid. A schedule is valid if and only if there is no overlap between
-	 * tasks and all dependencies are respected. 
-	 * 
-	 * No Overlap: For every pair of tasks (A,B), A's start time is greater than B's end time OR 
-	 * B's start time is greater than A's end time.
-	 * 
-	 * Dependencies are Respected: For all tasks' dependencies, the start time of the end dependency
-	 * is greater than the task's start time (assuming there is no overlap) AND, if the tasks are on
-	 * different processors, the start time of the end task is greater than the end time of the
-	 * task + the weight of the dependency.
+	 * tasks and all dependencies are respected.
 	 */
 	private void checkScheduleIsValid() {
+		checkNoOverlap();
+		checkDependenciesAreRespected();
+	}
 
-		TaskGraph tg = TaskGraph.getInstance();
+	/**
+	 * Checks there is no overlap between any two scheduled tasks.
+	 * There is no overlap if and only if for every pair of tasks (A,B), A's start time is greater than B's end time OR
+	 * B's start time is greater than A's end time.
+	 */
+	private void checkNoOverlap() {
 
-		// Checks if no Scheduled Tasks overlap each other on the same processor
-		for (int processor = 1; processor < Arguments.getInstance().getNumProcessors(); processor ++ ) {
-			if (s.getScheduledTasks(processor)!= null) {
+		for (int processor = 1; processor < Arguments.getInstance().getNumProcessors(); processor++) {
+			if (s.getScheduledTasks(processor) != null) {
 				for (ScheduledTask t1 : s.getScheduledTasks(processor)) {
 					for (ScheduledTask t2 : s.getScheduledTasks(processor)) {
 						if (!t1.equals(t2)) {
@@ -98,10 +98,19 @@ public class TestScheduler {
 				}
 			}
 		}
+	}
 
-		// Checks if all dependencies for all tasks respect each other
-		for (Task task : tg.getAllTasks()) { 
-			for (Dependency d : tg.getOutgoingDependencies(task)) {
+	/**
+	 * Checks all dependencies are respected.
+	 * Dependencies are respected if and only if, for all tasks' dependencies, the start time of the end dependency
+	 * is no less than the task's start time (assuming there is no overlap) AND, if the tasks are on
+	 * different processors, the start time of the end task is no less than than the end time of the
+	 * task plus the weight of the dependency.
+	 */
+	private void checkDependenciesAreRespected() {
+
+		for (Task task : TaskGraph.getInstance().getAllTasks()) {
+			for (Dependency d : TaskGraph.getInstance().getOutgoingDependencies(task)) {
 
 				if (s.getScheduledTask(task).getProcessor() != s.getScheduledTask(d.getEndTask()).getProcessor()){
 					assertTrue(s.getScheduledTask(task).getStartTime() + task.getDuration() + d.getWeight()
