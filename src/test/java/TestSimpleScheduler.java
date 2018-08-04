@@ -15,11 +15,11 @@ public class TestSimpleScheduler {
     @Before
     public void setup(){
         //set up nodes
-        Task task1=new Task(1,1);
-        Task task2=new Task(2,1);
-        Task task3=new Task(3,1);
-        Task task4=new Task(4,1);
-        Task task5=new Task(5,1);
+        Task task1=new Task("1",1);
+        Task task2=new Task("2",1);
+        Task task3=new Task("3",1);
+        Task task4=new Task("4",1);
+        Task task5=new Task("5",1);
 
         List<Task> tasks=new ArrayList<>();
         tasks.add(task1);

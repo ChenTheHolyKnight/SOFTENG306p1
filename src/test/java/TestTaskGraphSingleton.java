@@ -45,19 +45,19 @@ public class TestTaskGraphSingleton {
     @Test
     public void testListsAreUnmodifiable() {
         List<Task> tasks = new ArrayList<>();
-        tasks.add(new Task(1, 1));
-        tasks.add(new Task(1, 1));
-        tasks.add(new Task(1, 1));
+        tasks.add(new Task("1", 1));
+        tasks.add(new Task("1", 1));
+        tasks.add(new Task("1", 1));
 
         List<Dependency> deps = new ArrayList<>();
-        deps.add(new Dependency(new Task(1,1),new Task(2,2), 1));
-        deps.add(new Dependency(new Task(1,1),new Task(2,2), 1));
+        deps.add(new Dependency(new Task("1",1),new Task("2",2), 1));
+        deps.add(new Dependency(new Task("1",1),new Task("2",2), 1));
 
         TaskGraph.initialize(tasks, deps, null);
         List<Task> immutableTasks = TaskGraph.getInstance().getAllTasks();
 
         try {
-            immutableTasks.add(new Task(2,3));
+            immutableTasks.add(new Task("2",3));
             fail();
         } catch (UnsupportedOperationException e) {
 

@@ -21,9 +21,6 @@ import java.util.regex.Pattern;
 public class DotIO {
 
     // regex + string constants commonly used in DOT files
-    private static final String WHITE_SPACE = "\\s";
-    private static final String ID_WEIGHT_SPLIT = "\\[";
-    private static final String NON_NUMBERS = "[^0-9]+";
     private static final String QUOTES = "\"";
     private static final String GRAPH_START = "{";
     private static final String GRAPH_END = "}";
@@ -48,9 +45,8 @@ public class DotIO {
      */
     private static final String GRAPH_NAME_LINE_MATCH = "[\\s]*digraph[\\s]*\".*\"[\\s]*\\{[\\s]*";
     private static final String TASK_LINE_MATCH = "[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=]*[\\p{Digit}]*[\\s]*][\\s]*;";
-    private static final String DEP_LINE_MATCH = "[\\s]*[\\p{Alnum}]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=]*[\\s]*[\\p{Digit}]*[\\s]*][\\s]*;";
+    private static final String DEP_LINE_MATCH = "[\\s]*[\\p{Alnum}]*[\\s]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*][\\s]*;";
     private static final String END_OF_GRAPH_MATCH = "[\\s]*}[\\s]*";
-    private static final String BEGINNING_OF_GRAPH_MATCH = "[\\s]*{[\\s]*";
 
     private static final Pattern GRAPH_NAME_MATCH = Pattern.compile("[\\s]*digraph[\\s]*\"(.*)\"[\\s]*\\{[\\s]*");
     private static final Pattern TASK_NAME_MATCH = Pattern.compile("[\\s]*([\\p{Alnum}]*)[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*][\\s]*;");
@@ -69,21 +65,19 @@ public class DotIO {
 
     /**
      * New revised dotIn method that will replace previous implementation. Major upgrades for robustness.
-     * @param path the path of the dot file to read.
-     * @throws IOException
+     * @param path The path of the dot file to read.
+     * @throws IOException If there is a problem reading the file
      * @author Sam Broadhead
      */
-    public void newDotIn(String path) throws IOException {
-        String file = path;
+    public void dotIn(String path) throws IOException {
         String title = "";
-        List<Dependency> depList = new ArrayList<Dependency>();
-        List<Task> taskList;
-        Map<String, Integer> taskMap = new HashMap<String, Integer>();
-        Map<String[], Integer> depMap = new HashMap<String[], Integer>();
-        BufferedReader br = new BufferedReader(new FileReader(file));
+        List<Dependency> depList = new ArrayList<>();
+        List<Task> taskList = new ArrayList<>();
+        Map<String, Integer> taskMap = new HashMap<>();
+        Map<String[], Integer> depMap = new HashMap<>();
+        BufferedReader br = new BufferedReader(new FileReader(path));
         String line;
         while (((line = br.readLine()) != null) && (!line.contains(END_OF_GRAPH_MATCH))) {
-            System.out.println(line);
             if (line.matches(GRAPH_NAME_LINE_MATCH)) {
                 title = getStringMatch(GRAPH_NAME_MATCH, line);
             } else if (line.matches(TASK_LINE_MATCH)) {
@@ -101,75 +95,51 @@ public class DotIO {
                 }
                 String [] tasks = {src,dst};
                 int weight = Integer.parseInt(getStringMatch(DEP_WEIGHT_MATCH, line));
+                depMap.put(tasks, weight);
             }
         }
-        //TaskGraph.initialize(taskList, depList, title);
+        for (String[] keys: depMap.keySet()){
+            Task srcTask = new Task(keys[0],taskMap.get(keys[0]));
+            if (!taskList.contains(srcTask)){
+                taskList.add(srcTask);
+            }
+            Task dstTask = new Task(keys[1],taskMap.get(keys[1]));
+            if (!taskList.contains(dstTask)){
+                taskList.add(dstTask);
+            }
+            depList.add(new Dependency(srcTask,dstTask,depMap.get(keys)));
+        }
+        for (String key : taskMap.keySet()){
+            Task t = new Task(key,taskMap.get(key));
+            if (!taskList.contains(t)){
+                taskList.add(t);
+            }
+        }
+        /* check dotIn here
+        for (Dependency d: depList){
+            System.out.println("Dependency with src Task: "+d.getStartTask().getId()+" and dst Task: "+d.getEndTask().getId()+" and weight: "+d.getWeight());
+        }
+        for (Task t : taskList){
+            System.out.println("Task with id: "+t.getId()+" and weight: "+t.getDuration());
+        }*/
+        TaskGraph.initialize(taskList, depList, title);
     }
 
     /**
      * Helper method to find matches
-     * @param toMatch
-     * @param str
-     * @return
+     * @param toMatch A Pattern for the Matcher to match to.
+     * @param str Sequence for Matcher to match against the Pattern.
+     * @return the String that is found.
+     * @throws IOException If no match is found, meaning the DOT file is invalid.
      * @author Sam Broadhead
      */
-    public String getStringMatch(Pattern toMatch, String str){
+    private String getStringMatch(Pattern toMatch, String str) throws IOException {
         Matcher m = toMatch.matcher(str);
-        m.find();
-        return m.group(MATCHER_GROUP);
-    }
-
-    /**
-     * method that reads the dot file in and initializes the TaskGraph instance
-     * @throws IOException if the file can't be found
-     */
-    public void dotIn(String path) throws IOException {
-
-        String file = path;
-        String title = "";
-        List<Dependency> depList = new ArrayList<Dependency>();
-        List<Task> taskList;
-        Map<Integer, Task> taskMap = new HashMap<Integer, Task>();
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        String line;
-        while((line = br.readLine()) != null){
-            if(line.contains(GRAPH_START)) {
-                //beginning of graph
-                String [] parts = line.split(QUOTES);
-                System.out.println(parts[1]);
-                title = parts[1];
-            } else if (line.contains(GRAPH_END)){
-                //end of graph
-                continue;
-            }else if(line.contains(DEP_SPECIFIER)){
-                //Dependency
-                line = line.replaceAll(WHITE_SPACE,""); // get rid of spaces and tabs
-                String [] parts = line.split(ID_WEIGHT_SPLIT); // split between the tasks and the weight
-                String [] tasks = parts[0].split(DEP_SPECIFIER); // split the two tasks
-                parts[1] = parts[1].replaceAll(NON_NUMBERS,""); //strip everything not a number from the
-                // weight string to get weight
-                int startTask = Integer.parseInt(tasks[0]); // parse strings to int for Dependency object
-                int endTask = Integer.parseInt(tasks[1]);
-                int depWeight = Integer.parseInt(parts[1]);
-                System.out.println("New dependency with Start Task: " + tasks[0] + " End Task: " + tasks[1] +
-                        " Weight: " + parts[1]);
-                depList.add(new Dependency(taskMap.get(startTask), taskMap.get(endTask), depWeight)); // create a
-                // dependency object and add it to the last of dependencies
-            }else{
-                //Task
-                line = line.replaceAll(WHITE_SPACE,"");
-                String [] parts = line.split(ID_WEIGHT_SPLIT);
-                parts[1] = parts[1].replaceAll(NON_NUMBERS,"");
-                System.out.println("New task with id: " + parts[0] + " and weight: "+ parts[1]);
-                int taskID = Integer.parseInt(parts[0]);
-                int taskWeight = Integer.parseInt(parts[1]);
-                taskMap.put(taskID,new Task(taskID, taskWeight));
-                //taskList.add(new Task(taskID, taskWeight)); if we opt for a list implementation for tasks
-            }
+        if(m.find()){
+            return m.group(MATCHER_GROUP);
+        } else {
+            throw new IOException();
         }
-        taskList = new ArrayList<Task>(taskMap.values());
-
-        TaskGraph.initialize(taskList, depList, title);
     }
 
     /**

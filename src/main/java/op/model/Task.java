@@ -6,15 +6,15 @@ package op.model;
  * Class used to represent Node of a graph for graph visualization.
  */
 public class Task {
-	private int id;
+	private String id;
 	private int weight;
 	
-	public Task (int id, int weight) {
+	public Task (String id, int weight) {
 		this.id = id;
 		this.weight = weight;
 	}
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
@@ -24,6 +24,6 @@ public class Task {
 	
 	@Override
 	public boolean equals(Object task) {
-		return ((Task) task).getId() == id;
+		return ((Task) task).getId().equals(id);
 	}
 }
