@@ -1,4 +1,5 @@
 import op.algorithm.SimpleScheduler;
+import op.io.Arguments;
 import op.model.*;
 import org.junit.After;
 import org.junit.Before;
@@ -42,8 +43,12 @@ public class TestSimpleScheduler {
         dependencies.add(dependency4);
         dependencies.add(dependency5);
 
-        //initialise the Graph
+        // Initialise the Graph
         TaskGraph.initialize(tasks,dependencies,"SimpleGraph");
+
+        // Set up Arguments
+        Arguments.initialize("input.dot", 1, 1, false,
+                "output.dot");
     }
 
 
@@ -61,9 +66,9 @@ public class TestSimpleScheduler {
 
     @Test
     public void testSimpleGraph(){
-        SimpleScheduler ss=new SimpleScheduler();
-        Schedule schedule=ss.produceSchedule(1);
-        List<ScheduledTask>s=schedule.getScheduledTasks(1);
+        SimpleScheduler ss = new SimpleScheduler();
+        Schedule schedule = ss.produceSchedule();
+        List<ScheduledTask>s = schedule.getScheduledTasks(1);
         s.forEach(scheduledTask -> System.out.println(scheduledTask.task.getId()));
         //System.out.println(s);
     }

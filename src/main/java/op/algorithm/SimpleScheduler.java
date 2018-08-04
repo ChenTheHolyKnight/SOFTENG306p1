@@ -29,14 +29,12 @@ public class SimpleScheduler extends Scheduler {
 
     /**
      * Produces a schedule by scheduling every task on the same processor.
-     * @param numProcessors the number of processors available to schedule tasks onto
      * @return a basic schedule
      */
     @Override
-    public Schedule produceSchedule(int numProcessors) {
+    public Schedule produceSchedule() {
         Schedule schedule = new Schedule();
-        SchedulerUtil su=new SchedulerUtil();
-        for (Task task: su.createTopologicalOrder(TaskGraph.getInstance().getAllTasks())) {
+        for (Task task: SchedulerUtil.createTopologicalOrder(TaskGraph.getInstance().getAllTasks())) {
             ScheduledTask scheduledTask = new ScheduledTask(task, startTime, DEFAULT_PROCESSOR);
             schedule.addScheduledTask(scheduledTask);
             startTime = startTime + task.getDuration();

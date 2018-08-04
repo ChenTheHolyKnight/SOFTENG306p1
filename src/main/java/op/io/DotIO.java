@@ -1,6 +1,10 @@
 package op.io;
 
-import op.model.*;
+import op.model.Dependency;
+import op.model.Schedule;
+import op.model.Task;
+import op.model.TaskGraph;
+import op.model.ScheduledTask;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -170,13 +174,14 @@ public class DotIO {
 
     /**
      * Writes out a dot file of a complete schedule based on the task graph
-     * @param path The path of the file to be written to
      * @throws IOException if anything with File IO goes wrong
      * @author Darcy Cox
      */
-    public void dotOut(String path, Schedule s) throws IOException {
 
-        BufferedWriter bw = new BufferedWriter(new FileWriter(path, false));
+    public void dotOut(Schedule s) throws IOException {
+
+        BufferedWriter bw = new BufferedWriter(new FileWriter(Arguments.getInstance().getOutputGraphFilename(),
+                false));
 
         TaskGraph tg = TaskGraph.getInstance();
         String title = tg.getTitle();
