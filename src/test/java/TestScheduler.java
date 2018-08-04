@@ -51,14 +51,14 @@ public class TestScheduler {
 	@Test
     public void testSimpleSchedulerSchedule() {
         s = (new SimpleScheduler()).produceSchedule();
-        //checkScheduleIsValid();
+        checkScheduleIsValid();
     }
 
     /**
      * Tests if the schedule produced by GreedyScheduler is valid and at least as good as the schedule produced by
      *  SimpleScheduler.
      */
-    @Test
+    //@Test
     public void testGreedySchedulerSchedule() {
         s = (new SimpleScheduler()).produceSchedule();
         //checkScheduleIsValid();
@@ -87,11 +87,13 @@ public class TestScheduler {
 
 		// Checks if no Scheduled Tasks overlap each other on the same processor
 		for (int processor = 1; processor < Arguments.getInstance().getNumProcessors(); processor ++ ) {
-			for (ScheduledTask t1 : s.getScheduledTasks(processor)) {
-				for (ScheduledTask t2 : s.getScheduledTasks(processor)) {
-					if (!t1.equals(t2)) {
-						assertTrue(t1.getStartTime() + t1.getTask().getDuration() <= t2.getStartTime() 
-								|| t2.getStartTime() + t2.getTask().getDuration() <= t2.getStartTime());
+			if (s.getScheduledTasks(processor)!= null) {
+				for (ScheduledTask t1 : s.getScheduledTasks(processor)) {
+					for (ScheduledTask t2 : s.getScheduledTasks(processor)) {
+						if (!t1.equals(t2)) {
+							assertTrue(t1.getStartTime() + t1.getTask().getDuration() <= t2.getStartTime()
+									|| t2.getStartTime() + t2.getTask().getDuration() <= t1.getStartTime());
+						}
 					}
 				}
 			}
@@ -105,7 +107,8 @@ public class TestScheduler {
 					assertTrue(s.getScheduledTask(task).getStartTime() + task.getDuration() + d.getWeight()
 						<= s.getScheduledTask(d.getEndTask()).getStartTime());
 				} else {
-					assertTrue(s.getScheduledTask(task).getStartTime() < s.getScheduledTask(d.getEndTask()).getStartTime());
+					assertTrue(s.getScheduledTask(task).getStartTime() < s.getScheduledTask(d.getEndTask()).
+                            getStartTime());
 				}
 			}
 		}
