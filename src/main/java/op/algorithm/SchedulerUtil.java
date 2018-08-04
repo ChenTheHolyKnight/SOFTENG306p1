@@ -16,72 +16,55 @@ public class SchedulerUtil {
      * @return a list of tasks that sorted in topological order
      */
     public static List<Task> createTopologicalOrder(List<Task> tasks){
-        /*TaskGraph tg= TaskGraph.getInstance();
+        TaskGraph tg= TaskGraph.getInstance();
         List<Dependency> dependencies=new ArrayList<>();
         tasks.forEach(task -> {
             dependencies.addAll(tg.getIncomingDependencies(task));
         });
-        //dependencies.forEach(dependency -> System.out.println(dependency.getStartTask().getId()+"&"+dependency.getEndTask().getId()));
 
         List<Dependency> dependencies1=new ArrayList<>(dependencies);
-
+        List<Dependency> dependencies2=new ArrayList<>(dependencies);
         while(true){
             int num_deps=dependencies1.size();
             for(Dependency dependency:dependencies1){
                 for(Dependency dependency1:dependencies1){
-                    if(dependency.getEndTask().equals(dependency1.getStartTask())){
-                        dependencies1.add(new Dependency(dependency.getStartTask(),dependency1.getEndTask(),-1));
+                    if(dependency.getEndTask().getId().equals(dependency1.getStartTask().getId())){
+                        boolean hasAdded=false;
+                        Dependency new_dep=new Dependency(dependency.getStartTask(),dependency1.getEndTask(),-1);
+                        for (Dependency d:dependencies1){
+                            if(d.getStartTask().equals(new_dep.getStartTask())&&d.getEndTask().equals(new_dep.getEndTask())){
+                                hasAdded=true;
+                            }
+                        }
+                        if(!hasAdded)
+                            dependencies2.add(new Dependency(dependency.getStartTask(),dependency1.getEndTask(),-1));
                     }
                 }
             }
-            if(num_deps==dependencies1.size()){
+
+            if(num_deps==dependencies2.size()){
                 break;
             }
-
+            dependencies1.clear();
+            dependencies1.addAll(dependencies2);
         }
+
 
         List<Task> tasks1=new ArrayList<>(tasks);
-        tasks.forEach(task -> System.out.println(task.getId()));
-
-
-
-        //System.out.println("After");
-        /*Collections.sort(tasks1,(t1,t2)->{
+        Collections.sort(tasks1, (t1, t2) -> {
             int num=0;
-            for(Dependency dependency : dependencies) {
-                //System.out.println(dependency.getStartTask().getId() +" & "+ t1.getId());
-                if (dependency.getStartTask().getId() == t1.getId() && dependency.getEndTask().getId() == t2.getId()) {
-                    num = -1;
+            for(Dependency dependency:dependencies2){
+                if(dependency.getStartTask().equals(t1) && dependency.getEndTask().equals(t2)){
+                     num=-1;
                 }
-                if (dependency.getStartTask().getId() == t2.getId() && dependency.getEndTask().getId() == t1.getId()) {
-                    num = 1;
+                if(dependency.getStartTask().equals(t2) && dependency.getEndTask().equals(t1)){
+                    num=1;
                 }
-
             }
-
-            //System.out.println("break");
             return num;
         });
-        for(Task task1:tasks){
-            for(Task task2:tasks){
-                for(Dependency dependency:dependencies){
-                    Task start=dependency.getStartTask();
-                    Task end=dependency.getEndTask();
-                    if((start.equals(task1)&&end.equals(task2))){
-                        Collections.swap(tasks1,tasks.indexOf(task1),tasks1.indexOf(task2));
-                    }
-                }
-            }
-        }
 
-
-        tasks1.forEach(task1 -> System.out.println(task1.getId()));
-        return tasks;*/
-        List<Task> tasks1=TaskGraph.getInstance().getAllTasks();
-        tasks1.forEach(task -> System.out.print(task.getId()));
-        System.out.println("");
-        topologicalSort();
-        return null;
+        return tasks1;
     }
 
 
