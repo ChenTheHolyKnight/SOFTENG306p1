@@ -37,11 +37,11 @@ public class DotIO {
     /*
         things to look for are as follows:
         - name of graph
-        - task (id(String) and weight(int), potentially 2 separate things)
+        - task (id(String) and weight(int))
         - dependency (src task, dest task, weight(int))
         - end of graph ( } )
-        use Strings for line matches and patterns where data needs to be extracted from the line..
-        please don't ask me to explain the regex patterns
+        use Strings for line matches and patterns where data needs to be extracted from the line.
+        based on my interpretation of what a valid .dot file is.
      */
     private static final String GRAPH_NAME_LINE_MATCH = "[\\s]*digraph[\\s]*\".*\"[\\s]*\\{[\\s]*";
     private static final String TASK_LINE_MATCH = "[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=]*[\\p{Digit}]*[\\s]*][\\s]*;";
@@ -70,37 +70,37 @@ public class DotIO {
      * @author Sam Broadhead
      */
     public void dotIn(String path) throws IOException {
-        String title = "";
-        List<Dependency> depList = new ArrayList<>();
-        List<Task> taskList = new ArrayList<>();
-        Map<String, Integer> taskMap = new HashMap<>();
-        Map<String[], Integer> depMap = new HashMap<>();
-        BufferedReader br = new BufferedReader(new FileReader(path));
         String line;
+        String title = "";
+        List<Dependency> depList = new ArrayList<>(); // lists to initialize the task graph
+        List<Task> taskList = new ArrayList<>();
+        Map<String, Integer> taskMap = new HashMap<>(); // keep a map of unbuilt tasks to allow updates
+        Map<String[], Integer> depMap = new HashMap<>(); // keep a map of unbuilt deps to allow updates
+        BufferedReader br = new BufferedReader(new FileReader(path));
         while (((line = br.readLine()) != null) && (!line.contains(END_OF_GRAPH_MATCH))) {
-            if (line.matches(GRAPH_NAME_LINE_MATCH)) {
+            if (line.matches(GRAPH_NAME_LINE_MATCH)) { // the line is the graph name line
                 title = getStringMatch(GRAPH_NAME_MATCH, line);
-            } else if (line.matches(TASK_LINE_MATCH)) {
+            } else if (line.matches(TASK_LINE_MATCH)) { // the line is a task line
                 String  name = getStringMatch(TASK_NAME_MATCH, line);
                 int weight = Integer.parseInt(getStringMatch(TASK_WEIGHT_MATCH, line));
                 taskMap.put(name, weight);
-            } else if (line.matches(DEP_LINE_MATCH)) {
+            } else if (line.matches(DEP_LINE_MATCH)) { // the line is a dependency line
                 String src = getStringMatch(DEP_SRC_TASK_MATCH, line);
                 String dst = getStringMatch(DEP_DST_TASK_MATCH, line);
-                if (!taskMap.containsKey(src)) {
+                if (!taskMap.containsKey(src)) { // if there are unknown tasks in the dependency, add them
                     taskMap.put(src, DEFAULT_WEIGHT);
                 }
                 if (!taskMap.containsKey(dst)) {
                     taskMap.put(dst, DEFAULT_WEIGHT);
                 }
-                String [] tasks = {src,dst};
+                String [] tasks = {src,dst}; // store the two task ids as the key
                 int weight = Integer.parseInt(getStringMatch(DEP_WEIGHT_MATCH, line));
                 depMap.put(tasks, weight);
             }
         }
-        for (String[] keys: depMap.keySet()){
+        for (String[] keys: depMap.keySet()){ // build task and dependency objects.
             Task srcTask = new Task(keys[0],taskMap.get(keys[0]));
-            if (!taskList.contains(srcTask)){
+            if (!taskList.contains(srcTask)){ // if the task is not in the list, add it
                 taskList.add(srcTask);
             }
             Task dstTask = new Task(keys[1],taskMap.get(keys[1]));
@@ -109,15 +109,16 @@ public class DotIO {
             }
             depList.add(new Dependency(srcTask,dstTask,depMap.get(keys)));
         }
-        for (String key : taskMap.keySet()){
+        for (String key : taskMap.keySet()){ // build any tasks that have no ingoing or outgoing dependencies
             Task t = new Task(key,taskMap.get(key));
-            if (!taskList.contains(t)){
+            if (!taskList.contains(t)){ // if they aren't in the task list, add them
                 taskList.add(t);
             }
         }
         /* check dotIn here
         for (Dependency d: depList){
-            System.out.println("Dependency with src Task: "+d.getStartTask().getId()+" and dst Task: "+d.getEndTask().getId()+" and weight: "+d.getWeight());
+            System.out.println("Dependency with src Task: "+d.getStartTask().getId()+" and dst Task: "
+                    +d.getEndTask().getId()+" and weight: "+d.getWeight());
         }
         for (Task t : taskList){
             System.out.println("Task with id: "+t.getId()+" and weight: "+t.getDuration());
