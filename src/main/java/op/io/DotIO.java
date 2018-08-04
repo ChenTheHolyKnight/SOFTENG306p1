@@ -11,20 +11,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
- * The beginnings of a DotIO class that will read in a .dot file and create a Graph object that can be used in the
+ * A class that will read in a .dot file and create a Graph object that can be used in the
  * algorithm. This class will also produce a dot file from the resultant graph after the algorithm has been run.
- * (obviously) still in very early stages so subject to change.
- *
- * @author Sam Broadhead (dotIn()) Darcy Cox (dotOut())
  */
 public class DotIO {
 
     // regex + string constants commonly used in DOT files
-    private static final String WHITE_SPACE = "\\s";
-    private static final String ID_WEIGHT_SPLIT = "\\[";
-    private static final String NON_NUMBERS = "[^0-9]+";
     private static final String QUOTES = "\"";
     private static final String GRAPH_START = "{";
     private static final String GRAPH_END = "}";
@@ -36,8 +32,31 @@ public class DotIO {
     private static final String START_ATTR_SPECIFIER = "Start=";
     private static final String PROC_ATTR_SPECIFIER = "Processor=";
     private static final String STATEMENT_END = ";";
-    private static final String DEP_SPECIFIER = "−>";
+    private static final String DEP_SPECIFIER = "->";
 
+    /*
+        things to look for are as follows:
+        - name of graph
+        - task (id(String) and weight(int))
+        - dependency (src task, dest task, weight(int))
+        - end of graph ( } )
+        use Strings for line matches and patterns where data needs to be extracted from the line.
+        based on my interpretation of what a valid .dot file is.
+     */
+    private static final String GRAPH_NAME_LINE_MATCH = "[\\s]*digraph[\\s]*\".*\"[\\s]*\\{[\\s]*";
+    private static final String TASK_LINE_MATCH = "[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=]*[\\p{Digit}]*[\\s]*][\\s]*;";
+    private static final String DEP_LINE_MATCH = "[\\s]*[\\p{Alnum}]*[\\s]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*][\\s]*;";
+    private static final String END_OF_GRAPH_MATCH = "[\\s]*}[\\s]*";
+
+    private static final Pattern GRAPH_NAME_MATCH = Pattern.compile("[\\s]*digraph[\\s]*\"(.*)\"[\\s]*\\{[\\s]*");
+    private static final Pattern TASK_NAME_MATCH = Pattern.compile("[\\s]*([\\p{Alnum}]*)[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*][\\s]*;");
+    private static final Pattern TASK_WEIGHT_MATCH = Pattern.compile("[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*([\\p{Digit}]*)[\\s]*][\\s]*;");
+    private static final Pattern DEP_SRC_TASK_MATCH = Pattern.compile("[\\s]*([\\p{Alnum}]*)[\\s]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*][\\s]*;");
+    private static final Pattern DEP_DST_TASK_MATCH = Pattern.compile("[\\s]*[\\p{Alnum}]*[\\s]*.>[\\s]*([\\p{Alnum}]*)[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*][\\s]*;");
+    private static final Pattern DEP_WEIGHT_MATCH = Pattern.compile("[\\s]*[\\p{Alnum}]*[\\s]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*([\\p{Digit}]*)[\\s]*][\\s]*;");
+
+    private static final int MATCHER_GROUP = 1;
+    private static final int DEFAULT_WEIGHT = 0;
 
     /**
      * Constructor for a new DotIO.
@@ -45,61 +64,89 @@ public class DotIO {
     public DotIO(){    }
 
     /**
-     * method that reads the dot file in and initializes the TaskGraph instance
-     * @throws IOException if the file can't be found
+     * New revised dotIn method that will replace previous implementation. Major upgrades for robustness.
+     * @param path The path of the dot file to read.
+     * @throws IOException If there is a problem reading the file
+     * @author Sam Broadhead
      */
     public void dotIn(String path) throws IOException {
-
-        String file = path;
-        String title = "";
-        List<Dependency> depList = new ArrayList<Dependency>();
-        List<Task> taskList;
-        Map<Integer, Task> taskMap = new HashMap<Integer, Task>();
-        BufferedReader br = new BufferedReader(new FileReader(file));
         String line;
-        while((line = br.readLine()) != null){
-            if(line.contains(GRAPH_START)) {
-                //beginning of graph
-                String [] parts = line.split(QUOTES);
-                System.out.println(parts[1]);
-                title = parts[1];
-            } else if (line.contains(GRAPH_END)){
-                //end of graph
-                continue;
-            }else if(line.contains(DEP_SPECIFIER)){
-                //Dependency
-                line = line.replaceAll(WHITE_SPACE,""); // get rid of spaces and tabs
-                String [] parts = line.split(ID_WEIGHT_SPLIT); // split between the tasks and the weight
-                String [] tasks = parts[0].split(DEP_SPECIFIER); // split the two tasks
-                parts[1] = parts[1].replaceAll(NON_NUMBERS,""); //strip everything not a number from the
-                // weight string to get weight
-                int startTask = Integer.parseInt(tasks[0]); // parse strings to int for Dependency object
-                int endTask = Integer.parseInt(tasks[1]);
-                int depWeight = Integer.parseInt(parts[1]);
-                System.out.println("New dependency with Start Task: " + tasks[0] + " End Task: " + tasks[1] +
-                        " Weight: " + parts[1]);
-                depList.add(new Dependency(taskMap.get(startTask), taskMap.get(endTask), depWeight)); // create a
-                // dependency object and add it to the last of dependencies
-            }else{
-                //Task
-                line = line.replaceAll(WHITE_SPACE,"");
-                String [] parts = line.split(ID_WEIGHT_SPLIT);
-                parts[1] = parts[1].replaceAll(NON_NUMBERS,"");
-                System.out.println("New task with id: " + parts[0] + " and weight: "+ parts[1]);
-                int taskID = Integer.parseInt(parts[0]);
-                int taskWeight = Integer.parseInt(parts[1]);
-                taskMap.put(taskID,new Task(taskID, taskWeight));
-                //taskList.add(new Task(taskID, taskWeight)); if we opt for a list implementation for tasks
+        String title = "";
+        List<Dependency> depList = new ArrayList<>(); // lists to initialize the task graph
+        List<Task> taskList = new ArrayList<>();
+        Map<String, Integer> taskMap = new HashMap<>(); // keep a map of unbuilt tasks to allow updates
+        Map<String[], Integer> depMap = new HashMap<>(); // keep a map of unbuilt deps to allow updates
+        BufferedReader br = new BufferedReader(new FileReader(path));
+        while (((line = br.readLine()) != null) && (!line.contains(END_OF_GRAPH_MATCH))) {
+            if (line.matches(GRAPH_NAME_LINE_MATCH)) { // the line is the graph name line
+                title = getStringMatch(GRAPH_NAME_MATCH, line);
+            } else if (line.matches(TASK_LINE_MATCH)) { // the line is a task line
+                String  name = getStringMatch(TASK_NAME_MATCH, line);
+                int weight = Integer.parseInt(getStringMatch(TASK_WEIGHT_MATCH, line));
+                taskMap.put(name, weight);
+            } else if (line.matches(DEP_LINE_MATCH)) { // the line is a dependency line
+                String src = getStringMatch(DEP_SRC_TASK_MATCH, line);
+                String dst = getStringMatch(DEP_DST_TASK_MATCH, line);
+                if (!taskMap.containsKey(src)) { // if there are unknown tasks in the dependency, add them
+                    taskMap.put(src, DEFAULT_WEIGHT);
+                }
+                if (!taskMap.containsKey(dst)) {
+                    taskMap.put(dst, DEFAULT_WEIGHT);
+                }
+                String [] tasks = {src,dst}; // store the two task ids as the key
+                int weight = Integer.parseInt(getStringMatch(DEP_WEIGHT_MATCH, line));
+                depMap.put(tasks, weight);
             }
         }
-        taskList = new ArrayList<Task>(taskMap.values());
-
+        for (String[] keys: depMap.keySet()){ // build task and dependency objects.
+            Task srcTask = new Task(keys[0],taskMap.get(keys[0]));
+            if (!taskList.contains(srcTask)){ // if the task is not in the list, add it
+                taskList.add(srcTask);
+            }
+            Task dstTask = new Task(keys[1],taskMap.get(keys[1]));
+            if (!taskList.contains(dstTask)){
+                taskList.add(dstTask);
+            }
+            depList.add(new Dependency(srcTask,dstTask,depMap.get(keys)));
+        }
+        for (String key : taskMap.keySet()){ // build any tasks that have no ingoing or outgoing dependencies
+            Task t = new Task(key,taskMap.get(key));
+            if (!taskList.contains(t)){ // if they aren't in the task list, add them
+                taskList.add(t);
+            }
+        }
+        /* check dotIn here
+        for (Dependency d: depList){
+            System.out.println("Dependency with src Task: "+d.getStartTask().getId()+" and dst Task: "
+                    +d.getEndTask().getId()+" and weight: "+d.getWeight());
+        }
+        for (Task t : taskList){
+            System.out.println("Task with id: "+t.getId()+" and weight: "+t.getDuration());
+        }*/
         TaskGraph.initialize(taskList, depList, title);
+    }
+
+    /**
+     * Helper method to find matches
+     * @param toMatch A Pattern for the Matcher to match to.
+     * @param str Sequence for Matcher to match against the Pattern.
+     * @return the String that is found.
+     * @throws IOException If no match is found, meaning the DOT file is invalid.
+     * @author Sam Broadhead
+     */
+    private String getStringMatch(Pattern toMatch, String str) throws IOException {
+        Matcher m = toMatch.matcher(str);
+        if(m.find()){
+            return m.group(MATCHER_GROUP);
+        } else {
+            throw new IOException();
+        }
     }
 
     /**
      * Writes out a dot file of a complete schedule based on the task graph
      * @throws IOException if anything with File IO goes wrong
+     * @author Darcy Cox
      */
 
     public void dotOut(Schedule s) throws IOException {

@@ -102,9 +102,9 @@ public class TaskGraph {
      * @param id The ID of the required Task.
      * @return The Task with the specified ID.
      */
-    public Task getTaskById(int id) {
+    public Task getTaskById(String id) {
         for (Task task : TASKS) {
-            if (task.getId() == id) {
+            if (task.getId().equals(id)) {
                 return task;
             }
         }
