@@ -6,6 +6,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import scala.collection.parallel.ParIterableLike;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,8 +27,8 @@ public class TestDotIO {
     private static final String BASE_DIR = "src/main/resources/sample_inputs/";
     private static final String SAMPLE_7 = BASE_DIR + "Nodes_7_OutTree.dot";
     private static final String SAMPLE_8 = BASE_DIR + "Nodes_8_Random.dot";
-    private static final String SAMPLE_9 = BASE_DIR + "Nodes_9_SeriesParallel.dot";
-    private static final String SAMPLE_10 = BASE_DIR + "Nodes_10_Random.dot";
+    private static final String SAMPLE_9 = BASE_DIR + "Nodes_9_SeriesParallel.dot"; //S
+    private static final String SAMPLE_10 = BASE_DIR + "Nodes_10_Random.dot"; //S
     private static final String BASIC = BASE_DIR + "test.dot";
 
     private static DotIO dotIO;
@@ -85,9 +87,28 @@ public class TestDotIO {
         dotIO.dotIn(SAMPLE_7);
         TaskGraph tg = TaskGraph.getInstance();
         List<Task> tasksActual = tg.getAllTasks();
+        checkTaskListsAreEquivalent(tasksExpected, tasksActual);
+    }
 
-        assertEquals(tasksActual.size(), tasksExpected.size());
+    @Test
+    public void testSample8() throws IOException {
+        List<Task> tasksExpected = new ArrayList<Task>();
+        Collections.addAll(
+                tasksExpected,
+                new Task("0", 35),
+                new Task("1", 88),
+                new Task("2", 176),
+                new Task("3", 159),
+                new Task("4", 176),
+                new Task("6", 141),
+                new Task("7", 53),
+                new Task("5", 141)
+        );
 
+        dotIO.dotIn(SAMPLE_8);
+        TaskGraph tg = TaskGraph.getInstance();
+        List<Task> tasksActual = tg.getAllTasks();
+        checkTaskListsAreEquivalent(tasksExpected, tasksActual);
     }
 
 
