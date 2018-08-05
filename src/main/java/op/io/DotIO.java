@@ -177,7 +177,7 @@ public class DotIO {
         }
 
         // close up dot file
-        System.out.println(GRAPH_END);
+        //System.out.println(GRAPH_END);
         bw.write(GRAPH_END);
         bw.close();
     }
@@ -189,7 +189,7 @@ public class DotIO {
         sb.append(INDENT + ATTR_START + WEIGHT_ATTR_SPECIFIER + dep.getWeight() + ATTR_END + STATEMENT_END);
         sb.append(System.getProperty("line.separator"));
 
-        System.out.print(sb.toString());
+        //System.out.print(sb.toString());
         return sb.toString();
     }
 
@@ -208,13 +208,13 @@ public class DotIO {
                 .append(ATTR_END + STATEMENT_END);
         sb.append(System.getProperty("line.separator"));
 
-        System.out.print(sb.toString());
+        //System.out.print(sb.toString());
         return sb.toString();
     }
 
     private String constructTitleLine(String title) {
         String line = "digraph " + QUOTES + title + QUOTES + " " + GRAPH_START + System.getProperty("line.separator");
-        System.out.print(line);
+        //System.out.print(line);
         return line;
     }
 
