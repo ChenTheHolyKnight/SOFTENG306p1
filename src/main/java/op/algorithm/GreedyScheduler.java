@@ -60,11 +60,19 @@ public class GreedyScheduler extends Scheduler {
      */
     private double getEarliestStartTime(Schedule schedule, Task task, int processor) {
         List<Dependency> incomingEdges = TaskGraph.getInstance().getIncomingDependencies(task);
+
+        // Estimate the earliest start time of the task as the next available time on the processor
         double startTime = processorNextTime.get(processor);
+
         for (Dependency incomingEdge: incomingEdges) {
             Task startTask = incomingEdge.getStartTask();
+
+            // If a dependent task is not scheduled on the same processor, the start time of this task
+            // cannot be earlier than the end time of the dependent task plus the communication cost
             if (schedule.getScheduledTask(startTask).getProcessor() != processor) {
-                double newStartTime = schedule.getScheduledTask(startTask).getStartTime();
+                double newStartTime = schedule.getScheduledTask(startTask).getStartTime() + startTask.getDuration()
+                        + incomingEdge.getWeight();
+
                 if (newStartTime > startTime) {
                     startTime = newStartTime;
                 }
