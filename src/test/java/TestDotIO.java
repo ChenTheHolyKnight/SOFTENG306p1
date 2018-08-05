@@ -73,9 +73,11 @@ public class TestDotIO {
 
         dotIO.dotIn(BASIC);
         TaskGraph tg = TaskGraph.getInstance();
+        assertEquals("example",tg.getTitle());
         List<Task> tasksActual = tg.getAllTasks();
         List<Dependency> depsActual = tg.getAllDependencies();
         checkTaskListsAreEquivalent(tasksExpected, tasksActual);
+        checkDepListsAreEquivalent(depsExpected, depsActual);
     }
 
 
@@ -108,9 +110,11 @@ public class TestDotIO {
         );
         dotIO.dotIn(SAMPLE_7);
         TaskGraph tg = TaskGraph.getInstance();
+        assertEquals("OutTree-Balanced-MaxBf-3_Nodes_7_CCR_2.0_WeightType_Random",tg.getTitle());
         List<Task> tasksActual = tg.getAllTasks();
         List<Dependency> depsActual = tg.getAllDependencies();
         checkTaskListsAreEquivalent(tasksExpected, tasksActual);
+        checkDepListsAreEquivalent(depsExpected, depsActual);
     }
 
     @Test
@@ -151,9 +155,11 @@ public class TestDotIO {
 
         dotIO.dotIn(SAMPLE_8);
         TaskGraph tg = TaskGraph.getInstance();
+        assertEquals("Random_Nodes_8_Density_2.0_CCR_0.1_WeightType_Random",tg.getTitle());
         List<Task> tasksActual = tg.getAllTasks();
         List<Dependency> depsActual = tg.getAllDependencies();
         checkTaskListsAreEquivalent(tasksExpected, tasksActual);
+        checkDepListsAreEquivalent(depsExpected, depsActual);
     }
     @Test
     public void testSample9() throws IOException {
@@ -173,8 +179,11 @@ public class TestDotIO {
 
         dotIO.dotIn(SAMPLE_9);
         TaskGraph tg = TaskGraph.getInstance();
+        assertEquals("SeriesParallel-MaxBf-3_Nodes_9_CCR_10.0_WeightType_Random",tg.getTitle());
         List<Task> tasksActual = tg.getAllTasks();
+        List<Dependency> depsActual = tg.getAllDependencies();
         checkTaskListsAreEquivalent(tasksExpected, tasksActual);
+        checkDepListsAreEquivalent(depsExpected, depsActual);
     }
     @Test
     public void testSample10() throws IOException {
@@ -195,8 +204,11 @@ public class TestDotIO {
 
         dotIO.dotIn(SAMPLE_10);
         TaskGraph tg = TaskGraph.getInstance();
+        assertEquals("Random_Nodes_10_Density_1.90_CCR_10.00_WeightType_Random",tg.getTitle());
         List<Task> tasksActual = tg.getAllTasks();
+        List<Dependency> depsActual = tg.getAllDependencies();
         checkTaskListsAreEquivalent(tasksExpected, tasksActual);
+        checkDepListsAreEquivalent(depsExpected, depsActual);
     }
     @Test
     public void testSample11() throws IOException {
@@ -218,8 +230,11 @@ public class TestDotIO {
 
         dotIO.dotIn(SAMPLE_11);
         TaskGraph tg = TaskGraph.getInstance();
+        assertEquals("OutTree-Balanced-MaxBf-3_Nodes_11_CCR_0.1_WeightType_Random",tg.getTitle());
         List<Task> tasksActual = tg.getAllTasks();
+        List<Dependency> depsActual = tg.getAllDependencies();
         checkTaskListsAreEquivalent(tasksExpected, tasksActual);
+        checkDepListsAreEquivalent(depsExpected, depsActual);
     }
 
 
