@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class GreedyScheduler extends Scheduler {
 
-    private HashMap<Integer, Double> processorNextTime;
+    private HashMap<Integer, Integer> processorNextTime;
     private int FIRST_PROCESSOR = 1;
 
     public GreedyScheduler() {
@@ -22,7 +22,7 @@ public class GreedyScheduler extends Scheduler {
         processorNextTime = new HashMap<>();
 
         for (int processor = FIRST_PROCESSOR; processor <= numProcessors; processor++) {
-            processorNextTime.put(processor, 0.0);
+            processorNextTime.put(processor, 0);
         }
     }
 
@@ -36,16 +36,16 @@ public class GreedyScheduler extends Scheduler {
         for (Task task: SchedulerUtil.createTopologicalOrder(TaskGraph.getInstance().getAllTasks())) {
 
             int bestProcessor = FIRST_PROCESSOR;
-            double earliestStartTime = Double.POSITIVE_INFINITY;
+            int earliestStartTime = Integer.MAX_VALUE;
 
             for (int processor = FIRST_PROCESSOR; processor < Arguments.getInstance().getNumProcessors(); processor++) {
-                double newEarliest = getEarliestStartTime(schedule, task, processor);
+                int newEarliest = getEarliestStartTime(schedule, task, processor);
                 if (newEarliest < earliestStartTime) {
                     earliestStartTime = newEarliest;
                     bestProcessor = processor;
                 }
             }
-            ScheduledTask scheduledTask = new ScheduledTask(task, (int)earliestStartTime, bestProcessor);
+            ScheduledTask scheduledTask = new ScheduledTask(task, earliestStartTime, bestProcessor);
             schedule.addScheduledTask(scheduledTask);
             processorNextTime.put(bestProcessor, earliestStartTime + task.getDuration());
         }
@@ -58,11 +58,11 @@ public class GreedyScheduler extends Scheduler {
      * @param processor
      * @return
      */
-    private double getEarliestStartTime(Schedule schedule, Task task, int processor) {
+    private int getEarliestStartTime(Schedule schedule, Task task, int processor) {
         List<Dependency> incomingEdges = TaskGraph.getInstance().getIncomingDependencies(task);
 
         // Estimate the earliest start time of the task as the next available time on the processor
-        double startTime = processorNextTime.get(processor);
+        int startTime = processorNextTime.get(processor);
 
         for (Dependency incomingEdge: incomingEdges) {
             Task startTask = incomingEdge.getStartTask();
@@ -70,7 +70,7 @@ public class GreedyScheduler extends Scheduler {
             // If a dependent task is not scheduled on the same processor, the start time of this task
             // cannot be earlier than the end time of the dependent task plus the communication cost
             if (schedule.getScheduledTask(startTask).getProcessor() != processor) {
-                double newStartTime = schedule.getScheduledTask(startTask).getStartTime() + startTask.getDuration()
+                int newStartTime = schedule.getScheduledTask(startTask).getStartTime() + startTask.getDuration()
                         + incomingEdge.getWeight();
 
                 if (newStartTime > startTime) {

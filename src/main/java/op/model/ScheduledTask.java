@@ -25,7 +25,7 @@ public class ScheduledTask {
         return processor;
     }
 
-	public double getStartTime() {
+	public int getStartTime() {
 		return startTime;
 	}
 
