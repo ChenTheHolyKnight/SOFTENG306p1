@@ -45,7 +45,7 @@ public class GreedyScheduler extends Scheduler {
                     bestProcessor = processor;
                 }
             }
-            ScheduledTask scheduledTask = new ScheduledTask(task, earliestStartTime, bestProcessor);
+            ScheduledTask scheduledTask = new ScheduledTask(task, (int)earliestStartTime, bestProcessor);
             schedule.addScheduledTask(scheduledTask);
             processorNextTime.put(bestProcessor, earliestStartTime + task.getDuration());
         }
