@@ -2,13 +2,12 @@ package op;
 
 import op.algorithm.GreedyScheduler;
 import op.algorithm.Scheduler;
+import op.model.Arguments;
 import op.model.Schedule;
 import op.visualization.Visualiser;
-
-import op.io.Arguments;
 import op.io.CommandLineIO;
 import op.io.DotIO;
-import op.io.exceptions.InvalidUserInputException;
+import op.io.InvalidUserInputException;
 
 import java.io.IOException;
 

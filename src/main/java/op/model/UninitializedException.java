@@ -10,7 +10,7 @@ public class UninitializedException extends RuntimeException {
      * Creates a new UninitializedException with the default message.
      */
     public UninitializedException() {
-        super("TaskGraph must be initialized before access");
+        super("Singleton must be initialized before access");
     }
 
 }

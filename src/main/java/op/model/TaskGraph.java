@@ -60,11 +60,6 @@ public class TaskGraph {
         );
     }
 
-    private TaskGraph (List<Task> tasks, List<Dependency> dependencies, String title){
-        this.TASKS = Collections.unmodifiableList(tasks);
-        this.DEPENDENCIES = Collections.unmodifiableList(dependencies);
-        this.TITLE = title;
-    }
 
     /**
      * Gets all incoming Dependencies to a specified Task.
@@ -133,5 +128,12 @@ public class TaskGraph {
      */
 	public String getTitle() {
 	    return TITLE;
+    }
+	
+	// the private constructor for this singleton
+    private TaskGraph (List<Task> tasks, List<Dependency> dependencies, String title){
+        this.TASKS = Collections.unmodifiableList(tasks);
+        this.DEPENDENCIES = Collections.unmodifiableList(dependencies);
+        this.TITLE = title;
     }
 }

@@ -1,5 +1,6 @@
 package op.io;
 
+import op.model.Arguments;
 import op.model.Dependency;
 import op.model.Schedule;
 import op.model.Task;
@@ -123,25 +124,10 @@ public class DotIO {
         for (Task t : taskList){
             System.out.println("Task with id: "+t.getId()+" and weight: "+t.getDuration());
         }*/
+        br.close();
         TaskGraph.initialize(taskList, depList, title);
     }
 
-    /**
-     * Helper method to find matches
-     * @param toMatch A Pattern for the Matcher to match to.
-     * @param str Sequence for Matcher to match against the Pattern.
-     * @return the String that is found.
-     * @throws IOException If no match is found, meaning the DOT file is invalid.
-     * @author Sam Broadhead
-     */
-    private String getStringMatch(Pattern toMatch, String str) throws IOException {
-        Matcher m = toMatch.matcher(str);
-        if(m.find()){
-            return m.group(MATCHER_GROUP);
-        } else {
-            throw new IOException();
-        }
-    }
 
     /**
      * Writes out a dot file of a complete schedule based on the task graph
@@ -180,6 +166,23 @@ public class DotIO {
         //System.out.println(GRAPH_END);
         bw.write(GRAPH_END);
         bw.close();
+    }
+    
+    /**
+     * Helper method to find matches
+     * @param toMatch A Pattern for the Matcher to match to.
+     * @param str Sequence for Matcher to match against the Pattern.
+     * @return the String that is found.
+     * @throws IOException If no match is found, meaning the DOT file is invalid.
+     * @author Sam Broadhead
+     */
+    private String getStringMatch(Pattern toMatch, String str) throws IOException {
+        Matcher m = toMatch.matcher(str);
+        if(m.find()){
+            return m.group(MATCHER_GROUP);
+        } else {
+            throw new IOException();
+        }
     }
 
     // Helpers to construct lines of the dot file

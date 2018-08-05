@@ -1,7 +1,4 @@
-package op.io;
-
-import op.model.AlreadyInitializedException;
-import op.model.UninitializedException;
+package op.model;
 
 /**
  * Singleton to represent the arguments that the user has input to run the program with.
@@ -55,14 +52,6 @@ public class Arguments {
         return instance;
     }
 
-    // constructor to be called by the initialize method
-    private Arguments(String inputFilename, int numProcessors, int numCores, boolean toVisualize, String outputFilename) {
-        this.inputGraphFilename = inputFilename;
-        this.numProcessors = numProcessors;
-        this.numCores = numCores;
-        this.toVisualize = toVisualize;
-        this.outputGraphFilename = outputFilename;
-    }
 
     /**
      *
@@ -102,5 +91,14 @@ public class Arguments {
      */
     public String getOutputGraphFilename() {
         return outputGraphFilename;
+    }
+    
+    // constructor to be called by the initialize method
+    private Arguments(String inputFilename, int numProcessors, int numCores, boolean toVisualize, String outputFilename) {
+        this.inputGraphFilename = inputFilename;
+        this.numProcessors = numProcessors;
+        this.numCores = numCores;
+        this.toVisualize = toVisualize;
+        this.outputGraphFilename = outputFilename;
     }
 }
