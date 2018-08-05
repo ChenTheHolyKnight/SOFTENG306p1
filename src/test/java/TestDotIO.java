@@ -137,9 +137,8 @@ public class TestDotIO {
         for (int i = 0; i < expected.size(); i++){
             Dependency expectedDep = expected.get(i);
             Dependency actualDep = actual.get(i);
-            assertEquals(expectedDep.getStartTask().getId(),actualDep.getStartTask().getId());
-            assertEquals(expectedDep.getEndTask().getId(),actualDep.getEndTask().getId());
-            assertEquals(expectedDep.getWeight(),actualDep.getWeight());
+            assertTrue(expected.contains(actualDep));
+            assertTrue(actual.contains(expectedDep));
         }
     }
 
