@@ -1,5 +1,5 @@
 import op.io.CommandLineIO;
-import op.io.exceptions.InvalidUserInputException;
+import op.io.InvalidUserInputException;
 import op.model.Arguments;
 
 import org.junit.After;

@@ -1,6 +1,5 @@
 package op.io;
 
-import op.io.exceptions.InvalidUserInputException;
 import org.apache.commons.cli.*;
 import op.model.Arguments;
 

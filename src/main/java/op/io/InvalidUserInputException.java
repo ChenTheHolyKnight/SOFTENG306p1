@@ -1,4 +1,4 @@
-package op.io.exceptions;
+package op.io;
 
 /**
  * InvalidUserInputException should be thrown when a user tries to run the program with invalid input.

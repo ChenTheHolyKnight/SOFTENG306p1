@@ -2,7 +2,7 @@ package op;
 
 import op.algorithm.GreedyScheduler;
 import op.algorithm.Scheduler;
-import op.io.exceptions.InvalidUserInputException;
+import op.io.InvalidUserInputException;
 import op.model.Schedule;
 import op.visualization.Visualiser;
 import op.io.CommandLineIO;
@@ -80,7 +80,6 @@ public class Application {
      */
     private void startVisualization() {
         if (Arguments.getInstance().getToVisualize()) {
-            Visualiser visualiser = new Visualiser();
         }
     }
 
