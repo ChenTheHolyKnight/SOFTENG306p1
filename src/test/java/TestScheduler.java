@@ -142,7 +142,7 @@ public class TestScheduler {
 	 */
 	private void checkNoOverlap() {
 
-		for (int processor = 1; processor < Arguments.getInstance().getNumProcessors(); processor++) {
+		for (int processor = 1; processor <= Arguments.getInstance().getNumProcessors(); processor++) {
 			if (s.getScheduledTasks(processor) != null) {
 				for (ScheduledTask t1 : s.getScheduledTasks(processor)) {
 					for (ScheduledTask t2 : s.getScheduledTasks(processor)) {

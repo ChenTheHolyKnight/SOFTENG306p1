@@ -38,7 +38,7 @@ public class GreedyScheduler extends Scheduler {
             int bestProcessor = FIRST_PROCESSOR;
             int earliestStartTime = Integer.MAX_VALUE;
 
-            for (int processor = FIRST_PROCESSOR; processor < Arguments.getInstance().getNumProcessors(); processor++) {
+            for (int processor = FIRST_PROCESSOR; processor <= Arguments.getInstance().getNumProcessors(); processor++) {
                 int newEarliest = getEarliestStartTime(schedule, task, processor);
                 if (newEarliest < earliestStartTime) {
                     earliestStartTime = newEarliest;
