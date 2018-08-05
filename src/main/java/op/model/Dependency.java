@@ -29,5 +29,32 @@ public class Dependency {
 
 	public int getWeight() {
 		return weight;
-	}	
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Dependency)) {
+			return false;
+		}
+
+		// dependencies are only equal if they have the same weight, start task, and end task
+		Dependency other = (Dependency)obj;
+		if (!(this.startTask.getId().equals(other.startTask.getId()))) {
+			return false;
+		}
+		if (this.startTask.getDuration() != other.startTask.getDuration()) {
+			return false;
+		}
+		if (!(this.endTask.getId().equals(other.endTask.getId()))) {
+			return false;
+		}
+		if (this.endTask.getDuration() != other.endTask.getDuration()) {
+			return false;
+		}
+		if (this.weight != other.weight) {
+			return  false;
+		}
+
+		return true; // we made it past all checks so the dependencies are equal
+	}
 }
