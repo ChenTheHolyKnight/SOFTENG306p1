@@ -8,10 +8,10 @@ package op.model;
 public class ScheduledTask {
 
     public Task task;
-    private double startTime;
+    private int startTime;
     private int processor;
 
-    public ScheduledTask (Task task, double startTime, int processor) {
+    public ScheduledTask (Task task, int startTime, int processor) {
         this.task = task;
         this.startTime = startTime;
         this.processor = processor;
@@ -25,7 +25,7 @@ public class ScheduledTask {
         return processor;
     }
 
-	public double getStartTime() {
+	public int getStartTime() {
 		return startTime;
 	}
 
