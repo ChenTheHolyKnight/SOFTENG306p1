@@ -19,9 +19,16 @@ comparison. Your team might choose to contribute the solution to the PARC lab fo
 | Victoria Skeggs   | Vske511     | https://github.com/victoriaskeggs       |
 | Chen Zhao         | Czha959     | https://github.com/ChenTheHolyKnight    |
 
+## Project Setup
+This project uses Gradle. In order to build the project, navigate to the root folder of this repository 
+in the command line and type the command
+`./gradlew build`
+This will run the tests and build the executable jar file. (note: due to this project's use of the GraphStream
+library, the build can take a couple minutes to package dependencies into the jar)
+
 ## CLI Usage
 ```
-Usage:  java -jar scheduler.jar [path-to-DOT-file] [Number-of-processors] [-options]
+Usage:  java -jar Scheduler.jar [path-to-DOT-file] [Number-of-processors] [-options]
 
 where options include:
     -p <numCores>       Choose the number of computer cores to run the algorithm on,
@@ -33,7 +40,8 @@ where options include:
   
     -o <name>           Sets output name of the output DOT file, where <name> is the 
                         name of the output file.
-                        (default is "[path-to-DOT-file]-output.Dot"
+                        (default is "[path-to-DOT-file]-output.dot")
 ```
+
 
     
