@@ -110,6 +110,7 @@ public class TaskGraph {
         }
         return null;
     }
+
     /**
 	 * Gets all the tasks in the graph
 	 * @return The all the tasks in the graph.
@@ -119,7 +120,16 @@ public class TaskGraph {
 	}
 
     /**
+     * Gets all the dependencies in the graph
+     * @return
+     */
+    public List<Dependency> getAllDependencies(){
+        return DEPENDENCIES;
+    }
+
+    /**
      * Gets the title of the TaskGraph instance
+     * @return title
      */
 	public String getTitle() {
 	    return TITLE;
