@@ -28,7 +28,8 @@ public class TestDotIO {
     private static final String SAMPLE_7 = BASE_DIR + "Nodes_7_OutTree.dot";
     private static final String SAMPLE_8 = BASE_DIR + "Nodes_8_Random.dot";
     private static final String SAMPLE_9 = BASE_DIR + "Nodes_9_SeriesParallel.dot";
-    private static final String SAMPLE_10 = BASE_DIR + "Nodes_10_Random.dot";
+    private static final String SAMPLE_10 = BASE_DIR + "Nodes_10_Random.dot"; 
+    private static final String SAMPLE_11 = BASE_DIR + "Nodes_11_OutTree.dot";
     private static final String BASIC = BASE_DIR + "test.dot";
 
     private static DotIO dotIO;
@@ -61,8 +62,19 @@ public class TestDotIO {
                 new Task("4", 2)
         );
 
+        List<Dependency> depsExpected = new ArrayList<Dependency>();
+        Collections.addAll(
+                depsExpected,
+                new Dependency(tasksExpected.get(0),tasksExpected.get(1),1),
+                new Dependency(tasksExpected.get(0),tasksExpected.get(2),3),
+                new Dependency(tasksExpected.get(1),tasksExpected.get(3),2),
+                new Dependency(tasksExpected.get(2),tasksExpected.get(3),1)
+        );
+
         dotIO.dotIn(BASIC);
-        List<Task> tasksActual = TaskGraph.getInstance().getAllTasks();
+        TaskGraph tg = TaskGraph.getInstance();
+        List<Task> tasksActual = tg.getAllTasks();
+        List<Dependency> depsActual = tg.getAllDependencies();
         checkTaskListsAreEquivalent(tasksExpected, tasksActual);
     }
 
@@ -84,9 +96,20 @@ public class TestDotIO {
                 new Task("6", 7)
         );
 
+        List<Dependency> depsExpected = new ArrayList<Dependency>();
+        Collections.addAll(
+                depsExpected,
+                new Dependency(tasksExpected.get(0),tasksExpected.get(1),15),
+                new Dependency(tasksExpected.get(0),tasksExpected.get(2),11),
+                new Dependency(tasksExpected.get(0),tasksExpected.get(3),11),
+                new Dependency(tasksExpected.get(1),tasksExpected.get(4),19),
+                new Dependency(tasksExpected.get(1),tasksExpected.get(5),4),
+                new Dependency(tasksExpected.get(1),tasksExpected.get(6),21)
+        );
         dotIO.dotIn(SAMPLE_7);
         TaskGraph tg = TaskGraph.getInstance();
         List<Task> tasksActual = tg.getAllTasks();
+        List<Dependency> depsActual = tg.getAllDependencies();
         checkTaskListsAreEquivalent(tasksExpected, tasksActual);
     }
 
@@ -105,7 +128,95 @@ public class TestDotIO {
                 new Task("5", 141)
         );
 
+        List<Dependency> depsExpected = new ArrayList<Dependency>();
+        Collections.addAll(
+                depsExpected,
+                new Dependency(tasksExpected.get(0),tasksExpected.get(1),3),
+                new Dependency(tasksExpected.get(0),tasksExpected.get(2),9),
+                new Dependency(tasksExpected.get(0),tasksExpected.get(3),7),
+                new Dependency(tasksExpected.get(0),tasksExpected.get(4),5),
+                new Dependency(tasksExpected.get(0),tasksExpected.get(6),4),
+                new Dependency(tasksExpected.get(0),tasksExpected.get(7),9),
+                new Dependency(tasksExpected.get(1),tasksExpected.get(4),10),
+                new Dependency(tasksExpected.get(1),tasksExpected.get(7),6),
+                new Dependency(tasksExpected.get(2),tasksExpected.get(4),8),
+                new Dependency(tasksExpected.get(2),tasksExpected.get(5),6),
+                new Dependency(tasksExpected.get(2),tasksExpected.get(7),3),
+                new Dependency(tasksExpected.get(3),tasksExpected.get(5),5),
+                new Dependency(tasksExpected.get(3),tasksExpected.get(6),8),
+                new Dependency(tasksExpected.get(4),tasksExpected.get(6),2),
+                new Dependency(tasksExpected.get(5),tasksExpected.get(7),4),
+                new Dependency(tasksExpected.get(6),tasksExpected.get(7),8)
+        );
+
         dotIO.dotIn(SAMPLE_8);
+        TaskGraph tg = TaskGraph.getInstance();
+        List<Task> tasksActual = tg.getAllTasks();
+        List<Dependency> depsActual = tg.getAllDependencies();
+        checkTaskListsAreEquivalent(tasksExpected, tasksActual);
+    }
+    @Test
+    public void testSample9() throws IOException {
+        List<Task> tasksExpected = new ArrayList<Task>();
+        Collections.addAll(
+                tasksExpected,
+                new Task("0", 10),
+                new Task("1", 7),
+                new Task("2", 6),
+                new Task("3", 7),
+                new Task("4", 5),
+                new Task("5", 9),
+                new Task("6", 2),
+                new Task("7", 2),
+                new Task("8", 7)
+        );
+
+        dotIO.dotIn(SAMPLE_9);
+        TaskGraph tg = TaskGraph.getInstance();
+        List<Task> tasksActual = tg.getAllTasks();
+        checkTaskListsAreEquivalent(tasksExpected, tasksActual);
+    }
+    @Test
+    public void testSample10() throws IOException {
+        List<Task> tasksExpected = new ArrayList<Task>();
+        Collections.addAll(
+                tasksExpected,
+                new Task("0", 6),
+                new Task("1", 5),
+                new Task("2", 5),
+                new Task("3", 10),
+                new Task("4", 3),
+                new Task("5", 7),
+                new Task("6", 8),
+                new Task("7", 3),
+                new Task("8", 8),
+                new Task("9", 8)
+        );
+
+        dotIO.dotIn(SAMPLE_10);
+        TaskGraph tg = TaskGraph.getInstance();
+        List<Task> tasksActual = tg.getAllTasks();
+        checkTaskListsAreEquivalent(tasksExpected, tasksActual);
+    }
+    @Test
+    public void testSample11() throws IOException {
+        List<Task> tasksExpected = new ArrayList<Task>();
+        Collections.addAll(
+                tasksExpected,
+                new Task("0", 50),
+                new Task("1", 70),
+                new Task("2", 90),
+                new Task("3", 100),
+                new Task("4", 40),
+                new Task("5", 20),
+                new Task("6", 100),
+                new Task("7", 80),
+                new Task("8", 50),
+                new Task("9", 20),
+                new Task("10", 20)
+        );
+
+        dotIO.dotIn(SAMPLE_11);
         TaskGraph tg = TaskGraph.getInstance();
         List<Task> tasksActual = tg.getAllTasks();
         checkTaskListsAreEquivalent(tasksExpected, tasksActual);
