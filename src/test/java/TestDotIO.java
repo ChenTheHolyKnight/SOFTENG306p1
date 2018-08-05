@@ -66,7 +66,7 @@ public class TestDotIO {
         Collections.addAll(
                 depsExpected,
                 new Dependency(tasksExpected.get(0),tasksExpected.get(1),1),
-                new Dependency(tasksExpected.get(0),tasksExpected.get(2),3),
+                new Dependency(tasksExpected.get(0),tasksExpected.get(2),2),
                 new Dependency(tasksExpected.get(1),tasksExpected.get(3),2),
                 new Dependency(tasksExpected.get(2),tasksExpected.get(3),1)
         );
@@ -83,9 +83,6 @@ public class TestDotIO {
 
     @Test
     public void testSample7() throws IOException{
-
-        //TODO: check title is the same, tasks, and dependencies
-        // expected
         List<Task> tasksExpected = new ArrayList<Task>();
         Collections.addAll(
                 tasksExpected,
@@ -108,6 +105,7 @@ public class TestDotIO {
                 new Dependency(tasksExpected.get(1),tasksExpected.get(5),4),
                 new Dependency(tasksExpected.get(1),tasksExpected.get(6),21)
         );
+
         dotIO.dotIn(SAMPLE_7);
         TaskGraph tg = TaskGraph.getInstance();
         assertEquals("OutTree-Balanced-MaxBf-3_Nodes_7_CCR_2.0_WeightType_Random",tg.getTitle());
@@ -127,9 +125,9 @@ public class TestDotIO {
                 new Task("2", 176),
                 new Task("3", 159),
                 new Task("4", 176),
+                new Task("5", 141),
                 new Task("6", 141),
-                new Task("7", 53),
-                new Task("5", 141)
+                new Task("7", 53)
         );
 
         List<Dependency> depsExpected = new ArrayList<Dependency>();
@@ -177,6 +175,23 @@ public class TestDotIO {
                 new Task("8", 7)
         );
 
+        List<Dependency> depsExpected = new ArrayList<Dependency>();
+        Collections.addAll(
+                depsExpected,
+                new Dependency(tasksExpected.get(0),tasksExpected.get(2),51),
+                new Dependency(tasksExpected.get(0),tasksExpected.get(3),22),
+                new Dependency(tasksExpected.get(0),tasksExpected.get(4),44),
+                new Dependency(tasksExpected.get(2),tasksExpected.get(6),59),
+                new Dependency(tasksExpected.get(2),tasksExpected.get(7),15),
+                new Dependency(tasksExpected.get(2),tasksExpected.get(8),59),
+                new Dependency(tasksExpected.get(3),tasksExpected.get(1),59),
+                new Dependency(tasksExpected.get(4),tasksExpected.get(1),66),
+                new Dependency(tasksExpected.get(5),tasksExpected.get(1),37),
+                new Dependency(tasksExpected.get(6),tasksExpected.get(5),22),
+                new Dependency(tasksExpected.get(7),tasksExpected.get(5),59),
+                new Dependency(tasksExpected.get(8),tasksExpected.get(5),59)
+        );
+
         dotIO.dotIn(SAMPLE_9);
         TaskGraph tg = TaskGraph.getInstance();
         assertEquals("SeriesParallel-MaxBf-3_Nodes_9_CCR_10.0_WeightType_Random",tg.getTitle());
@@ -200,6 +215,30 @@ public class TestDotIO {
                 new Task("7", 3),
                 new Task("8", 8),
                 new Task("9", 8)
+        );
+
+        List<Dependency> depsExpected = new ArrayList<Dependency>();
+        Collections.addAll(
+                depsExpected,
+                new Dependency(tasksExpected.get(0),tasksExpected.get(3),34),
+                new Dependency(tasksExpected.get(0),tasksExpected.get(4),24),
+                new Dependency(tasksExpected.get(0),tasksExpected.get(9),44),
+                new Dependency(tasksExpected.get(1),tasksExpected.get(2),48),
+                new Dependency(tasksExpected.get(1),tasksExpected.get(5),19),
+                new Dependency(tasksExpected.get(1),tasksExpected.get(6),39),
+                new Dependency(tasksExpected.get(2),tasksExpected.get(3),10),
+                new Dependency(tasksExpected.get(2),tasksExpected.get(7),48),
+                new Dependency(tasksExpected.get(2),tasksExpected.get(8),48),
+                new Dependency(tasksExpected.get(4),tasksExpected.get(6),10),
+                new Dependency(tasksExpected.get(4),tasksExpected.get(7),48),
+                new Dependency(tasksExpected.get(4),tasksExpected.get(8),48),
+                new Dependency(tasksExpected.get(4),tasksExpected.get(9),39),
+                new Dependency(tasksExpected.get(6),tasksExpected.get(7),15),
+                new Dependency(tasksExpected.get(6),tasksExpected.get(8),39),
+                new Dependency(tasksExpected.get(6),tasksExpected.get(9),29),
+                new Dependency(tasksExpected.get(7),tasksExpected.get(8),15),
+                new Dependency(tasksExpected.get(7),tasksExpected.get(9),34),
+                new Dependency(tasksExpected.get(8),tasksExpected.get(9),39)
         );
 
         dotIO.dotIn(SAMPLE_10);
@@ -226,6 +265,21 @@ public class TestDotIO {
                 new Task("8", 50),
                 new Task("9", 20),
                 new Task("10", 20)
+        );
+
+        List<Dependency> depsExpected = new ArrayList<Dependency>();
+        Collections.addAll(
+                depsExpected,
+                new Dependency(tasksExpected.get(0),tasksExpected.get(1),9),
+                new Dependency(tasksExpected.get(0),tasksExpected.get(2),7),
+                new Dependency(tasksExpected.get(0),tasksExpected.get(3),4),
+                new Dependency(tasksExpected.get(1),tasksExpected.get(4),10),
+                new Dependency(tasksExpected.get(1),tasksExpected.get(5),7),
+                new Dependency(tasksExpected.get(1),tasksExpected.get(6),5),
+                new Dependency(tasksExpected.get(2),tasksExpected.get(7),5),
+                new Dependency(tasksExpected.get(2),tasksExpected.get(8),3),
+                new Dependency(tasksExpected.get(2),tasksExpected.get(9),10),
+                new Dependency(tasksExpected.get(3),tasksExpected.get(10),4)
         );
 
         dotIO.dotIn(SAMPLE_11);
