@@ -31,11 +31,10 @@ public class Schedule {
         return false;
     }
 
+
     /**
-     * Gets a task's corresponding scheduled task in this schedule
-     * 
-     * @param scheduledTask the task
-     * @return the scheduled task representing the task in this schedule
+     * Method to add a new scheduled task to this schedule instance
+     * @param scheduledTask the scheduled task to add
      */
     public void addScheduledTask(ScheduledTask scheduledTask){
         int processorNum=scheduledTask.getProcessor();
@@ -49,6 +48,12 @@ public class Schedule {
         taskMap.put(scheduledTask.getTask(), scheduledTask);
     }
 
+    /**
+     * Gets a task's corresponding scheduled task in this schedule
+     * 
+     * @param task the task to retrieve the relevant ScheduledTask for
+     * @return the scheduled task representing the task in this schedule
+     */
     public ScheduledTask getScheduledTask(Task t) {
     	return taskMap.get(t);
     }
@@ -66,8 +71,8 @@ public class Schedule {
      * Calculates the length of the schedule or partial schedule
      * @return the time it would take for all scheduled tasks to be completed
      */
-	public double getLength() {
-        double length = 0;
+	public int getLength() {
+        int length = 0;
         for (List<ScheduledTask> tasks: processorTasksMap.values()) {
             ScheduledTask lastTask = tasks.get(tasks.size()-1);
             if (lastTask.getStartTime() + lastTask.getTask().getDuration() > length) {

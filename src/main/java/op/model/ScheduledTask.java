@@ -7,7 +7,7 @@ package op.model;
  */
 public class ScheduledTask {
 
-    public Task task;
+    private Task task;
     private int startTime;
     private int processor;
 
@@ -25,10 +25,18 @@ public class ScheduledTask {
         return processor;
     }
 
+    /**
+     * 
+     * @return the start time of this scheduled task
+     */
 	public int getStartTime() {
 		return startTime;
 	}
 
+	/**
+	 * 
+	 * @return the task that this ScheduledTask instance refers to
+	 */
 	public Task getTask() {
 		return task;
 	}

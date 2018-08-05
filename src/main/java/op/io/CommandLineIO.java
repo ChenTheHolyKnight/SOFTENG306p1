@@ -1,7 +1,8 @@
 package op.io;
 
-import op.io.exceptions.InvalidUserInputException;
 import org.apache.commons.cli.*;
+
+import op.model.Arguments;
 
 /**
  * This class parses user input to the console and writes requested messages to the console.

@@ -10,6 +10,6 @@ public class AlreadyInitializedException extends RuntimeException {
      * Constructs a new AlreadyInitializedException with the default message
      */
     public AlreadyInitializedException() {
-        super("TaskGraph cannot be initialized more than once");
+        super("Singleton cannot be initialized more than once");
     }
 }

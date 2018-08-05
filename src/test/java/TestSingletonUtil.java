@@ -1,4 +1,4 @@
-import op.io.Arguments;
+import op.model.Arguments;
 import op.model.TaskGraph;
 
 import java.lang.reflect.Field;
@@ -6,7 +6,7 @@ import java.lang.reflect.Field;
 /**
  * Provides convenience methods to reset a singleton instance to avoid errors when multiple tests use it.
  */
-public class SingletonTesting {
+public class TestSingletonUtil {
 
     public static void resetTaskGraph()
             throws SecurityException, NoSuchFieldException,

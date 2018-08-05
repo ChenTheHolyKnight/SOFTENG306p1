@@ -8,8 +8,8 @@ import op.algorithm.SimpleScheduler;
 import org.junit.After;
 import org.junit.Test;
 
-import op.io.Arguments;
 import op.io.DotIO;
+import op.model.Arguments;
 import op.model.Dependency;
 import op.model.Schedule;
 import op.model.ScheduledTask;
@@ -30,8 +30,8 @@ public class TestScheduler {
 	@After
 	public void reset() {
 		try {
-			SingletonTesting.resetTaskGraph();
-			SingletonTesting.resetArguments();
+			TestSingletonUtil.resetTaskGraph();
+			TestSingletonUtil.resetArguments();
 		} catch (NoSuchFieldException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
@@ -39,14 +39,6 @@ public class TestScheduler {
 		}
 	}
 
-    /**
-     * Sets up the program input.
-     * @throws IOException
-     */
-    private void setup(String inputFilePath) throws IOException {
-        Arguments.initialize(inputFilePath,10,1,false,"testOutput.dot");
-        new DotIO().dotIn(inputFilePath);
-    }
 
     /**
      * Tests if the schedule produced by SimpleScheduler is valid.
@@ -63,20 +55,6 @@ public class TestScheduler {
         }
     }
 
-    /**
-     * Checks that the schedule produced by GreedyScheduler is valid and at least as good as the schedule produced by
-     * SimpleScheduler.
-     */
-    private void checkGreedyScheduler(String path) {
-        try {
-            setup(path);
-            s = (new GreedyScheduler()).produceSchedule();
-            checkScheduleIsValid();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * Tests GreedyScheduler is valid with test.dot as the input graph.
@@ -124,6 +102,30 @@ public class TestScheduler {
     @Test
     public void testGreedySchedulerWithNodes11Graph() {
         checkGreedyScheduler(PATH_TO_NODES_11);
+    }
+    
+    /**
+     * Sets up the program input.
+     * @throws IOException
+     */
+    private void setup(String inputFilePath) throws IOException {
+        Arguments.initialize(inputFilePath,10,1,false,"testOutput.dot");
+        new DotIO().dotIn(inputFilePath);
+    }
+    
+    /**
+     * Checks that the schedule produced by GreedyScheduler is valid and at least as good as the schedule produced by
+     * SimpleScheduler.
+     */
+    private void checkGreedyScheduler(String path) {
+        try {
+            setup(path);
+            s = (new GreedyScheduler()).produceSchedule();
+            checkScheduleIsValid();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 	
 	/**

@@ -1,5 +1,5 @@
-import op.io.Arguments;
 import op.model.AlreadyInitializedException;
+import op.model.Arguments;
 import op.model.UninitializedException;
 import org.junit.After;
 import org.junit.Test;
@@ -15,7 +15,7 @@ public class TestArgumentsSingleton {
     @After
     public void resetSingleton() {
         try {
-            SingletonTesting.resetArguments();
+            TestSingletonUtil.resetArguments();
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {

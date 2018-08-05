@@ -16,7 +16,7 @@ public class TestTaskGraphSingleton {
     @After
     public void resetSingleton() {
         try {
-            SingletonTesting.resetTaskGraph();
+            TestSingletonUtil.resetTaskGraph();
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {

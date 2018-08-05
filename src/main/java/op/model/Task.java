@@ -14,10 +14,18 @@ public class Task {
 		this.weight = weight;
 	}
 
+	/**
+	 * 
+	 * @return The id of this task
+	 */
 	public String getId() {
 		return id;
 	}
 
+	/**
+	 * 
+	 * @return The duration of this task (time it takes to complete the task)
+	 */
 	public int getDuration() {
 		return weight;
 	}
