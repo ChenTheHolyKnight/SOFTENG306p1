@@ -14,7 +14,7 @@ comparison. Your team might choose to contribute the solution to the PARC lab fo
 | Contributors      | UPI         | Github Link                             |
 | ----------------- | ----------- | --------------------------------------- |
 | Ravid Aharon      | Raha837     | https://github.com/Ravid12              |
-| Sam Broadhead     | Sbro     | https://github.com/swimuel              |
+| Sam Broadhead     | Sbro348     | https://github.com/swimuel              |
 | Darcy Cox         | Dcox740     | https://github.com/darcycox97           |
 | Victoria Skeggs   | Vske511     | https://github.com/victoriaskeggs       |
 | Chen Zhao         | Czha959     | https://github.com/ChenTheHolyKnight    |
