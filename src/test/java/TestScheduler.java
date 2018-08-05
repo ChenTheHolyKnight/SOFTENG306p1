@@ -1,14 +1,11 @@
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.util.List;
 
 import op.algorithm.GreedyScheduler;
-import op.algorithm.Scheduler;
 import op.algorithm.SimpleScheduler;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import op.io.Arguments;
@@ -54,15 +51,12 @@ public class TestScheduler {
     /**
      * Tests if the schedule produced by SimpleScheduler is valid.
      */
-	//@Test
+	@Test
     public void testSimpleScheduler() {
 	    try {
 
             setup(PATH_TO_TEST);
             s = (new SimpleScheduler()).produceSchedule();
-			List<ScheduledTask> tasks=s.getScheduledTasks(1);
-			//tasks.forEach(scheduledTask -> System.out.println(scheduledTask.getTask().getId()));
-			//System.out.println();
             checkScheduleIsValid();
         } catch (IOException e) {
 	        e.printStackTrace();
@@ -79,10 +73,6 @@ public class TestScheduler {
             s = (new GreedyScheduler()).produceSchedule();
             checkScheduleIsValid();
 
-            // Ensure schedule is at least as good as schedule produced by simple scheduler
-            if (s.getLength() > (new SimpleScheduler()).produceSchedule().getLength()){
-                fail();
-            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -91,7 +81,7 @@ public class TestScheduler {
     /**
      * Tests GreedyScheduler is valid with test.dot as the input graph.
      */
-    //@Test
+    @Test
     public void testGreedySchedulerWithTestGraph() {
         checkGreedyScheduler(PATH_TO_TEST);
     }
@@ -99,7 +89,7 @@ public class TestScheduler {
     /**
      * Tests GreedyScheduler is valid with Nodes_7_OutTree.dot as the input graph.
      */
-    //@Test
+    @Test
     public void testGreedySchedulerWithNodes7Graph() {
         checkGreedyScheduler(PATH_TO_NODES_7);
     }
@@ -107,7 +97,7 @@ public class TestScheduler {
     /**
      * Tests GreedyScheduler is valid with Nodes_8_Random.dot as the input graph.
      */
-    //@Test
+    @Test
     public void testGreedySchedulerWithNodes8Graph() {
         checkGreedyScheduler(PATH_TO_NODES_8);
     }
@@ -115,7 +105,7 @@ public class TestScheduler {
     /**
      * Tests GreedyScheduler is valid with Nodes_9_SeriesParallel.dot as the input graph.
      */
-    //@Test
+    @Test
     public void testGreedySchedulerWithNodes9Graph() {
         checkGreedyScheduler(PATH_TO_NODES_9);
     }
@@ -131,7 +121,7 @@ public class TestScheduler {
     /**
      * Tests GreedyScheduler is valid with Nodes_11_OutTree.dot as the input graph.
      */
-    //@Test
+    @Test
     public void testGreedySchedulerWithNodes11Graph() {
         checkGreedyScheduler(PATH_TO_NODES_11);
     }
@@ -177,9 +167,6 @@ public class TestScheduler {
 
 		for (Task task : TaskGraph.getInstance().getAllTasks()) {
 			for (Dependency d : TaskGraph.getInstance().getOutgoingDependencies(task)) {
-
-			    //System.out.println(d.getEndTask());
-                //System.out.println(s.getScheduledTask(d.getStartTask()).getTask().getId());
 
 				if (s.getScheduledTask(task).getProcessor() != s.getScheduledTask(d.getEndTask()).getProcessor()){
 					assertTrue(s.getScheduledTask(task).getStartTime() + task.getDuration() + d.getWeight()
