@@ -1,8 +1,8 @@
 package op.io;
 
 import org.apache.commons.cli.*;
-
 import op.model.Arguments;
+
 
 /**
  * This class parses user input to the console and writes requested messages to the console.
@@ -56,7 +56,11 @@ public class CommandLineIO {
         try {
             cmd = parser.parse(options, args);
         } catch (ParseException e) {
-            printHelpAndThrowError();
+            if (e.getMessage() == null || e.getMessage().equals("")) {
+                printHelpAndThrowError("Could not parse command line arguments.");
+            } else {
+                printHelpAndThrowError(e.getMessage());
+            }
         }
         interpret(cmd);
     }
@@ -115,7 +119,10 @@ public class CommandLineIO {
         try {
             numCores = Integer.parseInt(numCoresRaw);
         } catch (NumberFormatException e) {
-            printHelpAndThrowError();
+            printHelpAndThrowError("Number of cores to run the program on must be a positive integer.");
+        }
+        if (numCores <= 0) {
+            printHelpAndThrowError("Number of cores to run the program on cannot be 0 or negative.");
         }
         return numCores;
     }
@@ -151,7 +158,10 @@ public class CommandLineIO {
         try {
             numProcessors = Integer.parseInt(numProcessorsRaw);
         } catch (NumberFormatException e) {
-            printHelpAndThrowError();
+            printHelpAndThrowError("Number of processors must be a positive integer.");
+        }
+        if (numProcessors <= 0) {
+            printHelpAndThrowError("Number of processors cannot be 0 or negative.");
         }
         return numProcessors;
     }
@@ -163,7 +173,7 @@ public class CommandLineIO {
      */
     private void checkCorrectNumArguments(CommandLine cmd) throws InvalidUserInputException {
         if (cmd.getArgs().length != NUM_PROCESSORS_POSITION + 1) {
-            printHelpAndThrowError();
+            printHelpAndThrowError("Not enough or too many arguments entered. See correct usage above.");
         }
     }
 
@@ -173,9 +183,9 @@ public class CommandLineIO {
      * about the error.
      * @throws InvalidUserInputException tells the program the user has entered invalid input
      */
-    private void printHelpAndThrowError() throws InvalidUserInputException {
+    private void printHelpAndThrowError(String message) throws InvalidUserInputException {
         formatter.printHelp(HELP_MESSAGE, options);
-        throw new InvalidUserInputException("Arguments line arguments missing, of wrong type or in wrong order.");
+        throw new InvalidUserInputException(message);
     }
 
 }

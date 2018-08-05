@@ -2,12 +2,12 @@ package op;
 
 import op.algorithm.GreedyScheduler;
 import op.algorithm.Scheduler;
-import op.model.Arguments;
+import op.io.InvalidUserInputException;
 import op.model.Schedule;
 import op.visualization.Visualiser;
 import op.io.CommandLineIO;
 import op.io.DotIO;
-import op.io.InvalidUserInputException;
+import op.model.Arguments;
 
 import java.io.IOException;
 
@@ -46,7 +46,7 @@ public class Application {
         try {
             new CommandLineIO().parseArgs(args);
         } catch (InvalidUserInputException e) {
-            fatalError("Could not read command line input.");
+            fatalError(e.getMessage());
         }
     }
 
@@ -80,7 +80,6 @@ public class Application {
      */
     private void startVisualization() {
         if (Arguments.getInstance().getToVisualize()) {
-            Visualiser visualiser = new Visualiser();
         }
     }
 
