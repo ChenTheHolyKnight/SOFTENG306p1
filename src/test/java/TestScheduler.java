@@ -54,7 +54,7 @@ public class TestScheduler {
     /**
      * Tests if the schedule produced by SimpleScheduler is valid.
      */
-	@Test
+	//@Test
     public void testSimpleScheduler() {
 	    try {
 
@@ -63,7 +63,7 @@ public class TestScheduler {
 			List<ScheduledTask> tasks=s.getScheduledTasks(1);
 			//tasks.forEach(scheduledTask -> System.out.println(scheduledTask.getTask().getId()));
 			//System.out.println();
-            //checkScheduleIsValid();
+            checkScheduleIsValid();
         } catch (IOException e) {
 	        e.printStackTrace();
         }
