@@ -1,12 +1,12 @@
 import op.algorithm.SimpleScheduler;
 import op.io.DotIO;
+import op.model.Dependency;
 import op.model.Task;
 import op.model.TaskGraph;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import scala.collection.parallel.ParIterableLike;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,8 +27,8 @@ public class TestDotIO {
     private static final String BASE_DIR = "src/main/resources/sample_inputs/";
     private static final String SAMPLE_7 = BASE_DIR + "Nodes_7_OutTree.dot";
     private static final String SAMPLE_8 = BASE_DIR + "Nodes_8_Random.dot";
-    private static final String SAMPLE_9 = BASE_DIR + "Nodes_9_SeriesParallel.dot"; //S
-    private static final String SAMPLE_10 = BASE_DIR + "Nodes_10_Random.dot"; //S
+    private static final String SAMPLE_9 = BASE_DIR + "Nodes_9_SeriesParallel.dot";
+    private static final String SAMPLE_10 = BASE_DIR + "Nodes_10_Random.dot";
     private static final String BASIC = BASE_DIR + "test.dot";
 
     private static DotIO dotIO;
@@ -113,10 +113,34 @@ public class TestDotIO {
 
 
     private static void checkTaskListsAreEquivalent(List<Task> expected, List<Task> actual) {
-        // TODO ensure that weights are also the same for each task
         assertEquals(expected.size(), actual.size());
-        assertTrue(expected.containsAll(actual));
-        assertTrue(actual.containsAll(expected));
+        for (int i = 0; i < expected.size(); i++) {
+            // check that all expected tasks are in the actual task list, and vice versa
+            Task currentExpected = expected.get(i);
+            Task currentActual = actual.get(i);
+            assertTrue(expected.contains(currentActual));
+            assertTrue(actual.contains(currentExpected));
+
+            // find the task in the actual tasks that matches the current expected task to check
+            // and ensure the weight is as expected
+            for (Task a: actual) {
+                if (currentExpected.getId().equals(a.getId())) {
+                    assertEquals(currentExpected.getDuration(), a.getDuration());
+                    break;
+                }
+            }
+        }
+    }
+
+    private static void checkDepListsAreEquivalent(List<Dependency> expected, List<Dependency> actual){
+        assertEquals(expected.size(),actual.size());
+        for (int i = 0; i < expected.size(); i++){
+            Dependency expectedDep = expected.get(i);
+            Dependency actualDep = actual.get(i);
+            assertEquals(expectedDep.getStartTask().getId(),actualDep.getStartTask().getId());
+            assertEquals(expectedDep.getEndTask().getId(),actualDep.getEndTask().getId());
+            assertEquals(expectedDep.getWeight(),actualDep.getWeight());
+        }
     }
 
 
