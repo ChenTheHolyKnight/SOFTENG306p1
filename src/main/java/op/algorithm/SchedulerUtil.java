@@ -17,54 +17,51 @@ public class SchedulerUtil {
      * @return a list of tasks that sorted in topological order
      */
     public static List<Task> createTopologicalOrder(List<Task> tasks) {
-        TaskGraph tg = TaskGraph.getInstance();
-        List<Dependency> dependencies = new ArrayList<>();
-        tasks.forEach(task -> {
-            dependencies.addAll(tg.getIncomingDependencies(task));
-        });
+        TaskGraph tg=TaskGraph.getInstance();
+        List<Task> tasks1=new ArrayList<>(tasks);
+        List<Dependency> dependencies=new ArrayList<>();
+        tasks1.forEach(task -> dependencies.addAll(tg.getOutgoingDependencies(task)));
+        List<Task> removedTasks=new ArrayList<>();
+        List<Dependency> removedDep=new ArrayList<>();
 
-        List<Dependency> dependencies1 = new ArrayList<>(dependencies);
-        List<Dependency> dependencies2 = new ArrayList<>(dependencies);
-        while (true) {
-            int num_deps = dependencies1.size();
-            for (Dependency dependency : dependencies1) {
-                for (Dependency dependency1 : dependencies1) {
-                    if (dependency.getEndTask().getId().equals(dependency1.getStartTask().getId())) {
-                        boolean hasAdded = false;
-                        Dependency new_dep = new Dependency(dependency.getStartTask(), dependency1.getEndTask(), -1);
-                        for (Dependency d : dependencies1) {
-                            if (d.getStartTask().equals(new_dep.getStartTask()) && d.getEndTask().equals(new_dep.getEndTask())) {
-                                hasAdded = true;
-                            }
-                        }
-                        if (!hasAdded)
-                            dependencies2.add(new Dependency(dependency.getStartTask(), dependency1.getEndTask(), -1));
-                    }
-                }
-            }
-
-            if (num_deps == dependencies2.size()) {
-                break;
-            }
-            dependencies1.clear();
-            dependencies1.addAll(dependencies2);
+        List<Task> outputList=new ArrayList<>();
+        while (!tasks1.isEmpty()){
+            removedTasks=findEntryPoints(tasks1,dependencies);
+            //System.out.println(removedTasks.size());
+            removedTasks.forEach(task -> {
+                removedDep.addAll(tg.getOutgoingDependencies(task));
+            });
+            outputList.addAll(removedTasks);
+            tasks1.removeAll(removedTasks);
+            dependencies.removeAll(removedDep);
+            removedDep.clear();
+            removedTasks.clear();
+            //System.out.println(tasks1.size());
         }
+        //outputList.forEach(task -> System.out.print(task.getId()));
+        //System.out.println("Hi");
+        return outputList;
+    }
 
+    /**
+     * This is a method to find the Entry task of the task graph.
+     * */
+    private static List<Task> findEntryPoints(List<Task> tasks,List<Dependency> dependencies){
+        List<Task> starts=new ArrayList<>();
+        //List<Task> tasks=TaskGraph.getInstance().getAllTasks();
 
-        List<Task> tasks1 = new ArrayList<>(tasks);
-        Collections.sort(tasks1, (t1, t2) -> {
-            int num = 0;
-            for (Dependency dependency : dependencies2) {
-                if (dependency.getStartTask().equals(t1) && dependency.getEndTask().equals(t2)) {
-                    num = -1;
-                }
-                if (dependency.getStartTask().equals(t2) && dependency.getEndTask().equals(t1)) {
-                    num = 1;
+        tasks.forEach(task -> {
+            //System.out.println(TaskGraph.getInstance().getIncomingDependencies(task).size());
+            List<Dependency> incoming=new ArrayList<>();
+            for(Dependency dependency:dependencies){
+                if(dependency.getEndTask().equals(task)){
+                    incoming.add(dependency);
                 }
             }
-            return num;
+            if(incoming.isEmpty()){
+                starts.add(task);
+            }
         });
-
-        return tasks1;
+        return starts;
     }
 }

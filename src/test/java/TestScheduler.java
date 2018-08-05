@@ -107,7 +107,7 @@ public class TestScheduler {
     /**
      * Tests GreedyScheduler is valid with Nodes_8_Random.dot as the input graph.
      */
-   // @Test
+    //@Test
     public void testGreedySchedulerWithNodes8Graph() {
         checkGreedyScheduler(PATH_TO_NODES_8);
     }
@@ -123,7 +123,7 @@ public class TestScheduler {
     /**
      * Tests GreedyScheduler is valid with Nodes_10_Random.dot as the input graph.
      */
-    //@Test
+    @Test
     public void testGreedySchedulerWithNodes10Graph() {
         checkGreedyScheduler(PATH_TO_NODES_10);
     }
@@ -179,7 +179,7 @@ public class TestScheduler {
 			for (Dependency d : TaskGraph.getInstance().getOutgoingDependencies(task)) {
 
 			    //System.out.println(d.getEndTask());
-                System.out.println(s.getScheduledTask(d.getEndTask()).getTask().getId());
+                //System.out.println(s.getScheduledTask(d.getStartTask()).getTask().getId());
 
 				if (s.getScheduledTask(task).getProcessor() != s.getScheduledTask(d.getEndTask()).getProcessor()){
 					assertTrue(s.getScheduledTask(task).getStartTime() + task.getDuration() + d.getWeight()
