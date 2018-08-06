@@ -40,7 +40,7 @@ repositories {
 
 // configure the name and location of the output jar
 shadowJar {
-	baseName = 'Scheduler'
+	baseName = 'scheduler'
 	destinationDir = new File('build')
 	classifier = null
 	dependencies {
