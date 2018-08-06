@@ -45,7 +45,7 @@ public class Application {
         long time=endTime-startTime;
 
         //print out in the command Line
-        System.out.println("Time: "+time+"ms        Schedule Length:"+scheduledLength);
+        System.out.println("Time: "+time+"ms        Schedule Length: "+scheduledLength);
 
 
     }
