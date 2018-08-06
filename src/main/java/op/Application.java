@@ -16,6 +16,8 @@ import java.io.IOException;
  */
 public class Application {
     public static void main(String[] args) {
+        //get the  start time of the program
+        long startTime=System.currentTimeMillis();
 
         Application application = new Application();
 
@@ -34,6 +36,18 @@ public class Application {
 
         // Write out the schedule
         application.writeDot(dotParser, schedule);
+
+        //get the end time of the program
+        long endTime=System.currentTimeMillis();
+
+        int scheduledLength=schedule.getLength();
+        //print out the time
+        long time=endTime-startTime;
+
+        //print out in the command Line
+        System.out.println("Time: "+time+"ms        Schedule Length:"+scheduledLength);
+
+
     }
 
     /**
