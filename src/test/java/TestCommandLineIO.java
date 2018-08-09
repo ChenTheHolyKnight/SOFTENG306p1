@@ -14,20 +14,6 @@ import org.junit.Test;
 public class TestCommandLineIO {
 	private Arguments arguments;
 
-    /*
-    Required so that each instance of Arguments is only initialized once
-     */
-    @After
-    public void resetArguments() {
-        try {
-            TestSingletonUtil.resetArguments();
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-    }
-
     /**
      * Tests that CommandLineIO returns a Arguments object with correct field values when given a valid user input with
      * all options defined.

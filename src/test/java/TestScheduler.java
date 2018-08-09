@@ -33,7 +33,6 @@ public class TestScheduler {
 	public void reset() {
 		try {
 			TestSingletonUtil.resetTaskGraph();
-			TestSingletonUtil.resetArguments();
 		} catch (NoSuchFieldException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
