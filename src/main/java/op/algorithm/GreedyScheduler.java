@@ -12,11 +12,13 @@ import java.util.List;
  */
 public class GreedyScheduler extends Scheduler {
 
-    private HashMap<Integer, Integer> processorNextTime;
+	private int numProcessors;
+	private HashMap<Integer, Integer> processorNextTime;
     private int FIRST_PROCESSOR = 1;
+    
 
-    public GreedyScheduler() {
-        int numProcessors = Arguments.getInstance().getNumProcessors();
+    public GreedyScheduler(int numProcessors) {
+    	this.numProcessors = numProcessors;
         processorNextTime = new HashMap<>();
 
         for (int processor = FIRST_PROCESSOR; processor <= numProcessors; processor++) {
@@ -36,7 +38,7 @@ public class GreedyScheduler extends Scheduler {
             int bestProcessor = FIRST_PROCESSOR;
             int earliestStartTime = Integer.MAX_VALUE;
 
-            for (int processor = FIRST_PROCESSOR; processor <= Arguments.getInstance().getNumProcessors(); processor++) {
+            for (int processor = FIRST_PROCESSOR; processor <= numProcessors; processor++) {
                 int newEarliest = getEarliestStartTime(schedule, task, processor);
                 if (newEarliest < earliestStartTime) {
                     earliestStartTime = newEarliest;

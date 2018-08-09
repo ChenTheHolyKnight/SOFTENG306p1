@@ -12,6 +12,7 @@ import org.junit.Test;
  * @author Victoria Skeggs
  */
 public class TestCommandLineIO {
+	private Arguments arguments;
 
     /*
     Required so that each instance of Arguments is only initialized once
@@ -46,9 +47,9 @@ public class TestCommandLineIO {
         args[6] = "output.dot";
 
         try {
-            commandLineIO.parseArgs(args.clone());
+            arguments = commandLineIO.parseArgs(args.clone());
             assertCommandIsCorrect(args[0], Integer.parseInt(args[1]), Integer.parseInt(args[3]),
-                    true, args[6], Arguments.getInstance());
+                    true, args[6]);
         } catch (InvalidUserInputException e) {
             Assert.fail();
         }
@@ -68,9 +69,9 @@ public class TestCommandLineIO {
         args[1] = "10";
 
         try {
-            commandLineIO.parseArgs(args.clone());
+        	arguments = commandLineIO.parseArgs(args.clone());
             assertCommandIsCorrect(args[0], Integer.parseInt(args[1]), 1, false,
-                    "inputq9837-output.dot", Arguments.getInstance());
+                    "inputq9837-output.dot");
         } catch (InvalidUserInputException e) {
             Assert.fail();
         }
@@ -90,9 +91,9 @@ public class TestCommandLineIO {
         args[1] = "10";
 
         try {
-            commandLineIO.parseArgs(args.clone());
+            arguments = commandLineIO.parseArgs(args.clone());
             assertCommandIsCorrect(args[0], Integer.parseInt(args[1]), 1, false,
-                    "inputkjsherkjaf-output.dot", Arguments.getInstance());
+                    "inputkjsherkjaf-output.dot");
         } catch (InvalidUserInputException e) {
             Assert.fail();
         }
@@ -111,9 +112,9 @@ public class TestCommandLineIO {
         args[1] = "10";
 
         try {
-            commandLineIO.parseArgs(args.clone());
+            arguments = commandLineIO.parseArgs(args.clone());
             assertCommandIsCorrect(args[0], Integer.parseInt(args[1]), 1, false,
-                    "inpu.tkjsh.erkjaf-output.dot", Arguments.getInstance());
+                    "inpu.tkjsh.erkjaf-output.dot");
         } catch (InvalidUserInputException e) {
             Assert.fail();
         }
@@ -137,9 +138,9 @@ public class TestCommandLineIO {
         args[6] = "90";
 
         try {
-            commandLineIO.parseArgs(args.clone());
+            arguments = commandLineIO.parseArgs(args.clone());
             assertCommandIsCorrect(args[0], Integer.parseInt(args[1]), Integer.parseInt(args[6]),
-                    true, args[4], Arguments.getInstance());
+                    true, args[4]);
         } catch (InvalidUserInputException e) {
             Assert.fail();
         }
@@ -235,7 +236,7 @@ public class TestCommandLineIO {
     }
     
     private void assertCommandIsCorrect(String expectedInputFilename, int expectedNumProcessors, int expectedNumCores,
-    		boolean expectedToVisualise, String expectedOutputFilename, Arguments arguments) {
+    		boolean expectedToVisualise, String expectedOutputFilename) {
 
     	Assert.assertEquals("Arguments object returns incorrect input filename", expectedInputFilename,
     			arguments.getInputGraphFilename());

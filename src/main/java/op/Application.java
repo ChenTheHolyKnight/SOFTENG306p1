@@ -15,6 +15,8 @@ import java.io.IOException;
  * Entry point for the optimal scheduling program
  */
 public class Application {
+	private Arguments arguments;
+	
     public static void main(String[] args) {
         //get the  start time of the program
         long startTime=System.currentTimeMillis();
@@ -58,7 +60,7 @@ public class Application {
      */
     private void initArguments(String[] args) {
         try {
-            new CommandLineIO().parseArgs(args);
+            arguments = new CommandLineIO().parseArgs(args);
         } catch (InvalidUserInputException e) {
             fatalError(e.getMessage());
         }
@@ -72,9 +74,9 @@ public class Application {
     private void readDot(DotIO dotParser) {
 
         try {
-            dotParser.dotIn(Arguments.getInstance().getInputGraphFilename());
+            dotParser.dotIn(arguments.getInputGraphFilename());
         } catch (IOException e) {
-            fatalError("Could not find file: " + Arguments.getInstance().getInputGraphFilename());
+            fatalError("Could not find file: " + arguments.getInputGraphFilename());
         }
     }
 
@@ -84,7 +86,7 @@ public class Application {
      * @return a schedule
      */
     private Schedule produceSchedule() {
-        Scheduler scheduler = new GreedyScheduler();
+        Scheduler scheduler = new GreedyScheduler(arguments.getNumProcessors());
         return scheduler.produceSchedule();
     }
 
@@ -93,7 +95,8 @@ public class Application {
      * To be run concurrently with produceSchedule()
      */
     private void startVisualization() {
-        if (Arguments.getInstance().getToVisualize()) {
+        if (arguments.getToVisualize()) {
+        	//TODO: Do something here
         }
     }
 
@@ -104,7 +107,7 @@ public class Application {
      */
     private void writeDot(DotIO dotParser, Schedule schedule){
         try {
-            dotParser.dotOut(schedule);
+            dotParser.dotOut(schedule, arguments.getOutputGraphFilename());
         } catch (IOException e) {
             fatalError("Could not write dot graph output.");
         }

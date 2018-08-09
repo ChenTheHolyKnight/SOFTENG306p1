@@ -135,10 +135,9 @@ public class DotIO {
      * @author Darcy Cox
      */
 
-    public void dotOut(Schedule s) throws IOException {
-
-        BufferedWriter bw = new BufferedWriter(new FileWriter(Arguments.getInstance().getOutputGraphFilename(),
-                false));
+    public void dotOut(Schedule s, String outputGraphFilename) throws IOException {
+    	
+        BufferedWriter bw = new BufferedWriter(new FileWriter(outputGraphFilename, false));
 
         TaskGraph tg = TaskGraph.getInstance();
         String title = tg.getTitle();
