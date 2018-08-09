@@ -27,11 +27,12 @@ public class TestScheduler {
     private final String PATH_TO_NODES_10 = "./src/main/resources/sample_inputs/Nodes_10_Random.dot";
     private final String PATH_TO_NODES_11 = "./src/main/resources/sample_inputs/Nodes_11_OutTree.dot";
 
+    private Arguments arguments;
+    
 	@After
 	public void reset() {
 		try {
 			TestSingletonUtil.resetTaskGraph();
-			TestSingletonUtil.resetArguments();
 		} catch (NoSuchFieldException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
@@ -109,7 +110,7 @@ public class TestScheduler {
      * @throws IOException
      */
     private void setup(String inputFilePath) throws IOException {
-        Arguments.initialize(inputFilePath,10,1,false,"testOutput.dot");
+        arguments = new Arguments(inputFilePath,10,1,false,"testOutput.dot");
         new DotIO().dotIn(inputFilePath);
     }
     
@@ -120,7 +121,7 @@ public class TestScheduler {
     private void checkGreedyScheduler(String path) {
         try {
             setup(path);
-            s = (new GreedyScheduler()).produceSchedule();
+            s = (new GreedyScheduler(arguments.getNumProcessors())).produceSchedule();
             checkScheduleIsValid();
 
         } catch (IOException e) {
@@ -144,7 +145,7 @@ public class TestScheduler {
 	 */
 	private void checkNoOverlap() {
 
-		for (int processor = 1; processor <= Arguments.getInstance().getNumProcessors(); processor++) {
+		for (int processor = 1; processor <= arguments.getNumProcessors(); processor++) {
 			if (s.getScheduledTasks(processor) != null) {
 				for (ScheduledTask t1 : s.getScheduledTasks(processor)) {
 					for (ScheduledTask t2 : s.getScheduledTasks(processor)) {

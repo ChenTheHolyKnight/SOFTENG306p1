@@ -22,19 +22,4 @@ public class TestSingletonUtil {
         init.setBoolean(null, false);
         init.setAccessible(false);
     }
-
-    public static void resetArguments()
-            throws SecurityException, NoSuchFieldException,
-            IllegalArgumentException, IllegalAccessException {
-
-        Field instance = Arguments.class.getDeclaredField("instance");
-        instance.setAccessible(true);
-        instance.set(null, null);
-        instance.setAccessible(false);
-
-        Field init = Arguments.class.getDeclaredField("initialized");
-        init.setAccessible(true);
-        init.setBoolean(null, false);
-        init.setAccessible(false);
-    }
 }
