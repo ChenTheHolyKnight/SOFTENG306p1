@@ -9,3 +9,7 @@
 .grayBackground{
     -fx-background-color:#69715F;
 }
+
+.tileBackgroundColour{
+    -fx-background-color:#2a2a2a;
+}
