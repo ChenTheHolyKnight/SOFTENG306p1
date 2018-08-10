@@ -39,11 +39,13 @@ public class DFSScheduler extends BranchAndBoundScheduler {
         // start the search, and continue until all possible schedules have been processed
         while (!scheduleStack.isEmpty()) {
             Schedule currentSchedule = scheduleStack.pop();
+
             if (currentSchedule.isComplete()) {
                 // check if the complete schedule is better than our best schedule so far
                 if (currentSchedule.getLength() < bestScheduleLength) {
                     bestSchedule = currentSchedule;
                     bestScheduleLength = currentSchedule.getLength();
+                    System.out.println("New best: " + bestScheduleLength);
                 }
             } else {
                 // not a complete schedule so add children to the stack to be processed later
@@ -53,6 +55,7 @@ public class DFSScheduler extends BranchAndBoundScheduler {
             }
         }
 
+        System.out.println("Optimal length: " + bestSchedule.getLength());
         return bestSchedule;
     }
 }

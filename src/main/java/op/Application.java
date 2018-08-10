@@ -1,5 +1,7 @@
 package op;
 
+import op.algorithm.DFSScheduler;
+import op.algorithm.EmptyPruner;
 import op.algorithm.GreedyScheduler;
 import op.algorithm.Scheduler;
 import op.io.InvalidUserInputException;
@@ -86,7 +88,7 @@ public class Application {
      * @return a schedule
      */
     private Schedule produceSchedule() {
-        Scheduler scheduler = new GreedyScheduler(arguments.getNumProcessors());
+        Scheduler scheduler = new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner());
         return scheduler.produceSchedule();
     }
 

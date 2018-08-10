@@ -79,6 +79,7 @@ public class TestScheduler {
         checkGreedyScheduler(PATH_TO_NODES_7);
     }
 
+
     /**
      * Tests GreedyScheduler is valid with Nodes_8_Random.dot as the input graph.
      */
@@ -95,6 +96,7 @@ public class TestScheduler {
         checkGreedyScheduler(PATH_TO_NODES_9);
     }
 
+
     /**
      * Tests GreedyScheduler is valid with Nodes_10_Random.dot as the input graph.
      */
@@ -102,6 +104,7 @@ public class TestScheduler {
     public void testGreedySchedulerWithNodes10Graph() {
         checkGreedyScheduler(PATH_TO_NODES_10);
     }
+
 
     /**
      * Tests GreedyScheduler is valid with Nodes_11_OutTree.dot as the input graph.
