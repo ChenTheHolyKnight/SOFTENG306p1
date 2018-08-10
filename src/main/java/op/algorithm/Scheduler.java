@@ -18,12 +18,19 @@ public abstract class Scheduler {
 
     // objects that are interested in being updated by the Scheduler
     private List<Visualiser> listeners;
+    private int numProcessors;
 
     /**
-     * Default constructor for a Scheduler instance
+     * Constructor for a Scheduler instance
+     * @param numProcessors the number of processors to schedule tasks on
      */
-    public Scheduler() {
+    public Scheduler(int numProcessors) {
+        this.numProcessors = numProcessors;
         this.listeners = new ArrayList<Visualiser>();
+    }
+
+    protected int getNumProcessors() {
+        return this.numProcessors;
     }
 
     /**

@@ -12,13 +12,12 @@ import java.util.List;
  */
 public class GreedyScheduler extends Scheduler {
 
-	private int numProcessors;
 	private HashMap<Integer, Integer> processorNextTime;
     private int FIRST_PROCESSOR = 1;
     
 
     public GreedyScheduler(int numProcessors) {
-    	this.numProcessors = numProcessors;
+    	super(numProcessors);
         processorNextTime = new HashMap<>();
 
         for (int processor = FIRST_PROCESSOR; processor <= numProcessors; processor++) {
@@ -33,6 +32,7 @@ public class GreedyScheduler extends Scheduler {
     @Override
     public Schedule produceSchedule() {
         Schedule schedule = new Schedule();
+        int numProcessors = super.getNumProcessors();
         for (Task task: SchedulerUtil.createTopologicalOrder(TaskGraph.getInstance().getAllTasks())) {
 
             int bestProcessor = FIRST_PROCESSOR;

@@ -15,8 +15,8 @@ public abstract class BranchAndBoundScheduler extends Scheduler {
      * Creates a BranchAndBoundScheduler instance with the specified Pruner implementation.
      * @param p The Pruner implementation to be used in the scheduling algorithm
      */
-    public BranchAndBoundScheduler(Pruner p) {
-        super();
+    public BranchAndBoundScheduler(int numProcessors, Pruner p) {
+        super(numProcessors);
         this.pruner = p;
     }
 
@@ -25,7 +25,7 @@ public abstract class BranchAndBoundScheduler extends Scheduler {
      * @return The Pruner implementation for the subclass to use as
      */
     protected Pruner getPruner() {
-        return pruner;
+        return this.pruner;
     }
 
 }
