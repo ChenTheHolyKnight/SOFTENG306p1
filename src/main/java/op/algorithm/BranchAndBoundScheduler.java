@@ -73,13 +73,15 @@ public abstract class BranchAndBoundScheduler extends Scheduler {
 
                 } else {
 
+                    boolean dependenciesAllScheduled = true;
                     for (Dependency d : deps) {
                         Task startTask = d.getStartTask();
                         if (s.getScheduledTask(startTask) == null) {
                             // if even one of the tasks dependencies is not scheduled, it is not free
-                            break;
+                            dependenciesAllScheduled = false;
                         }
-
+                    }
+                    if (dependenciesAllScheduled) {
                         freeTasks.add(t);
                     }
                 }

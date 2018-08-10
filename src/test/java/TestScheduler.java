@@ -1,8 +1,12 @@
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
+import op.algorithm.DFSScheduler;
+import op.algorithm.EmptyPruner;
 import op.algorithm.GreedyScheduler;
 import op.algorithm.SimpleScheduler;
 import org.junit.After;
@@ -40,7 +44,6 @@ public class TestScheduler {
 		}
 	}
 
-
     /**
      * Tests if the schedule produced by SimpleScheduler is valid.
      */
@@ -64,6 +67,9 @@ public class TestScheduler {
     public void testGreedySchedulerWithTestGraph() {
         checkGreedyScheduler(PATH_TO_TEST);
     }
+
+    @Test
+	public void testDFSSchedulerWithTestGraph() { checkDFSScheduler(PATH_TO_TEST); }
 
     /**
      * Tests GreedyScheduler is valid with Nodes_7_OutTree.dot as the input graph.
@@ -128,6 +134,17 @@ public class TestScheduler {
             e.printStackTrace();
         }
     }
+
+	private void checkDFSScheduler(String path) {
+		try {
+			setup(path);
+			s = (new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner())).produceSchedule();
+			checkScheduleIsValid();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	/**
 	 * Checks if a schedule is valid. A schedule is valid if and only if there is no overlap between

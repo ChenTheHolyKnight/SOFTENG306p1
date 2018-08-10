@@ -25,8 +25,18 @@ public class Schedule {
      * @param stNew The scheduled task to add
      */
     public Schedule(Schedule s, ScheduledTask stNew) {
-        this.processorTasksMap = new HashMap<>(s.processorTasksMap);
-        this.taskMap = new HashMap<>(s.taskMap);
+
+        this.taskMap = (HashMap<Task, ScheduledTask>)((s.taskMap).clone());
+        this.processorTasksMap = (HashMap<Integer, List<ScheduledTask>>)((s.processorTasksMap).clone());
+
+        // replace the lists of scheduled tasks with an equivalent list, but with a different reference.
+        // this is so that when these lists are changed in child schedules of s, it does not affect
+        // the parent schedule. This is not necessary for the Task/ScheduledTask map because the values within
+        // those objects cannot be changed by objects referencing them.
+        for (int i : this.processorTasksMap.keySet()) {
+            this.processorTasksMap.put(i, new ArrayList<ScheduledTask>(this.processorTasksMap.get(i)));
+        }
+
         this.addScheduledTask(stNew);
     }
   
@@ -57,12 +67,12 @@ public class Schedule {
      */
     public void addScheduledTask(ScheduledTask scheduledTask){
         int processorNum=scheduledTask.getProcessor();
-        if(processorTasksMap.get(processorNum)!=null){
-	    processorTasksMap.get(processorNum).add(scheduledTask);
+        if(processorTasksMap.get(processorNum)!= null){
+	        processorTasksMap.get(processorNum).add(scheduledTask);
         }else{
             List<ScheduledTask> tasks=new ArrayList<>();
             tasks.add(scheduledTask);
-            processorTasksMap.put(scheduledTask.getProcessor(),tasks);
+            processorTasksMap.put(processorNum,tasks);
         }
         taskMap.put(scheduledTask.getTask(), scheduledTask);
     }
@@ -74,7 +84,7 @@ public class Schedule {
      * @return the scheduled task representing the task in this schedule, null if the task is not yet scheduled
      */
     public ScheduledTask getScheduledTask(Task t) {
-    	return taskMap.get(t);
+        return taskMap.get(t);
     }
 
     /**
