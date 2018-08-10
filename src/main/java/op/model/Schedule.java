@@ -8,8 +8,27 @@ import java.util.*;
 
 public class Schedule {
 
-    private HashMap<Integer,List<ScheduledTask>> processorTasksMap = new HashMap<>();
-    private HashMap<Task,ScheduledTask> taskMap = new HashMap<>();
+    private HashMap<Integer,List<ScheduledTask>> processorTasksMap;
+    private HashMap<Task,ScheduledTask> taskMap;
+
+    /**
+     * Constructs an empty schedule instance
+     */
+    public Schedule() {
+        this.processorTasksMap = new HashMap<>();
+        this.taskMap = new HashMap<>();
+    }
+
+    /**
+     * Constructs a new schedule by extending the provided schedule by the provided scheduled task
+     * @param s The schedule to base this new schedule on
+     * @param stNew The scheduled task to add
+     */
+    public Schedule(Schedule s, ScheduledTask stNew) {
+        this.processorTasksMap = new HashMap<>(s.processorTasksMap);
+        this.taskMap = new HashMap<>(s.taskMap);
+        this.addScheduledTask(stNew);
+    }
   
     /**
      * Tells whether or not this Schedule instance is a complete schedule (all tasks allocated)
@@ -51,8 +70,8 @@ public class Schedule {
     /**
      * Gets a task's corresponding scheduled task in this schedule
      * 
-     * @param task the task to retrieve the relevant ScheduledTask for
-     * @return the scheduled task representing the task in this schedule
+     * @param t the task to retrieve the relevant ScheduledTask for
+     * @return the scheduled task representing the task in this schedule, null if the task is not yet scheduled
      */
     public ScheduledTask getScheduledTask(Task t) {
     	return taskMap.get(t);
