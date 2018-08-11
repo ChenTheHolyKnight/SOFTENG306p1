@@ -31,6 +31,7 @@ public class DFSScheduler extends BranchAndBoundScheduler {
         // variables to keep track of the best schedule so far in the search
         Schedule bestSchedule = null;
         int bestScheduleLength = Integer.MAX_VALUE;
+        Pruner p = getPruner();
 
         // initialize stack with the empty schedule
         Stack<Schedule> scheduleStack =  new Stack<Schedule>();
@@ -39,7 +40,6 @@ public class DFSScheduler extends BranchAndBoundScheduler {
         // start the search, and continue until all possible schedules have been processed
         while (!scheduleStack.isEmpty()) {
             Schedule currentSchedule = scheduleStack.pop();
-
             if (currentSchedule.isComplete()) {
                 // check if the complete schedule is better than our best schedule so far
                 if (currentSchedule.getLength() < bestScheduleLength) {
@@ -49,7 +49,9 @@ public class DFSScheduler extends BranchAndBoundScheduler {
                 }
             } else {
                 // not a complete schedule so add children to the stack to be processed later
-                for (Schedule s: super.getChildrenOfSchedule(currentSchedule)) {
+
+                List<Schedule> pruned = p.prune(super.getChildrenOfSchedule(currentSchedule), bestScheduleLength, getNumProcessors());
+                for (Schedule s: pruned){
                     scheduleStack.push(s);
                 }
             }
