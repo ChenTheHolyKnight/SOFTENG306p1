@@ -4,6 +4,7 @@ import op.algorithm.GreedyScheduler;
 import op.algorithm.Scheduler;
 import op.io.InvalidUserInputException;
 import op.model.Schedule;
+import op.visualization.GUIApplication;
 import op.visualization.Visualiser;
 import op.io.CommandLineIO;
 import op.io.DotIO;
@@ -34,7 +35,7 @@ public class Application {
         Schedule schedule = application.produceSchedule();
 
         // Start visualization
-        application.startVisualization();
+        application.startVisualization(args);
 
         // Write out the schedule
         application.writeDot(dotParser, schedule);
@@ -94,9 +95,10 @@ public class Application {
      * Visualizes the search for a solution schedule
      * To be run concurrently with produceSchedule()
      */
-    private void startVisualization() {
+    private void startVisualization(String[] args) {
         if (arguments.getToVisualize()) {
         	//TODO: Do something here
+            javafx.application.Application.launch(GUIApplication.class,args);
         }
     }
 

@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.ToggleSwitch?>
 
-<AnchorPane prefHeight="600.0" prefWidth="900.0" styleClass="background" stylesheets="@Styles/BackPanel.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="op.visualization.View.GUI">
+<AnchorPane prefHeight="600.0" prefWidth="900.0" styleClass="background" stylesheets="@Styles/BackPanel.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="op.visualization.View.GUIController">
    <children>
       <AnchorPane layoutX="-1.0" prefHeight="600.0" prefWidth="681.0" styleClass="textBackground" />
       <VBox layoutX="681.0" prefHeight="600.0" prefWidth="260.0">
