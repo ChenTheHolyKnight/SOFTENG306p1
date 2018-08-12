@@ -14,7 +14,7 @@ public class GUIApplication extends Application{
     public void start(Stage stage) throws Exception {
 
         FXMLLoader loader=new FXMLLoader();
-        loader.setLocation(GUIApplication.class.getResource("View/GUI.fxml"));
+        loader.setLocation(GUIApplication.class.getResource("view/GUI.fxml"));
         Parent root=loader.load();
         Scene scene = new Scene(root);
 

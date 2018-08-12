@@ -1,4 +1,4 @@
-package op.visualization;
+package op.visualization.controller;
 
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
@@ -12,15 +12,15 @@ import org.graphstream.ui.view.Viewer;
  * @author Ravid
  *
  */
-public class GraphDisplay {
+public class GraphController {
 	
 	private static final String STYLE_CLASS = "ui.class";
 	
-	private static GraphDisplay instance = new GraphDisplay();
+	private static GraphController instance = new GraphController();
 	
 	private Graph graph; 
 	
-	private GraphDisplay () {
+	private GraphController () {
 		graph =  new SingleGraph("graph");
 		graph.addAttribute("ui.stylesheet", GRAPH_DISPLAY_STYLESHEET);
 		Viewer viewer = graph.display();
@@ -31,7 +31,7 @@ public class GraphDisplay {
 	 * 
 	 * @return the singleton instance of GraphDisplay
 	 */
-	public static GraphDisplay getInstance(){
+	public static GraphController getInstance(){
 		return instance;
 	}
 	
