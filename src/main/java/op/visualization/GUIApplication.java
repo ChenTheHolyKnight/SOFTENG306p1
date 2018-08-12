@@ -12,13 +12,13 @@ import java.net.URL;
 public class GUIApplication extends Application{
     @Override
     public void start(Stage stage) throws Exception {
-        String location="file:/"+System.getProperty("user.dir")+"\\src\\main\\java\\op\\visualization\\View\\GUI.fxml";
+        String location="file:/"+System.getProperty("user.dir")+"\\src\\main\\java\\op\\visualization\\view\\GUI.fxml";
 
         //System.out.println(location);
         //System.out.println(this.getClass().getResource("."));
         //FXMLLoader loader=new FXMLLoader(new URL(location));
         FXMLLoader loader=new FXMLLoader();
-        loader.setLocation(GUIApplication.class.getResource("View/GUI.fxml"));
+        loader.setLocation(GUIApplication.class.getResource("view/GUI.fxml"));
         Parent root=loader.load();
         Scene scene = new Scene(root);
 
