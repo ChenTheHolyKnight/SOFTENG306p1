@@ -66,6 +66,9 @@ public class DotIO {
 
     /**
      * New revised dotIn method that will replace previous implementation. Major upgrades for robustness.
+     * 
+     * Takes a path containing the input DOT file, and initializes the TaskGraph singleton with 
+     * information representing the task graph in the input file.
      * @param path The path of the dot file to read.
      * @throws IOException If there is a problem reading the file
      * @author Sam Broadhead
