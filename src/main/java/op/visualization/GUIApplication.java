@@ -16,8 +16,10 @@ public class GUIApplication extends Application{
 
         //System.out.println(location);
         //System.out.println(this.getClass().getResource("."));
-        FXMLLoader loader=new FXMLLoader(new URL(location));
-
+        //FXMLLoader loader=new FXMLLoader(new URL(location));
+        FXMLLoader loader=new FXMLLoader();
+        loader.setLocation(GUIApplication.class.getResource("View/GUI.fxml"));
+        System.out.println(this.getClass().getResource("."));
         Parent root=loader.load();
         Scene scene = new Scene(root);
 

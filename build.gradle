@@ -59,8 +59,18 @@ jar {
 				'Main-Class': 'op.Application'
 		)
 	}
-}
+	sourceSets {
+		main {
+			resources {
+				srcDirs = ["src/main/java"]
+				includes = ["**/*.fxml","**/*.css"]
 
+			}
+			output.resourcesDir = "build/classes/java/main/op/visualization/View"
+		}
+	}
+
+}
 
 
 test {
@@ -68,5 +78,7 @@ test {
         events "passed", "skipped", "failed"
     }
 }
+
+
 
 
