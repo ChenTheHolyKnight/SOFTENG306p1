@@ -2,6 +2,7 @@ package op.visualization.controller;
 
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
 import org.controlsfx.control.ToggleSwitch;
@@ -17,6 +18,9 @@ public class GUIController {
 
     @FXML
     public AnchorPane schedulePane;
+
+    @FXML
+    public TabPane tabPane;
 
 
 
@@ -50,6 +54,7 @@ public class GUIController {
     @FXML
     public void initialize(){
         schedulePane.setOpacity(0.0);
+        tabPane.setStyle("Style/TabPane.css");
     }
 
 
