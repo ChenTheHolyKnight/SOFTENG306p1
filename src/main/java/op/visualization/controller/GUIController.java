@@ -1,4 +1,4 @@
-package op.visualization.view;
+package op.visualization.controller;
 
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
