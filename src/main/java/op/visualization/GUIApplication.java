@@ -18,12 +18,8 @@ public class GUIApplication extends Application{
         Parent root=loader.load();
         Scene scene = new Scene(root);
 
-
-
-        stage.setResizable(true);
-
+        stage.setResizable(false);
         stage.setScene(scene);
-
         stage.show();
     }
 

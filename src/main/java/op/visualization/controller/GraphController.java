@@ -4,7 +4,12 @@ import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
+import org.graphstream.ui.graphicGraph.GraphicGraph;
 import org.graphstream.ui.view.Viewer;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A singleton class representing the display for the Graphstream graph.
@@ -15,19 +20,17 @@ import org.graphstream.ui.view.Viewer;
 public class GraphController {
 	
 	private static final String STYLE_CLASS = "ui.class";
-	
 	private static GraphController instance = new GraphController();
-	
-	private Graph graph; 
+	private GraphicGraph graph;
 	
 	private GraphController () {
-		graph =  new SingleGraph("graph");
-		graph.addAttribute("ui.stylesheet", GRAPH_DISPLAY_STYLESHEET);
+		graph =  new GraphicGraph("graph");
+		graph.setAttribute("ui.stylesheet", GRAPH_DISPLAY_STYLESHEET);
 		Viewer viewer = graph.display();
 	}
 	
 	/**
-	 * Get's the singleton instance of GraphDisplay
+	 * Gets the singleton instance of GraphDisplay
 	 * 
 	 * @return the singleton instance of GraphDisplay
 	 */
@@ -38,7 +41,7 @@ public class GraphController {
 	/**
 	 * Adds a node to the graph visualisation
 	 * 
-	 * @param nodeId the Id of the node to add
+	 * @param newNodeId the Id of the node to add
 	 */
 	public void addNode(String parentNodeId, String newNodeId) {
 		if (graph.getNode(parentNodeId) == null) {
@@ -53,9 +56,9 @@ public class GraphController {
  
 	public void eliminateChildren (String nodeId) {
 		Node n = graph.getNode(nodeId);
-		n.addAttribute(STYLE_CLASS, "eliminated");		
-		for (Edge e : n.getEachLeavingEdge()){
-			e.addAttribute(STYLE_CLASS, "eliminated");
+		n.setAttribute(STYLE_CLASS, "eliminated");
+		for (Edge e : n.leavingEdges().collect(Collectors.toList())){
+			e.setAttribute(STYLE_CLASS, "eliminated");
 			eliminateChildren(e.getTargetNode().getId());
 		}
 	}
@@ -63,6 +66,13 @@ public class GraphController {
 	public void update() {
 		
 	}
+
+    /**
+     * @return a reference to the visualization graph
+     */
+	public GraphicGraph getGraph() {
+	    return graph;
+    }
 	
 	private static final String GRAPH_DISPLAY_STYLESHEET =
 		"node.eliminated { "
