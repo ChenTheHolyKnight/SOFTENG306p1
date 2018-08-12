@@ -27,8 +27,8 @@ public class GUIController {
     @FXML
     public void onSwitchTriggered(){
         boolean selected=this.graphSwitch.isSelected();
-        if(selected){
-            FadeTransition fadeout = new FadeTransition(Duration.millis(500), schedulePane);
+        if(!selected){
+            FadeTransition fadeout = new FadeTransition(Duration.millis(500), schedulePane); //fade out schedulePane
             fadeout.setFromValue(1.0);
             fadeout.setToValue(0.0);
             fadeout.setOnFinished(event -> {
@@ -36,7 +36,7 @@ public class GUIController {
             });
             fadeout.playFromStart();
         }else {
-            FadeTransition fadeout = new FadeTransition(Duration.millis(500), schedulePane);
+            FadeTransition fadeout = new FadeTransition(Duration.millis(500), schedulePane); //fade in schedulePane
             fadeout.setFromValue(0.0);
             fadeout.setToValue(1.0);
             fadeout.setOnFinished(event -> {
@@ -49,7 +49,7 @@ public class GUIController {
 
     @FXML
     public void initialize(){
-
+        schedulePane.setOpacity(0.0);
     }
 
 
