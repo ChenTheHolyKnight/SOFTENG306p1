@@ -2,6 +2,7 @@ package op.visualization.controller;
 
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;

@@ -15,6 +15,6 @@
 }
 
 .tabBackgroundColour{
-    -fx-background-color:#69715F;
-    -fx-text-fill:#FFFFFF;
+     background: white;
+    -fx-text-fill: white;
 }
