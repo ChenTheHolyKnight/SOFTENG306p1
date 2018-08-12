@@ -2,8 +2,11 @@ package op.visualization.controller;
 
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 import org.controlsfx.control.ToggleSwitch;
 
@@ -21,6 +24,13 @@ public class GUIController {
 
     @FXML
     public TabPane tabPane;
+
+    @FXML
+    public Tab statsTab;
+
+    private Scene scene;
+
+    private boolean selected=false;
 
 
 
@@ -52,9 +62,32 @@ public class GUIController {
     }
 
     @FXML
+    public void onTabClicked(){
+        Translate translate=new Translate();
+        Tab tab=tabPane.getSelectionModel().getSelectedItem();
+        AnchorPane pane=(AnchorPane) tab.getContent();
+        if(!selected) {
+            selected=true;
+            this.scene.getWindow().setWidth(this.scene.getWindow().getWidth() + tabPane.getWidth());
+
+
+            translate.setX(pane.getWidth());
+
+        }else{
+            selected=false;
+            this.scene.getWindow().setWidth(this.scene.getWindow().getWidth() - tabPane.getWidth());
+            translate.setX(-pane.getWidth());
+        }
+        tabPane.getTransforms().add(translate);
+    }
+
+    public void setScene(Scene scene) {
+        this.scene = scene;
+    }
+
+    @FXML
     public void initialize(){
         schedulePane.setOpacity(0.0);
-        tabPane.setStyle("Style/TabPane.css");
     }
 
 

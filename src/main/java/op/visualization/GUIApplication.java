@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import op.visualization.controller.GUIController;
 
 import java.io.File;
 import java.net.URL;
@@ -18,7 +19,8 @@ public class GUIApplication extends Application{
         Parent root=loader.load();
         Scene scene = new Scene(root);
 
-
+        GUIController controller=loader.getController();
+        controller.setScene(scene);
 
         stage.setResizable(true);
 
