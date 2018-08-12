@@ -19,13 +19,13 @@ public class GUIApplication extends Application{
         //FXMLLoader loader=new FXMLLoader(new URL(location));
         FXMLLoader loader=new FXMLLoader();
         loader.setLocation(GUIApplication.class.getResource("View/GUI.fxml"));
-        System.out.println(this.getClass().getResource("."));
         Parent root=loader.load();
         Scene scene = new Scene(root);
 
 
 
-        stage.setResizable(false);
+        stage.setResizable(true);
+
         stage.setScene(scene);
 
         stage.show();
