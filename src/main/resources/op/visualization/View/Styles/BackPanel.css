@@ -13,3 +13,8 @@
 .tileBackgroundColour{
     -fx-background-color:#2a2a2a;
 }
+
+.tabBackgroundColour{
+    -fx-background-color:#69715F;
+    -fx-text-fill:#FFFFFF;
+}

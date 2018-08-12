@@ -3,6 +3,8 @@
 <?import eu.hansolo.tilesfx.Tile?>
 <?import java.lang.String?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.ToggleSwitch?>
@@ -30,5 +32,19 @@
             <String fx:value="textBackground" />
             <String fx:value="grayBackground" />
          </styleClass></AnchorPane>
+      <TabPane layoutX="680.0" prefHeight="600.0" prefWidth="270.0" side="RIGHT" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab styleClass="tabBackground" text="Statistics">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+          </Tab>
+          <Tab styleClass="grayBackground" text="Performance">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
    </children>
 </AnchorPane>
