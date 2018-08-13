@@ -77,6 +77,8 @@ public class DotIO {
         List<Task> taskList = new ArrayList<>();
         Map<String, Integer> taskMap = new HashMap<>(); // keep a map of unbuilt tasks to allow updates
         Map<String[], Integer> depMap = new HashMap<>(); // keep a map of unbuilt deps to allow updates
+        Map<String,List<Dependency>> depOutMap = new HashMap<>(); // map of tasks and their outgoing dependencies
+        Map<String,List<Dependency>> depInMap = new HashMap<>(); // map of tasks and their outgoing dependencies
         BufferedReader br = new BufferedReader(new FileReader(path));
         while (((line = br.readLine()) != null) && (!line.contains(END_OF_GRAPH_MATCH))) {
             if (line.matches(GRAPH_NAME_LINE_MATCH)) { // the line is the graph name line
@@ -110,11 +112,22 @@ public class DotIO {
             }
             depList.add(new Dependency(taskList.get(taskList.indexOf(srcTask)),taskList.get(taskList.indexOf(dstTask)),depMap.get(keys)));
         }
+        for (Dependency d : depList){
+            depOutMap.computeIfAbsent(d.getStartTask().getId(), k -> new ArrayList<>());
+            depInMap.computeIfAbsent(d.getEndTask().getId(), k -> new ArrayList<>());
+            depOutMap.get(d.getStartTask().getId()).add(d);
+            depInMap.get(d.getEndTask().getId()).add(d);
+        }
         for (String key : taskMap.keySet()){ // build any tasks that have no ingoing or outgoing dependencies
             Task t = new Task(key,taskMap.get(key));
+            depInMap.computeIfAbsent(key, k -> new ArrayList<>()); // build any lists not yet build
+            depOutMap.computeIfAbsent(key, k -> new ArrayList<>());
             if (!taskList.contains(t)){ // if they aren't in the task list, add them
                 taskList.add(t);
             }
+        }
+        for (Task t : taskList){
+            t.addDependencies(depInMap.get(t.getId()),depOutMap.get(t.getId()));
         }
         /* check dotIn here
         for (Dependency d: depList){
@@ -125,7 +138,7 @@ public class DotIO {
             System.out.println("Task with id: "+t.getId()+" and weight: "+t.getDuration());
         }*/
         br.close();
-        TaskGraph.initialize(taskList, depList, title);
+        TaskGraph.initialize(taskList, title);
     }
 
 
@@ -155,7 +168,7 @@ public class DotIO {
         for (Task t : tasks) {
             // consider outgoing dependencies of all nodes
             // this will cover all existing dependencies as every dependency must have an origin node
-            List<Dependency> outgoingDeps = tg.getOutgoingDependencies(t);
+            List<Dependency> outgoingDeps = t.getOutgoingDependencies();
             for (Dependency d: outgoingDeps) {
                 bw.write(constructDependencyLine(d));
             }
