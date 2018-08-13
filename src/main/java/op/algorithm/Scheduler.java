@@ -57,7 +57,7 @@ public abstract class Scheduler {
      * @return The earliest start time of the task on the given processor, based on the given schedule
      */
     protected int getEarliestStartTime(Schedule s, Task t, int p) {
-        List<Dependency> incomingEdges = TaskGraph.getInstance().getIncomingDependencies(t);
+        List<Dependency> incomingEdges = t.getIncomingDependencies();
 
         // Estimate the earliest start time of the task as the next available time on the processor
         int startTime = s.getNextFreeTimeOfProcessor(p);

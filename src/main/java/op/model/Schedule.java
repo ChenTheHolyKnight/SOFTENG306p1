@@ -147,8 +147,9 @@ public class Schedule {
     }
 
 	/**
+	 * Checks if this schedule is equal to another object.
 	 * Two schedules are equal if and only if every processor in the schedule has the same
-	 * scheduling of scheduled tasks.
+	 * scheduling of scheduled tasks on any other processor in another schedule.
 	 */
 	@Override
 	public boolean equals(Object schedule){
@@ -164,5 +165,21 @@ public class Schedule {
 			}
 		}
 		return true;
+	}
+	
+	/**
+	 * gets the hashcode for this schedule.
+	 * The hashcode is calculated based off all the scheduled tasks on all processors.
+	 */
+	@Override 
+	public int hashCode() {
+		int result = 17;
+		
+		for (List<ScheduledTask> scheduledTasks : processorTasksMap.values()) {
+			for (ScheduledTask st : scheduledTasks) {
+				result = result + st.hashCode();
+			}
+		}
+		return result;
 	}
 }

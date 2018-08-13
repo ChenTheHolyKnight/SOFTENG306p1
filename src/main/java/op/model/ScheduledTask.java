@@ -47,9 +47,26 @@ public class ScheduledTask {
 		return task;
 	}
 	
+	/**
+	 * Checks if the scheduled task object is equal to another object.
+	 * Two scheduled task objects are equal if they have the same start time, and the string Id's of their 
+	 * tasks are identical.
+	 */
 	@Override
 	public boolean equals(Object st) {
 		return ((startTime == ((ScheduledTask) st).getStartTime()) && task.equals(((ScheduledTask) st).getTask()));
+	}
+	
+	/**
+	 * calculates hashcode for a scheduled task. 
+	 * This is calculated using the start time and the hashcode of the task.
+	 */
+	@Override
+	public int hashCode() {
+		int result = 17;
+		result = 31 * result + startTime;
+		result = 31 * result + task.hashCode();
+		return result;
 	}
 
 }

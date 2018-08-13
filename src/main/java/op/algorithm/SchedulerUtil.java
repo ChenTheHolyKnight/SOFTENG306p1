@@ -2,7 +2,6 @@ package op.algorithm;
 
 import op.model.Dependency;
 import op.model.Task;
-import op.model.TaskGraph;
 
 import java.util.*;
 
@@ -17,29 +16,22 @@ public class SchedulerUtil {
      * @return a list of tasks that sorted in topological order
      */
     public static List<Task> createTopologicalOrder(List<Task> tasks) {
-        TaskGraph tg=TaskGraph.getInstance();
         List<Task> tasks1=new ArrayList<>(tasks);
         List<Dependency> dependencies=new ArrayList<>();
-        tasks1.forEach(task -> dependencies.addAll(tg.getOutgoingDependencies(task)));
-        List<Task> removedTasks=new ArrayList<>();
+        tasks1.forEach(task -> dependencies.addAll(task.getOutgoingDependencies()));
+        List<Task> removedTasks;
         List<Dependency> removedDep=new ArrayList<>();
 
         List<Task> outputList=new ArrayList<>();
         while (!tasks1.isEmpty()){
             removedTasks=findEntryPoints(tasks1,dependencies);
-            //System.out.println(removedTasks.size());
-            removedTasks.forEach(task -> {
-                removedDep.addAll(tg.getOutgoingDependencies(task));
-            });
+            removedTasks.forEach(task -> removedDep.addAll(task.getOutgoingDependencies()));
             outputList.addAll(removedTasks);
             tasks1.removeAll(removedTasks);
             dependencies.removeAll(removedDep);
             removedDep.clear();
             removedTasks.clear();
-            //System.out.println(tasks1.size());
         }
-        //outputList.forEach(task -> System.out.print(task.getId()));
-
         return outputList;
     }
 
@@ -48,10 +40,8 @@ public class SchedulerUtil {
      * */
     private static List<Task> findEntryPoints(List<Task> tasks,List<Dependency> dependencies){
         List<Task> starts=new ArrayList<>();
-        //List<Task> tasks=TaskGraph.getInstance().getAllTasks();
 
         tasks.forEach(task -> {
-            //System.out.println(TaskGraph.getInstance().getIncomingDependencies(task).size());
             List<Dependency> incoming=new ArrayList<>();
             for(Dependency dependency:dependencies){
                 if(dependency.getEndTask().equals(task)){

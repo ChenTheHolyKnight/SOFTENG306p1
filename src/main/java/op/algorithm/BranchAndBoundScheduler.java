@@ -65,7 +65,7 @@ public abstract class BranchAndBoundScheduler extends Scheduler {
 
             if (s.getScheduledTask(t) == null) {
                 // the current task is not yet scheduled, check its dependencies
-                List<Dependency> deps = tg.getIncomingDependencies(t);
+                List<Dependency> deps = t.getIncomingDependencies();
 
                 if (deps.isEmpty()) {
                     freeTasks.add(t); // no dependencies so this task must be free
