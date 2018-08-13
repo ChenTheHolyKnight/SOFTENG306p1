@@ -1,13 +1,9 @@
 package op.algorithm;
 
-import op.model.Dependency;
 import op.model.Schedule;
-import op.model.Task;
-import op.model.TaskGraph;
-import op.visualization.Visualiser;
+import op.visualization.Visualizer;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -17,20 +13,20 @@ import java.util.List;
 public abstract class Scheduler {
 
     // objects that are interested in being updated by the Scheduler
-    private List<Visualiser> listeners;
+    private List<Visualizer> listeners;
 
     /**
      * Default constructor for a Scheduler instance
      */
     public Scheduler() {
-        this.listeners = new ArrayList<Visualiser>();
+        this.listeners = new ArrayList<Visualizer>();
     }
 
     /**
-     * Registers a Visualiser instance to observe the Scheduler.
-     * @param v the Visualiser to register as a listener
+     * Registers a Visualizer instance to observe the Scheduler.
+     * @param v the Visualizer to register as a listener
      */
-    public void addListener(Visualiser v) {
+    public void addListener(Visualizer v) {
         this.listeners.add(v);
     }
 

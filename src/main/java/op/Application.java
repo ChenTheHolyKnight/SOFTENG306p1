@@ -4,11 +4,10 @@ import op.algorithm.GreedyScheduler;
 import op.algorithm.Scheduler;
 import op.io.InvalidUserInputException;
 import op.model.Schedule;
-import op.visualization.GUIApplication;
-import op.visualization.Visualiser;
 import op.io.CommandLineIO;
 import op.io.DotIO;
 import op.model.Arguments;
+import op.visualization.Visualizer;
 
 import java.io.IOException;
 
@@ -17,6 +16,7 @@ import java.io.IOException;
  */
 public class Application {
 	private Arguments arguments;
+	private Scheduler scheduler;
 	
     public static void main(String[] args) {
 
@@ -88,7 +88,7 @@ public class Application {
      * @return a schedule
      */
     private Schedule produceSchedule() {
-        Scheduler scheduler = new GreedyScheduler(arguments.getNumProcessors());
+        scheduler = new GreedyScheduler(arguments.getNumProcessors());
         return scheduler.produceSchedule();
     }
 
@@ -98,8 +98,9 @@ public class Application {
      */
     private void startVisualization(String[] args) {
         if (arguments.getToVisualize()) {
-        	//TODO: Do something here
-            javafx.application.Application.launch(GUIApplication.class,args);
+            Visualizer visualiser = new Visualizer();
+        	scheduler.addListener(visualiser);
+        	visualiser.startVisualization(args);
         }
     }
 

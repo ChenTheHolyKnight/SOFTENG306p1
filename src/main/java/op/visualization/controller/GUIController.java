@@ -3,8 +3,11 @@ package op.visualization.controller;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.util.Duration;
+import op.visualization.messages.MessageAddNodes;
+import op.visualization.messages.MessageEliminateChildren;
+import op.visualization.messages.MessageSetOptimalSolution;
+import op.visualization.messages.UpdateMessage;
 import org.controlsfx.control.ToggleSwitch;
 import org.graphstream.ui.fx_viewer.FxDefaultView;
 import org.graphstream.ui.fx_viewer.FxViewer;
@@ -56,8 +59,6 @@ public class GUIController {
     public void initialize(){
         schedulePane.setOpacity(0.0);
         embedGraph();
-        addNodes();
-
     }
 
     /**
@@ -71,9 +72,11 @@ public class GUIController {
         graphPane.getChildren().add(view);
     }
 
-    private void addNodes() {
-        GraphController.getInstance().addNode("node1", "node2");
+    /**
+     * Tells the graph component of the GUI to update
+     * @param u
+     */
+    public void updateGraph(UpdateMessage u) {
+        GraphController.getInstance().updateGraph(u);
     }
-
-
 }
