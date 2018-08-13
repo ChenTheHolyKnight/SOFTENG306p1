@@ -28,7 +28,7 @@ public class TestCostFunction {
                 new Task("3", 5),
                 new Task("4", 1)
         );
-        TaskGraph.initialize(tasks, new ArrayList<>(), null);
+        TaskGraph.initialize(tasks, null);
     }
 
     @AfterClass

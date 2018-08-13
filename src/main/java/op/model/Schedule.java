@@ -175,7 +175,7 @@ public class Schedule {
 	public int hashCode() {
 		int result = 17;
 		
-		for (List<ScheduledTask> scheduledTasks : processorTasksMap.values()) {
+		for (List<ScheduledTask> scheduledTasks : processorMap.values()) {
 			for (ScheduledTask st : scheduledTasks) {
 				result = result + st.hashCode();
 			}
