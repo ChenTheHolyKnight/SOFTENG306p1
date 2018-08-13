@@ -110,4 +110,24 @@ public class Schedule {
         }
         return length;
     }
+	
+	/**
+	 * Two schedules are equal if and only if every processor in the schedule has the same
+	 * scheduling of scheduled tasks.
+	 */
+	@Override
+	public boolean equals(Object schedule){
+		int numProcessors = processorTasksMap.size();
+		if (schedule instanceof Schedule){
+			schedule = (Schedule) schedule;
+		} else {
+			return false;
+		}
+		for (int i=1; i<=numProcessors; i++) {
+			if (!processorTasksMap.values().contains(((Schedule) schedule).getScheduledTasks(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

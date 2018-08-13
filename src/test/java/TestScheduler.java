@@ -55,6 +55,40 @@ public class TestScheduler {
 	}
 	
 	/**
+	 * checks to see if two equivalent schedules are equal. Schedules are equal if every 
+	 * processor is identical to another processor in the other schedule.
+	 */
+	@Test
+	public void testEqualsMethod() {
+		s = new Schedule();
+        Schedule s2 = new Schedule();
+        
+		arguments = new Arguments(null,2,1,false,null);
+
+        s.addScheduledTask(new ScheduledTask(new Task("1", 3), 0, 1));
+		s.addScheduledTask(new ScheduledTask(new Task("2", 2), 3, 1));
+		s.addScheduledTask(new ScheduledTask(new Task("3", 3), 0, 2));
+		
+		s2.addScheduledTask(new ScheduledTask(new Task("1", 3), 0, 2));
+		s2.addScheduledTask(new ScheduledTask(new Task("2", 2), 3, 2));
+		s2.addScheduledTask(new ScheduledTask(new Task("3", 3), 0, 1));
+		
+		assertTrue(s.equals(s2));
+		
+		Schedule s3 = new Schedule (s2, new ScheduledTask(new Task("4", 3), 3, 1));
+		s2.addScheduledTask(new ScheduledTask(new Task("4", 3), 3, 1));
+		
+		try {
+			assertTrue(s.equals(s2));
+			throw new AssertionError("Thought unequal schedules are equal");
+		} catch (AssertionError e) {
+			// Do nothing
+		}
+		
+		assertTrue (s2.equals(s3));
+	}
+	
+	/**
      * Test if the testScheduleIsValid method recognizes a schedule with overlap
      */
 	@Test
