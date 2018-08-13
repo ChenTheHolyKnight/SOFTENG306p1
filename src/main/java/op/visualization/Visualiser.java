@@ -2,7 +2,9 @@ package op.visualization;
 
 import op.visualization.messages.MessageAddNode;
 import op.visualization.messages.MessageEliminateChildren;
+import op.visualization.messages.MessageSetOptimalSolution;
 import op.visualization.messages.UpdateMessage;
+import op.visualization.controller.GraphController;
 
 /**
  * Interface that any visualisation implementation must conform to.
@@ -10,8 +12,7 @@ import op.visualization.messages.UpdateMessage;
  */
 public class Visualiser {
 	
-	private GraphDisplay graphDisplay = GraphDisplay.getInstance();
-
+	private GraphController graphController = GraphController.getInstance();
 
     /**
      * Updates the visualisation state
@@ -19,10 +20,13 @@ public class Visualiser {
      */
     public void update(UpdateMessage u) {
     	if (u instanceof MessageAddNode) {
-    		graphDisplay.addNode(((MessageAddNode) u).getParentNodeId(), ((MessageAddNode) u).getNewNodeId());
+    		graphController.addNode(((MessageAddNode) u).getParentNodeId(), ((MessageAddNode) u).getNewNodeId());
     	}
     	if (u instanceof MessageEliminateChildren) {
-    		graphDisplay.eliminateChildren(((MessageEliminateChildren) u).getParentNodeId());
+    		graphController.eliminateChildren(((MessageEliminateChildren) u).getParentNodeId());
     	}
+    	if (u instanceof MessageSetOptimalSolution) {
+            graphController.setOptimalSolution(((MessageSetOptimalSolution) u).getOptimalDescendantLine());
+		}
     }
 }
