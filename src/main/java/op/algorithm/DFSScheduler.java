@@ -66,7 +66,7 @@ public class DFSScheduler extends BranchAndBoundScheduler {
     }
 
     // helper to tell us when a partial schedule is worth pursuing any further.
-    // returns true if the cost function is less than the know best length
+    // returns true if the cost function is less than the known best length
     // returns false if the cost function is greater than or equal to the known best, because all schedules based on
     // this schedule are guaranteed to be worse than our known best.
     private boolean costFunctionIsPromising(Schedule s, int bestSoFar) {

@@ -1,12 +1,12 @@
 package op;
 
 import op.algorithm.*;
+import op.algorithm.bound.BottomLevelFunction;
 import op.algorithm.bound.EmptyCostFunction;
-import op.algorithm.bound.IdleTimeCalculator;
+import op.algorithm.bound.IdleTimeFunction;
 import op.io.InvalidUserInputException;
 import op.model.Schedule;
 import op.visualization.GUIApplication;
-import op.visualization.Visualiser;
 import op.io.CommandLineIO;
 import op.io.DotIO;
 import op.model.Arguments;
@@ -74,11 +74,15 @@ public class Application {
      * @return a schedule
      */
     private Schedule produceSchedule() {
-        Scheduler fastScheduler = new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner(), new IdleTimeCalculator(arguments.getNumProcessors()));
+        Scheduler idleTimeScheduler = new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner(), new IdleTimeFunction(arguments.getNumProcessors()));
+        Scheduler bottomLevelScheduler = new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner(), new BottomLevelFunction());
         Scheduler slowScheduler = new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner(), new EmptyCostFunction());
         long startTime = System.currentTimeMillis();
-        Schedule fastSchedule = fastScheduler.produceSchedule();
-        System.out.println("Time with cost function: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+fastSchedule.getLength());
+        Schedule bottomLevelSchedule = bottomLevelScheduler.produceSchedule();
+        System.out.println("Time with bottom level cost function: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+bottomLevelSchedule.getLength());
+        startTime = System.currentTimeMillis();
+        Schedule idleTimeSchedule = idleTimeScheduler.produceSchedule();
+        System.out.println("Time with idle time cost function: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+idleTimeSchedule.getLength());
         startTime = System.currentTimeMillis();
         Schedule slowSchedule = slowScheduler.produceSchedule();
         System.out.println("Time without cost function: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+slowSchedule.getLength());

@@ -10,17 +10,17 @@ import op.model.TaskGraph;
  * Uses the formula: f(s) = (sum(task weights) + total idle time) /  num of processors
  * @author Darcy Cox
  */
-public class IdleTimeCalculator implements CostFunction {
+public class IdleTimeFunction implements CostFunction {
 
     private int numProcessors;
     private int taskWeightSum;
 
     /**
-     * Creates a new IdleTimeCalculator instance. This cost function implementation needs to know
+     * Creates a new IdleTimeFunction instance. This cost function implementation needs to know
      * the number of processors that tasks are scheduled on.
      * @param numProcessors The number of processors that tasks are scheduled on
      */
-    public IdleTimeCalculator(int numProcessors) {
+    public IdleTimeFunction(int numProcessors) {
         this.numProcessors = numProcessors;
 
         // calculate sum of task weights at construction time so it is not re-calculated at every call of calculate()

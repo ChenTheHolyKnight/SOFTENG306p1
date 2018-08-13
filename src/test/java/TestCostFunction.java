@@ -1,9 +1,8 @@
-import op.algorithm.bound.IdleTimeCalculator;
+import op.algorithm.bound.IdleTimeFunction;
 import op.model.Schedule;
 import op.model.ScheduledTask;
 import op.model.Task;
 import op.model.TaskGraph;
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -44,7 +43,7 @@ public class TestCostFunction {
 
     @Test
     public void testIdleTimeCostFunctionOneProcessor() {
-        IdleTimeCalculator func = new IdleTimeCalculator(1);
+        IdleTimeFunction func = new IdleTimeFunction(1);
 
         Schedule s = new Schedule();
         s.addScheduledTask(new ScheduledTask(new Task("1", 2), 0, 1));
@@ -63,7 +62,7 @@ public class TestCostFunction {
 
     @Test
     public void testIdleTimeCostFunctionTwoProcessors() {
-        IdleTimeCalculator func = new IdleTimeCalculator(2);
+        IdleTimeFunction func = new IdleTimeFunction(2);
 
         Schedule s = new Schedule();
         s.addScheduledTask(new ScheduledTask(new Task("1", 2), 0, 1));

@@ -12,6 +12,7 @@ public class Schedule {
 
     private HashMap<Integer,List<ScheduledTask>> processorMap; // stores all scheduled tasks on a given processor
     private HashMap<Task,ScheduledTask> taskMap; // stores the scheduled representation of tasks
+    private int costFunction;
 
     /**
      * Constructs an empty schedule instance
