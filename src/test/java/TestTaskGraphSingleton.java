@@ -35,9 +35,9 @@ public class TestTaskGraphSingleton {
             List<Task> tasks = new ArrayList<>();
             List<Dependency> deps = new ArrayList<>();
 
-            TaskGraph.initialize(tasks, deps, null);
+            TaskGraph.initialize(tasks, null);
             TaskGraph.getInstance();
-            TaskGraph.initialize(null, null, null);
+            TaskGraph.initialize(null, null);
             fail();
         } catch (AlreadyInitializedException e) {}
     }
@@ -53,7 +53,7 @@ public class TestTaskGraphSingleton {
         deps.add(new Dependency(new Task("1",1),new Task("2",2), 1));
         deps.add(new Dependency(new Task("1",1),new Task("2",2), 1));
 
-        TaskGraph.initialize(tasks, deps, null);
+        TaskGraph.initialize(tasks, null);
         List<Task> immutableTasks = TaskGraph.getInstance().getAllTasks();
 
         try {
