@@ -7,6 +7,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 import org.controlsfx.control.ToggleSwitch;
 import org.graphstream.ui.fx_viewer.FxDefaultView;
