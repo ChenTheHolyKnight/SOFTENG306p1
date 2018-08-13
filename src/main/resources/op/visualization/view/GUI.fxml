@@ -28,11 +28,11 @@
                </children>
             </AnchorPane>
          </children></VBox>
-      <TabPane fx:id="tabPane" layoutX="680.0" layoutY="60.0" prefHeight="600.0" prefWidth="300.0" side="RIGHT" styleClass="background" stylesheets="@Styles/TabPane.css" tabClosingPolicy="UNAVAILABLE">
+      <TabPane fx:id="tabPane" layoutX="680.0" layoutY="60.0" prefHeight="538.0" prefWidth="300.0" side="RIGHT" styleClass="background" stylesheets="@Styles/TabPane.css" tabClosingPolicy="UNAVAILABLE">
         <tabs>
           <Tab text="Statistics">
             <content>
-                  <VBox>
+                  <VBox prefHeight="514.0" prefWidth="261.0">
                      <children>
                         <Label alignment="CENTER" prefHeight="30.0" prefWidth="264.0" styleClass="grayBackground" text="CPU Usage" textAlignment="CENTER" textFill="WHITE" />
                         <Tile />
