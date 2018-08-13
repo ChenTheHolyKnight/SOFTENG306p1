@@ -7,6 +7,7 @@ import java.util.List;
 /**
  * Representation of a schedule, which is an allocation of tasks to processors over a certain time.
  */
+
 public class Schedule {
 
     private HashMap<Integer,List<ScheduledTask>> processorMap; // stores all scheduled tasks on a given processor
@@ -144,4 +145,24 @@ public class Schedule {
 
         return scheduledTasks;
     }
+
+	/**
+	 * Two schedules are equal if and only if every processor in the schedule has the same
+	 * scheduling of scheduled tasks.
+	 */
+	@Override
+	public boolean equals(Object schedule){
+		int numProcessors = processorMap.size();
+		if (schedule instanceof Schedule){
+			schedule = (Schedule) schedule;
+		} else {
+			return false;
+		}
+		for (int i=1; i<=numProcessors; i++) {
+			if (!processorMap.values().contains(((Schedule) schedule).getScheduledTasksOfProcessor(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

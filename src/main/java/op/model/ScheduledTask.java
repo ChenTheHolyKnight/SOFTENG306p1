@@ -46,5 +46,10 @@ public class ScheduledTask {
 	public Task getTask() {
 		return task;
 	}
+	
+	@Override
+	public boolean equals(Object st) {
+		return ((startTime == ((ScheduledTask) st).getStartTime()) && task.equals(((ScheduledTask) st).getTask()));
+	}
 
 }
