@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * 
  * @author Ravid
- * Class used to represent Node of a graph for graph visualization.
+ * Class used to represent an input task.
  */
 public class Task {
 	private final String id;
@@ -15,6 +15,12 @@ public class Task {
 	private List<Dependency> incomingDependencies;
 	private List<Dependency> outgoingDependencies;
 
+	
+	/**
+	 * Create a new task
+	 * @param id Task ID as String
+	 * @param weight weight of the task as an int
+	 */
 	public Task (String id, int weight) {
 		this.id = id;
 		this.weight = weight;
