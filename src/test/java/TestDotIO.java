@@ -19,7 +19,7 @@ import static org.junit.Assert.fail;
 
 /**
  * Test class checking that the dot file IO module correctly initializes the TaskGraph singleton.
- * @author Darcy Cox
+ * @author Sam Broadhead
  */
 public class TestDotIO {
 
@@ -44,9 +44,7 @@ public class TestDotIO {
     public void resetTaskGraph() {
         try {
             TestSingletonUtil.resetTaskGraph();
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
     }

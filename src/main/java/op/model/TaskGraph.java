@@ -16,7 +16,6 @@ public class TaskGraph {
     private static TaskGraph instance;
 
     private final List<Task> TASKS;
-    //private final List<Dependency> DEPENDENCIES;
     private final String TITLE;
 
     /**
@@ -36,7 +35,6 @@ public class TaskGraph {
     /**
      * Creates the TaskGraph instance
      * @param tasks A list of all tasks in the task graph
-     * //@param dependencies A list of all dependencies in the task graph
      * @param title The name of the task graph
      * @throws AlreadyInitializedException if TaskGraph has already been initialized
      */

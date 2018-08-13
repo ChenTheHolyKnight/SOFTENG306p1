@@ -11,21 +11,47 @@ import java.util.List;
 public class Task {
 	private final String id;
 	private final int weight;
+	private int bottomLevel;
 
 	private List<Dependency> incomingDependencies;
 	private List<Dependency> outgoingDependencies;
 
-	
+
 	/**
 	 * Create a new task
-	 * @param id Task ID as String
+	 *
+	 * @param id     Task ID as String
 	 * @param weight weight of the task as an int
 	 */
-	public Task (String id, int weight) {
+	public Task(String id, int weight) {
 		this.id = id;
 		this.weight = weight;
+		this.bottomLevel = 0;
 	}
 
+	private int calculateBottomLevel(Task t) {
+		int currentMax = 0;
+		if(t.getOutgoingDependencies().size() == 0){
+			currentMax = t.getDuration();
+		}
+		for (Dependency d : t.getOutgoingDependencies()) {
+			int bottom = t.getDuration() + calculateBottomLevel(d.getEndTask());
+			if (bottom > currentMax) { // if a task has multiple children, take the shortest path from them
+				currentMax = bottom;
+			}
+		}
+		return currentMax;
+
+	}
+
+	public void setBottomLevel() {
+		bottomLevel = calculateBottomLevel(this);
+		System.out.println("Task with id: " + getId() + " and bottom level: " + bottomLevel);
+	}
+
+	public int getBottomLevel() {
+		return bottomLevel;
+	}
 	public void addDependencies(List<Dependency> in, List<Dependency> out){
 		this.incomingDependencies = Collections.unmodifiableList(in);
 		this.outgoingDependencies = Collections.unmodifiableList(out);

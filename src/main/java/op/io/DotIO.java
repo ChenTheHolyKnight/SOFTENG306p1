@@ -132,6 +132,9 @@ public class DotIO {
         for (Task t : taskList){
             t.addDependencies(depInMap.get(t.getId()),depOutMap.get(t.getId()));
         }
+        for (Task t : taskList){
+            t.setBottomLevel();
+        }
         /* check dotIn here
         for (Dependency d: depList){
             System.out.println("Dependency with src Task: "+d.getStartTask().getId()+" and dst Task: "
