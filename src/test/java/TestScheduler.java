@@ -63,7 +63,7 @@ public class TestScheduler {
 		s = new Schedule();
         Schedule s2 = new Schedule();
         
-		arguments = new Arguments(null,1,1,false,null);
+		arguments = new Arguments(null,2,1,false,null);
 
         s.addScheduledTask(new ScheduledTask(new Task("1", 3), 0, 1));
 		s.addScheduledTask(new ScheduledTask(new Task("2", 2), 3, 1));
