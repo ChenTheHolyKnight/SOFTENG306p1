@@ -2,6 +2,7 @@ package op;
 
 import op.algorithm.*;
 import op.algorithm.bound.BottomLevelFunction;
+import op.algorithm.bound.CombinedCostFunction;
 import op.algorithm.bound.EmptyCostFunction;
 import op.algorithm.bound.IdleTimeFunction;
 import op.io.InvalidUserInputException;
@@ -80,13 +81,18 @@ public class Application {
         long startTime = System.currentTimeMillis();
         Schedule bottomLevelSchedule = bottomLevelScheduler.produceSchedule();
         System.out.println("Time with bottom level cost function: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+bottomLevelSchedule.getLength());
+        Scheduler combinedScheduler = new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner(), new CombinedCostFunction(arguments.getNumProcessors()));
+        startTime = System.currentTimeMillis();
+        Schedule combinedSchedule = combinedScheduler.produceSchedule();
+        System.out.println("Time with both cost functions: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+combinedSchedule.getLength());
         startTime = System.currentTimeMillis();
         Schedule idleTimeSchedule = idleTimeScheduler.produceSchedule();
         System.out.println("Time with idle time cost function: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+idleTimeSchedule.getLength());
-        startTime = System.currentTimeMillis();
-        Schedule slowSchedule = slowScheduler.produceSchedule();
-        System.out.println("Time without cost function: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+slowSchedule.getLength());
-        return slowSchedule;
+//        startTime = System.currentTimeMillis();
+//        Schedule slowSchedule = slowScheduler.produceSchedule();
+//        System.out.println("Time without cost function: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+slowSchedule.getLength());
+//        return slowSchedule;
+        return idleTimeSchedule;
     }
 
     /**
