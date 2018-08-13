@@ -48,7 +48,6 @@ public abstract class BranchAndBoundScheduler extends Scheduler {
         for (Task t : freeTasks) {
             for (int i = 1; i <= super.getNumProcessors(); i++) {
                 int startTime = super.getEarliestStartTime(s, t, i);
-
                 children.add(new Schedule(s, new ScheduledTask(t, startTime, i)));
             }
         }

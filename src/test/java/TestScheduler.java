@@ -241,9 +241,9 @@ public class TestScheduler {
 	private void checkNoOverlap() {
 
 		for (int processor = 1; processor <= arguments.getNumProcessors(); processor++) {
-			if (s.getScheduledTasks(processor) != null) {
-				for (ScheduledTask t1 : s.getScheduledTasks(processor)) {
-					for (ScheduledTask t2 : s.getScheduledTasks(processor)) {
+			if (s.getScheduledTasksOfProcessor(processor) != null) {
+				for (ScheduledTask t1 : s.getScheduledTasksOfProcessor(processor)) {
+					for (ScheduledTask t2 : s.getScheduledTasksOfProcessor(processor)) {
 						if (!t1.equals(t2)) {
 							assertTrue(t1.getStartTime() + t1.getTask().getDuration() <= t2.getStartTime()
 									|| t2.getStartTime() + t2.getTask().getDuration() <= t1.getStartTime());

@@ -60,7 +60,7 @@ public abstract class Scheduler {
         List<Dependency> incomingEdges = TaskGraph.getInstance().getIncomingDependencies(t);
 
         // Estimate the earliest start time of the task as the next available time on the processor
-        int startTime = getNextStartTimeOfProcessor(s, p);
+        int startTime = s.getNextFreeTimeOfProcessor(p);
 
         for (Dependency incomingEdge: incomingEdges) {
             Task startTask = incomingEdge.getStartTask();
@@ -68,7 +68,8 @@ public abstract class Scheduler {
             // If a dependent task is not scheduled on the same processor, the start time of this task
             // cannot be earlier than the end time of the dependent task plus the communication cost
             if (s.getScheduledTask(startTask).getProcessor() != p) {
-                int newStartTime = s.getScheduledTask(startTask).getStartTime() + startTask.getDuration()
+                int newStartTime = s.getScheduledTask(startTask).getStartTime()
+                        + startTask.getDuration()
                         + incomingEdge.getWeight();
 
                 if (newStartTime > startTime) {
@@ -77,25 +78,6 @@ public abstract class Scheduler {
             }
         }
         return startTime;
-    }
-
-    // helper to get the next available time for scheduling on a processor.
-    private int getNextStartTimeOfProcessor(Schedule s, int processor) {
-        List<ScheduledTask> scheduledTasks = s.getScheduledTasks(processor);
-        int bestStartTime = 0;
-
-        // scheduledTasks is null if the processor has no scheduled tasks yet
-        if (scheduledTasks != null) {
-            // earliest start is the maximum finishing time of all tasks on the processor
-            for (ScheduledTask st : scheduledTasks) {
-                int finishTime = st.getStartTime() + st.getTask().getDuration();
-                if (finishTime > bestStartTime) {
-                    bestStartTime = finishTime;
-                }
-            }
-        }
-
-        return bestStartTime;
     }
 
 }

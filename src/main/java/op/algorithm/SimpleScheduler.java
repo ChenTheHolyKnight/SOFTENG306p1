@@ -5,10 +5,6 @@ import op.model.ScheduledTask;
 import op.model.Task;
 import op.model.TaskGraph;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Class containing logic to produce the simplest valid schedule. Used as a fall-back option.
