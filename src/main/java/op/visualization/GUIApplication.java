@@ -30,8 +30,9 @@ public class GUIApplication extends Application{
         //System.out.println(new SystemInfo().OsInfo());
         //new SystemInfo().printCPU();
         Timer timer = new Timer();
-        Tile tile=controller.getTile();
-        timer.schedule(new SystemInfo(tile), 0, 100);
+        Tile cpuTile=controller.getCPUTile();
+        Tile memTile=controller.getMemoryTile();
+        timer.schedule(new SystemInfo(cpuTile,memTile), 0, 100);
 
         stage.setScene(scene);
         stage.show();

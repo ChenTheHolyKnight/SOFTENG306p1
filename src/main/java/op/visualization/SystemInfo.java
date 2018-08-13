@@ -9,20 +9,26 @@ import java.text.NumberFormat;
 import java.util.TimerTask;
 
 public class SystemInfo extends TimerTask{
+    private Tile memoryTile;
     private Runtime runtime = Runtime.getRuntime();
     private Tile cpuTile;
 
-    public SystemInfo(Tile cpuTile){
+    public SystemInfo(Tile cpuTile,Tile memoryTile){
         this.cpuTile=cpuTile;
+        this.memoryTile=memoryTile;
     }
 
     public long usedMem() {
         return Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
     }
 
-    public double MemInfo() {
-        long allocatedMemory = runtime.totalMemory();
-        return usedMem()/allocatedMemory*100;
+    public double getMemory() {
+        OperatingSystemMXBean operatingSystemMXBean=
+                (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+        double free=(double)operatingSystemMXBean.getFreePhysicalMemorySize();
+        double total=(double) operatingSystemMXBean.getTotalPhysicalMemorySize();
+        double result=(total-free)/total*100;
+        return result;
 
     }
 
@@ -36,7 +42,6 @@ public class SystemInfo extends TimerTask{
     @Override
     public void run() {
         cpuTile.setValue(this.getCPU());
-        //cpuTile.setValue(this.MemInfo());
-        //cpuTile.setValue(20);
+        memoryTile.setValue(this.getMemory());
     }
 }

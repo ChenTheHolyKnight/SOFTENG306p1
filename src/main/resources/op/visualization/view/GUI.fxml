@@ -37,7 +37,7 @@
                         <Label alignment="CENTER" prefHeight="30.0" prefWidth="264.0" styleClass="grayBackground" text="CPU Usage" textAlignment="CENTER" textFill="WHITE" />
                         <Tile fx:id="cpuTile" prefHeight="240.0" prefWidth="260.0" />
                         <Label alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="30.0" prefWidth="264.0" styleClass="grayBackground" text="Memory Usage" textAlignment="CENTER" textFill="WHITE" />
-                        <Tile layoutX="10.0" layoutY="40.0" prefHeight="240.0" prefWidth="260.0" />
+                        <Tile fx:id="memoryTile" layoutX="10.0" layoutY="40.0" prefHeight="240.0" prefWidth="260.0" />
                      </children>
                   </VBox>
             </content>

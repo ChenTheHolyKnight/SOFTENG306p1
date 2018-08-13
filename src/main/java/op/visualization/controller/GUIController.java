@@ -35,6 +35,9 @@ public class GUIController {
     @FXML
     public Tile cpuTile;
 
+    @FXML
+    public Tile memoryTile;
+
 
     private Scene scene;
 
@@ -82,9 +85,14 @@ public class GUIController {
         addNodes();
     }
 
-    public Tile getTile(){
+    public Tile getCPUTile(){
         this.cpuTile.setSkinType(Tile.SkinType.BAR_GAUGE);
         return cpuTile;
+    }
+
+    public Tile getMemoryTile(){
+        this.memoryTile.setSkinType(Tile.SkinType.BAR_GAUGE);
+        return memoryTile;
     }
 
     /**
