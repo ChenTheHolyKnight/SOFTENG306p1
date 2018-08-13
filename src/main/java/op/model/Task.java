@@ -35,8 +35,22 @@ public class Task {
 		return weight;
 	}
 	
+	/**
+	 * Checks if this task object is equal to another object.
+	 * Two task objects are equal if they have identical id strings.
+	 */
 	@Override
 	public boolean equals(Object task) {
 		return ((Task) task).getId().equals(id);
+	}
+	
+	/**
+	 * calculate the hashcode of this task based off of it's Id.
+	 */
+	@Override
+	public int hashCode() {
+		int result = 17;
+		result = 31 * result + id.hashCode();
+		return result;
 	}
 }
