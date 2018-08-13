@@ -26,7 +26,6 @@ public class GraphController {
 	private GraphController () {
 		graph =  new GraphicGraph("graph");
 		graph.setAttribute("ui.stylesheet", GRAPH_DISPLAY_STYLESHEET);
-		Viewer viewer = graph.display();
 	}
 	
 	/**

@@ -56,6 +56,7 @@ public class GUIController {
     public void initialize(){
         schedulePane.setOpacity(0.0);
         embedGraph();
+        addNodes();
 
     }
 
@@ -68,6 +69,10 @@ public class GUIController {
         GraphRenderer renderer = viewer.newDefaultGraphRenderer();
         FxDefaultView view = new FxDefaultView(viewer, "graph", renderer);
         graphPane.getChildren().add(view);
+    }
+
+    private void addNodes() {
+        GraphController.getInstance().addNode("node1", "node2");
     }
 
 

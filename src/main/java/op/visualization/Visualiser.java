@@ -13,7 +13,6 @@ public class Visualiser {
 	
 	private GraphController graphController = GraphController.getInstance();
 
-
     /**
      * Updates the visualisation state
      * @param u the update message. contains the necessary information about which state should be changed.
