@@ -1,6 +1,8 @@
 package op;
 
 import op.algorithm.*;
+import op.algorithm.bound.EmptyCostFunction;
+import op.algorithm.bound.IdleTimeCalculator;
 import op.io.InvalidUserInputException;
 import op.model.Schedule;
 import op.visualization.GUIApplication;
@@ -72,14 +74,14 @@ public class Application {
      * @return a schedule
      */
     private Schedule produceSchedule() {
-      //  Scheduler fastScheduler = new DFSScheduler(arguments.getNumProcessors(), new IdleTimePruner());
-        Scheduler slowScheduler = new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner());
-      //  long startTime = System.currentTimeMillis();
-      //  Schedule fastSchedule = fastScheduler.produceSchedule();
-      //  System.out.println("Time with pruning: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+fastSchedule.getLength());
+        Scheduler fastScheduler = new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner(), new IdleTimeCalculator(arguments.getNumProcessors()));
+        Scheduler slowScheduler = new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner(), new EmptyCostFunction());
         long startTime = System.currentTimeMillis();
+        Schedule fastSchedule = fastScheduler.produceSchedule();
+        System.out.println("Time with cost function: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+fastSchedule.getLength());
+        startTime = System.currentTimeMillis();
         Schedule slowSchedule = slowScheduler.produceSchedule();
-        System.out.println("Time without pruning: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+slowSchedule.getLength());
+        System.out.println("Time without cost function: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+slowSchedule.getLength());
         return slowSchedule;
     }
 

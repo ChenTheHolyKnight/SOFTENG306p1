@@ -35,14 +35,19 @@ public class IdleTimeCalculator implements CostFunction {
         int idleTime = 0; // stores the idle time across all processors
         for (int i = 1; i <= numProcessors; i++) {
             int expectedStartTime = 0; // time that next task should start if no idle time
-            for (ScheduledTask st : s.getScheduledTasksOfProcessor(i)) {
-                // add to idleTime whenever an empty slot is detected between tasks
-                int actualStartTime = st.getStartTime();
-                idleTime += actualStartTime - expectedStartTime;
 
-                // the next task can start exactly when the current task finishes
-                expectedStartTime = st.getStartTime() + st.getTask().getDuration();
+            // sum up idle time of each processor that has scheduled tasks on it
+            if (s.getScheduledTasksOfProcessor(i) != null) {
+                for (ScheduledTask st : s.getScheduledTasksOfProcessor(i)) {
+                    // add to idleTime whenever an empty slot is detected between tasks
+                    int actualStartTime = st.getStartTime();
+                    idleTime += actualStartTime - expectedStartTime;
+
+                    // the next task can start exactly when the current task finishes
+                    expectedStartTime = st.getStartTime() + st.getTask().getDuration();
+                }
             }
+
         }
 
         return (taskWeightSum + idleTime) / numProcessors;
