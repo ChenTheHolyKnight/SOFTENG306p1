@@ -1,5 +1,4 @@
 import op.io.DotIO;
-import op.model.Dependency;
 import op.model.Task;
 import op.model.TaskGraph;
 import org.junit.After;
@@ -9,9 +8,12 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * Simple testing class for the bottom level of a task
+ * @author Sam Broadhead
+ */
 public class TestBottomLevel {
     // constants to hold the paths to each dot file
     private static final String BASE_DIR = "src/main/resources/sample_inputs/";

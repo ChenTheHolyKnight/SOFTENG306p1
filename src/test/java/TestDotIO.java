@@ -19,7 +19,7 @@ import static org.junit.Assert.fail;
 
 /**
  * Test class checking that the dot file IO module correctly initializes the TaskGraph singleton.
- * @author Sam Broadhead
+ * @author Sam Broadhead, Darcy Cox
  */
 public class TestDotIO {
 

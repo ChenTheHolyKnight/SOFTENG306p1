@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * 
- * @author Ravid
+ * @author Ravid, Sam
  * Class used to represent an input task.
  */
 public class Task {

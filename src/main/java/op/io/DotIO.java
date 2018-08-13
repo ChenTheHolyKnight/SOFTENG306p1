@@ -116,9 +116,9 @@ public class DotIO {
             depList.add(new Dependency(taskList.get(taskList.indexOf(srcTask)),taskList.get(taskList.indexOf(dstTask)),depMap.get(keys)));
         }
         for (Dependency d : depList){
-            depOutMap.computeIfAbsent(d.getStartTask().getId(), k -> new ArrayList<>());
+            depOutMap.computeIfAbsent(d.getStartTask().getId(), k -> new ArrayList<>()); // build lists not yet built
             depInMap.computeIfAbsent(d.getEndTask().getId(), k -> new ArrayList<>());
-            depOutMap.get(d.getStartTask().getId()).add(d);
+            depOutMap.get(d.getStartTask().getId()).add(d); // add the dependency to the list for the respective tasks
             depInMap.get(d.getEndTask().getId()).add(d);
         }
         for (String key : taskMap.keySet()){ // build any tasks that have no ingoing or outgoing dependencies
@@ -129,20 +129,12 @@ public class DotIO {
                 taskList.add(t);
             }
         }
-        for (Task t : taskList){
+        for (Task t : taskList){ // add the dependencies to all tasks
             t.addDependencies(depInMap.get(t.getId()),depOutMap.get(t.getId()));
         }
-        for (Task t : taskList){
+        for (Task t : taskList){ // generate bottom levels for all tasks
             t.setBottomLevel();
         }
-        /* check dotIn here
-        for (Dependency d: depList){
-            System.out.println("Dependency with src Task: "+d.getStartTask().getId()+" and dst Task: "
-                    +d.getEndTask().getId()+" and weight: "+d.getWeight());
-        }
-        for (Task t : taskList){
-            System.out.println("Task with id: "+t.getId()+" and weight: "+t.getDuration());
-        }*/
         br.close();
         TaskGraph.initialize(taskList, title);
     }
