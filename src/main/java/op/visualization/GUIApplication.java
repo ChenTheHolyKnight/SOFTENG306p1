@@ -22,7 +22,7 @@ public class GUIApplication extends Application{
         GUIController controller=loader.getController();
         controller.setScene(scene);
 
-        stage.setHeight(600);
+        stage.setHeight(620);
         stage.setResizable(false);
         stage.centerOnScreen();
 
