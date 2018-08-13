@@ -55,8 +55,9 @@ public class TestScheduler {
 	}
 	
 	/**
-	 * checks to see if two equivalent schedules are equal. Schedules are equal if every 
-	 * processor is identical to another processor in the other schedule.
+	 * checks to see if two equivalent schedules are equal and have matching hashcodes. 
+	 * Also checks if two different schedules are NOT equal and do NOT have matching hashcodes
+	 * Schedules are equal if every processor is identical to another processor in the other schedule.
 	 */
 	@Test
 	public void testEqualsMethod() {
@@ -74,6 +75,7 @@ public class TestScheduler {
 		s2.addScheduledTask(new ScheduledTask(new Task("3", 3), 0, 1));
 		
 		assertTrue(s.equals(s2));
+		assertTrue(s.hashCode() == s2.hashCode());
 		
 		Schedule s3 = new Schedule (s2, new ScheduledTask(new Task("4", 3), 3, 1));
 		s2.addScheduledTask(new ScheduledTask(new Task("4", 3), 3, 1));
@@ -84,8 +86,15 @@ public class TestScheduler {
 		} catch (AssertionError e) {
 			// Do nothing
 		}
+		try {
+			assertTrue(s.hashCode() == s2.hashCode());
+			throw new AssertionError("Thought unequal schedules are equal");
+		} catch (AssertionError e) {
+			// Do nothing
+		}
 		
 		assertTrue (s2.equals(s3));
+		assertTrue (s2.hashCode() == s2.hashCode());
 	}
 	
 	/**
