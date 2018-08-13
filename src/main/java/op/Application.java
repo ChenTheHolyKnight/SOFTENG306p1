@@ -69,15 +69,15 @@ public class Application {
      * @return a schedule
      */
     private Schedule produceSchedule() {
-        Scheduler fastScheduler = new DFSScheduler(arguments.getNumProcessors(), new IdleTimePruner());
+      //  Scheduler fastScheduler = new DFSScheduler(arguments.getNumProcessors(), new IdleTimePruner());
         Scheduler slowScheduler = new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner());
+      //  long startTime = System.currentTimeMillis();
+      //  Schedule fastSchedule = fastScheduler.produceSchedule();
+      //  System.out.println("Time with pruning: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+fastSchedule.getLength());
         long startTime = System.currentTimeMillis();
-        Schedule fastSchedule = fastScheduler.produceSchedule();
-        System.out.println("Time with pruning: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+fastSchedule.getLength());
-        /*startTime = System.currentTimeMillis();
         Schedule slowSchedule = slowScheduler.produceSchedule();
-        System.out.println("Time without pruning: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+slowSchedule.getLength());*/
-        return fastSchedule;
+        System.out.println("Time without pruning: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+slowSchedule.getLength());
+        return slowSchedule;
     }
 
     /**
