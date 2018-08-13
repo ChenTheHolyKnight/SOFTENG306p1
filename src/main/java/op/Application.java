@@ -1,7 +1,6 @@
 package op;
 
-import op.algorithm.GreedyScheduler;
-import op.algorithm.Scheduler;
+import op.algorithm.*;
 import op.io.InvalidUserInputException;
 import op.model.Schedule;
 import op.visualization.GUIApplication;
@@ -20,9 +19,6 @@ public class Application {
 	
     public static void main(String[] args) {
 
-        //get the  start time of the program
-        long startTime=System.currentTimeMillis();
-
         Application application = new Application();
 
         // Read from command line
@@ -40,18 +36,6 @@ public class Application {
 
         // Write out the schedule
         application.writeDot(dotParser, schedule);
-
-        //get the end time of the program
-        long endTime=System.currentTimeMillis();
-
-        int scheduledLength=schedule.getLength();
-        //print out the time
-        long time=endTime-startTime;
-
-        //print out in the command Line
-        System.out.println("Time: "+time+"ms        Schedule Length: "+scheduledLength);
-
-
     }
 
     /**
@@ -88,8 +72,15 @@ public class Application {
      * @return a schedule
      */
     private Schedule produceSchedule() {
-        Scheduler scheduler = new GreedyScheduler(arguments.getNumProcessors());
-        return scheduler.produceSchedule();
+      //  Scheduler fastScheduler = new DFSScheduler(arguments.getNumProcessors(), new IdleTimePruner());
+        Scheduler slowScheduler = new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner());
+      //  long startTime = System.currentTimeMillis();
+      //  Schedule fastSchedule = fastScheduler.produceSchedule();
+      //  System.out.println("Time with pruning: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+fastSchedule.getLength());
+        long startTime = System.currentTimeMillis();
+        Schedule slowSchedule = slowScheduler.produceSchedule();
+        System.out.println("Time without pruning: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+slowSchedule.getLength());
+        return slowSchedule;
     }
 
     /**

@@ -8,8 +8,37 @@ import java.util.*;
 
 public class Schedule {
 
-    private HashMap<Integer,List<ScheduledTask>> processorTasksMap = new HashMap<>();
-    private HashMap<Task,ScheduledTask> taskMap = new HashMap<>();
+    private HashMap<Integer,List<ScheduledTask>> processorTasksMap;
+    private HashMap<Task,ScheduledTask> taskMap;
+
+    /**
+     * Constructs an empty schedule instance
+     */
+    public Schedule() {
+        this.processorTasksMap = new HashMap<>();
+        this.taskMap = new HashMap<>();
+    }
+
+    /**
+     * Constructs a new schedule by extending the provided schedule by the provided scheduled task
+     * @param s The schedule to base this new schedule on
+     * @param stNew The scheduled task to add
+     */
+    public Schedule(Schedule s, ScheduledTask stNew) {
+
+        this.taskMap = (HashMap<Task, ScheduledTask>)((s.taskMap).clone());
+        this.processorTasksMap = (HashMap<Integer, List<ScheduledTask>>)((s.processorTasksMap).clone());
+
+        // replace the lists of scheduled tasks with an equivalent list, but with a different reference.
+        // this is so that when these lists are changed in child schedules of s, it does not affect
+        // the parent schedule. This is not necessary for the Task/ScheduledTask map because the values within
+        // those objects cannot be changed by objects referencing them.
+        for (int i : this.processorTasksMap.keySet()) {
+            this.processorTasksMap.put(i, new ArrayList<ScheduledTask>(this.processorTasksMap.get(i)));
+        }
+
+        this.addScheduledTask(stNew);
+    }
   
     /**
      * Tells whether or not this Schedule instance is a complete schedule (all tasks allocated)
@@ -38,12 +67,12 @@ public class Schedule {
      */
     public void addScheduledTask(ScheduledTask scheduledTask){
         int processorNum=scheduledTask.getProcessor();
-        if(processorTasksMap.get(processorNum)!=null){
-	    processorTasksMap.get(processorNum).add(scheduledTask);
+        if(processorTasksMap.get(processorNum)!= null){
+	        processorTasksMap.get(processorNum).add(scheduledTask);
         }else{
             List<ScheduledTask> tasks=new ArrayList<>();
             tasks.add(scheduledTask);
-            processorTasksMap.put(scheduledTask.getProcessor(),tasks);
+            processorTasksMap.put(processorNum,tasks);
         }
         taskMap.put(scheduledTask.getTask(), scheduledTask);
     }
@@ -51,11 +80,11 @@ public class Schedule {
     /**
      * Gets a task's corresponding scheduled task in this schedule
      * 
-     * @param task the task to retrieve the relevant ScheduledTask for
-     * @return the scheduled task representing the task in this schedule
+     * @param t the task to retrieve the relevant ScheduledTask for
+     * @return the scheduled task representing the task in this schedule, null if the task is not yet scheduled
      */
     public ScheduledTask getScheduledTask(Task t) {
-    	return taskMap.get(t);
+        return taskMap.get(t);
     }
 
     /**
