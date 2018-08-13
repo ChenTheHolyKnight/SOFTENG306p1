@@ -11,6 +11,12 @@ public class ScheduledTask {
     private int startTime;
     private int processor;
 
+    /**
+     * Create a new Scheduled Task
+     * @param task a reference to the task this ScheduledTask represents
+     * @param startTime Start time of the Task
+     * @param processor Processor this task should be executed on
+     */
     public ScheduledTask (Task task, int startTime, int processor) {
         this.task = task;
         this.startTime = startTime;

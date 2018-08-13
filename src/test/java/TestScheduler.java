@@ -2,7 +2,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+
+import java.util.ArrayList;
+
 import java.util.HashMap;
+
 import java.util.List;
 
 import op.algorithm.DFSScheduler;
@@ -12,6 +16,7 @@ import op.algorithm.SimpleScheduler;
 import org.junit.After;
 import org.junit.Test;
 
+import junit.framework.Assert;
 import op.io.DotIO;
 import op.model.Arguments;
 import op.model.Dependency;
@@ -20,6 +25,11 @@ import op.model.ScheduledTask;
 import op.model.Task;
 import op.model.TaskGraph;
 
+/**
+ * Test class to ensure schedules produced are valid
+ * @author Ravid Aharon
+ *
+ */
 public class TestScheduler {
 	
 	private Schedule s;
@@ -43,6 +53,67 @@ public class TestScheduler {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+     * Test if the testScheduleIsValid method recognizes a schedule with overlap
+     */
+	@Test
+	public void testScheduleIsValidOverlap() {
+		s = new Schedule();
+        arguments = new Arguments(null,1,1,false,null);
+
+        // set up a schedule with overlap
+		s.addScheduledTask(new ScheduledTask(new Task("1", 3), 0, 1));
+		s.addScheduledTask(new ScheduledTask(new Task("2", 2), 2, 1));		
+	
+		// Checks if method recognizes overlap
+		try {
+				checkScheduleIsValid();
+				throw new AssertionError("did not detect overlap");	
+		} catch (AssertionError e) {
+			// do nothing if error was detected
+		}
+	}
+	
+	/**
+     * Test if the testScheduleIsValid method recognizes a schedule which does not 
+     * respect it's dependencies between tasks on different processors
+     */
+	@Test
+	public void testScheduleIsValidDependencyDisrespect() {
+		s = new Schedule();
+        arguments = new Arguments(null,2,1,false,null);
+        
+        ArrayList<Task> tasks = new ArrayList<Task>();
+        ArrayList<Dependency> dependencies = new ArrayList<Dependency>();
+        
+        // Create and add two tasks which don't respect dependency
+        Task t1 = new Task("1", 3);
+        Task t2 = new Task("2", 3);
+        ScheduledTask s1 = new ScheduledTask(t1, 0, 1);
+        ScheduledTask s2 = new ScheduledTask(t2, 3, 2);
+        Dependency d = new Dependency(t1, t2, 1);
+        
+        tasks.add(t1);
+        tasks.add(t2);
+        dependencies.add(d);
+        
+    	TaskGraph.initialize(tasks, dependencies, "depTest");
+        
+        // set up a schedule with overlap
+		s.addScheduledTask(s1);
+		s.addScheduledTask(s2);
+		
+	
+		// Checks if method recognizes that a dependency was not respected
+		try {
+				checkScheduleIsValid();
+				throw new AssertionError("did not detect dependency DISRESPECT");	
+		} catch (AssertionError e) {
+			// do nothing if error was detected
+		}
+	}
+
 
     /**
      * Tests if the schedule produced by SimpleScheduler is valid.
@@ -114,14 +185,6 @@ public class TestScheduler {
         checkGreedyScheduler(PATH_TO_NODES_11);
     }
     
-    /**
-     * Sets up the program input.
-     * @throws IOException
-     */
-    private void setup(String inputFilePath) throws IOException {
-        arguments = new Arguments(inputFilePath,10,1,false,"testOutput.dot");
-        new DotIO().dotIn(inputFilePath);
-    }
     
     /**
      * Checks that the schedule produced by GreedyScheduler is valid and at least as good as the schedule produced by
@@ -138,6 +201,17 @@ public class TestScheduler {
         }
     }
 
+    
+    /**
+     * Creates an Arguments Object and creates taskgraph.
+     * @throws IOException
+     */
+    private void setup(String inputFilePath) throws IOException {
+        arguments = new Arguments(inputFilePath,10,1,false,"testOutput.dot");
+        new DotIO().dotIn(inputFilePath);
+    }
+
+
 	private void checkDFSScheduler(String path) {
 		try {
 			setup(path);
@@ -148,6 +222,7 @@ public class TestScheduler {
 			e.printStackTrace();
 		}
 	}
+
 	
 	/**
 	 * Checks if a schedule is valid. A schedule is valid if and only if there is no overlap between
