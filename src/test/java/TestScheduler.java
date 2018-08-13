@@ -136,12 +136,13 @@ public class TestScheduler {
         ScheduledTask s1 = new ScheduledTask(t1, 0, 1);
         ScheduledTask s2 = new ScheduledTask(t2, 3, 2);
         Dependency d = new Dependency(t1, t2, 1);
-        
+        t1.addDependencies(new ArrayList<>(), new ArrayList<Dependency>(){{add(d);}});
+        t2.addDependencies(new ArrayList<Dependency>(){{add(d);}}, new ArrayList<>());
         tasks.add(t1);
         tasks.add(t2);
         dependencies.add(d);
         
-    	TaskGraph.initialize(tasks, dependencies, "depTest");
+    	TaskGraph.initialize(tasks, "depTest");
         
         // set up a schedule with overlap
 		s.addScheduledTask(s1);
@@ -307,7 +308,7 @@ public class TestScheduler {
 	private void checkDependenciesAreRespected() {
 
 		for (Task task : TaskGraph.getInstance().getAllTasks()) {
-			for (Dependency d : TaskGraph.getInstance().getOutgoingDependencies(task)) {
+			for (Dependency d : task.getOutgoingDependencies()) {
 
 				if (s.getScheduledTask(task).getProcessor() != s.getScheduledTask(d.getEndTask()).getProcessor()){
 					assertTrue(s.getScheduledTask(task).getStartTime() + task.getDuration() + d.getWeight()
