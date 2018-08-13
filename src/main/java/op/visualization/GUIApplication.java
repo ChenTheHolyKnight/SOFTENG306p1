@@ -1,5 +1,6 @@
 package op.visualization;
 
+import eu.hansolo.tilesfx.Tile;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,6 +10,7 @@ import op.visualization.controller.GUIController;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Timer;
 
 public class GUIApplication extends Application{
     @Override
@@ -25,6 +27,11 @@ public class GUIApplication extends Application{
         stage.setHeight(620);
         stage.setResizable(false);
         stage.centerOnScreen();
+        //System.out.println(new SystemInfo().OsInfo());
+        //new SystemInfo().printCPU();
+        Timer timer = new Timer();
+        Tile tile=controller.getTile();
+        timer.schedule(new SystemInfo(tile), 0, 100);
 
         stage.setScene(scene);
         stage.show();

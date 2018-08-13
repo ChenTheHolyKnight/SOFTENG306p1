@@ -1,5 +1,10 @@
 package op.visualization.controller;
 
+import eu.hansolo.tilesfx.Alarm;
+import eu.hansolo.tilesfx.Tile;
+import eu.hansolo.tilesfx.TileBuilder;
+import eu.hansolo.tilesfx.events.TileEvent;
+import eu.hansolo.tilesfx.events.TileEventListener;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -26,6 +31,9 @@ public class GUIController {
 
     @FXML
     private AnchorPane schedulePane;
+
+    @FXML
+    public Tile cpuTile;
 
 
     private Scene scene;
@@ -72,7 +80,11 @@ public class GUIController {
         schedulePane.setOpacity(0.0);
         embedGraph();
         addNodes();
+    }
 
+    public Tile getTile(){
+        this.cpuTile.setSkinType(Tile.SkinType.BAR_GAUGE);
+        return cpuTile;
     }
 
     /**
