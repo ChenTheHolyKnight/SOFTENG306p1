@@ -52,7 +52,11 @@ public class GraphController {
 		
 		graph.addEdge(parentNodeId + newNodeId, parentNodeId, newNodeId, true);
 	}
- 
+
+    /**
+     * Removes the descendants of a given node from the solution tree
+     * @param nodeId
+     */
 	public void eliminateChildren (String nodeId) {
 		Node n = graph.getNode(nodeId);
 		n.setAttribute(STYLE_CLASS, "eliminated");
@@ -61,6 +65,24 @@ public class GraphController {
 			eliminateChildren(e.getTargetNode().getId());
 		}
 	}
+
+    /**
+     * Marks the given nodes as the optimal solution
+     * @param nodeIds the nodes that represent the optimal solution
+     */
+	public void setOptimalSolution(List<String> nodeIds) {
+	    for (String nodeId : nodeIds) {
+            Node n = graph.getNode(nodeId);
+            n.setAttribute(STYLE_CLASS, "optimal");
+            for (Edge e : n.leavingEdges().collect(Collectors.toList())){
+                if (nodeIds.contains(e.getTargetNode().getId())) {
+                    e.setAttribute(STYLE_CLASS, "optimal");
+                    eliminateChildren(e.getTargetNode().getId());
+                }
+
+            }
+        }
+    }
 	
 	public void update() {
 		

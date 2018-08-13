@@ -2,6 +2,7 @@ package op.visualization;
 
 import op.visualization.messages.MessageAddNode;
 import op.visualization.messages.MessageEliminateChildren;
+import op.visualization.messages.MessageSetOptimalSolution;
 import op.visualization.messages.UpdateMessage;
 import op.visualization.controller.GraphController;
 
@@ -24,5 +25,8 @@ public class Visualiser {
     	if (u instanceof MessageEliminateChildren) {
     		graphController.eliminateChildren(((MessageEliminateChildren) u).getParentNodeId());
     	}
+    	if (u instanceof MessageSetOptimalSolution) {
+            graphController.setOptimalSolution(((MessageSetOptimalSolution) u).getOptimalDescendantLine());
+		}
     }
 }

@@ -20,9 +20,6 @@ public class Application {
 	
     public static void main(String[] args) {
 
-        // FOR TESTING
-        GUIApplication.main(args);
-
         //get the  start time of the program
         long startTime=System.currentTimeMillis();
 
