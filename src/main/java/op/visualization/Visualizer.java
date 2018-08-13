@@ -1,5 +1,6 @@
 package op.visualization;
 
+import eu.hansolo.tilesfx.Tile;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -7,6 +8,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import op.visualization.controller.GUIController;
 import op.visualization.messages.UpdateMessage;
+
+import java.util.Timer;
 
 /**
  * Interface that any visualisation implementation must conform to.
@@ -33,13 +36,24 @@ public class Visualizer extends Application {
 
         FXMLLoader loader=new FXMLLoader();
         loader.setLocation(Visualizer.class.getResource("view/GUI.fxml"));
-        controller = loader.getController();
         Parent root=loader.load();
         Scene scene = new Scene(root);
 
+        controller = loader.getController();
+        controller.setScene(scene);
+
+        stage.setHeight(620);
         stage.setResizable(false);
+        stage.centerOnScreen();
+
+        Timer timer = new Timer();
+        Tile cpuTile=controller.getCPUTile();
+        Tile memTile=controller.getMemoryTile();
+        timer.schedule(new SystemInfo(cpuTile,memTile), 0, 100);
+
         stage.setScene(scene);
         stage.show();
+
     }
 
     /**

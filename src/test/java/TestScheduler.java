@@ -1,13 +1,22 @@
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+
+import java.util.ArrayList;
+
+import java.util.HashMap;
+
 import java.util.List;
 
+import op.algorithm.DFSScheduler;
+import op.algorithm.EmptyPruner;
 import op.algorithm.GreedyScheduler;
 import op.algorithm.SimpleScheduler;
 import org.junit.After;
 import org.junit.Test;
 
+import junit.framework.Assert;
 import op.io.DotIO;
 import op.model.Arguments;
 import op.model.Dependency;
@@ -16,6 +25,11 @@ import op.model.ScheduledTask;
 import op.model.Task;
 import op.model.TaskGraph;
 
+/**
+ * Test class to ensure schedules produced are valid
+ * @author Ravid Aharon
+ *
+ */
 public class TestScheduler {
 	
 	private Schedule s;
@@ -37,6 +51,100 @@ public class TestScheduler {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * checks to see if two equivalent schedules are equal. Schedules are equal if every 
+	 * processor is identical to another processor in the other schedule.
+	 */
+	@Test
+	public void testEqualsMethod() {
+		s = new Schedule();
+        Schedule s2 = new Schedule();
+        
+		arguments = new Arguments(null,2,1,false,null);
+
+        s.addScheduledTask(new ScheduledTask(new Task("1", 3), 0, 1));
+		s.addScheduledTask(new ScheduledTask(new Task("2", 2), 3, 1));
+		s.addScheduledTask(new ScheduledTask(new Task("3", 3), 0, 2));
+		
+		s2.addScheduledTask(new ScheduledTask(new Task("1", 3), 0, 2));
+		s2.addScheduledTask(new ScheduledTask(new Task("2", 2), 3, 2));
+		s2.addScheduledTask(new ScheduledTask(new Task("3", 3), 0, 1));
+		
+		assertTrue(s.equals(s2));
+		
+		Schedule s3 = new Schedule (s2, new ScheduledTask(new Task("4", 3), 3, 1));
+		s2.addScheduledTask(new ScheduledTask(new Task("4", 3), 3, 1));
+		
+		try {
+			assertTrue(s.equals(s2));
+			throw new AssertionError("Thought unequal schedules are equal");
+		} catch (AssertionError e) {
+			// Do nothing
+		}
+		
+		assertTrue (s2.equals(s3));
+	}
+	
+	/**
+     * Test if the testScheduleIsValid method recognizes a schedule with overlap
+     */
+	@Test
+	public void testScheduleIsValidOverlap() {
+		s = new Schedule();
+        arguments = new Arguments(null,1,1,false,null);
+
+        // set up a schedule with overlap
+		s.addScheduledTask(new ScheduledTask(new Task("1", 3), 0, 1));
+		s.addScheduledTask(new ScheduledTask(new Task("2", 2), 2, 1));		
+	
+		// Checks if method recognizes overlap
+		try {
+				checkScheduleIsValid();
+				throw new AssertionError("did not detect overlap");	
+		} catch (AssertionError e) {
+			// do nothing if error was detected
+		}
+	}
+	
+	/**
+     * Test if the testScheduleIsValid method recognizes a schedule which does not 
+     * respect it's dependencies between tasks on different processors
+     */
+	@Test
+	public void testScheduleIsValidDependencyDisrespect() {
+		s = new Schedule();
+        arguments = new Arguments(null,2,1,false,null);
+        
+        ArrayList<Task> tasks = new ArrayList<Task>();
+        ArrayList<Dependency> dependencies = new ArrayList<Dependency>();
+        
+        // Create and add two tasks which don't respect dependency
+        Task t1 = new Task("1", 3);
+        Task t2 = new Task("2", 3);
+        ScheduledTask s1 = new ScheduledTask(t1, 0, 1);
+        ScheduledTask s2 = new ScheduledTask(t2, 3, 2);
+        Dependency d = new Dependency(t1, t2, 1);
+        
+        tasks.add(t1);
+        tasks.add(t2);
+        dependencies.add(d);
+        
+    	TaskGraph.initialize(tasks, dependencies, "depTest");
+        
+        // set up a schedule with overlap
+		s.addScheduledTask(s1);
+		s.addScheduledTask(s2);
+		
+	
+		// Checks if method recognizes that a dependency was not respected
+		try {
+				checkScheduleIsValid();
+				throw new AssertionError("did not detect dependency DISRESPECT");	
+		} catch (AssertionError e) {
+			// do nothing if error was detected
 		}
 	}
 
@@ -65,6 +173,9 @@ public class TestScheduler {
         checkGreedyScheduler(PATH_TO_TEST);
     }
 
+    @Test
+	public void testDFSSchedulerWithTestGraph() { checkDFSScheduler(PATH_TO_TEST); }
+
     /**
      * Tests GreedyScheduler is valid with Nodes_7_OutTree.dot as the input graph.
      */
@@ -72,6 +183,7 @@ public class TestScheduler {
     public void testGreedySchedulerWithNodes7Graph() {
         checkGreedyScheduler(PATH_TO_NODES_7);
     }
+
 
     /**
      * Tests GreedyScheduler is valid with Nodes_8_Random.dot as the input graph.
@@ -89,6 +201,7 @@ public class TestScheduler {
         checkGreedyScheduler(PATH_TO_NODES_9);
     }
 
+
     /**
      * Tests GreedyScheduler is valid with Nodes_10_Random.dot as the input graph.
      */
@@ -96,6 +209,7 @@ public class TestScheduler {
     public void testGreedySchedulerWithNodes10Graph() {
         checkGreedyScheduler(PATH_TO_NODES_10);
     }
+
 
     /**
      * Tests GreedyScheduler is valid with Nodes_11_OutTree.dot as the input graph.
@@ -105,14 +219,6 @@ public class TestScheduler {
         checkGreedyScheduler(PATH_TO_NODES_11);
     }
     
-    /**
-     * Sets up the program input.
-     * @throws IOException
-     */
-    private void setup(String inputFilePath) throws IOException {
-        arguments = new Arguments(inputFilePath,10,1,false,"testOutput.dot");
-        new DotIO().dotIn(inputFilePath);
-    }
     
     /**
      * Checks that the schedule produced by GreedyScheduler is valid and at least as good as the schedule produced by
@@ -128,6 +234,29 @@ public class TestScheduler {
             e.printStackTrace();
         }
     }
+
+    
+    /**
+     * Creates an Arguments Object and creates taskgraph.
+     * @throws IOException
+     */
+    private void setup(String inputFilePath) throws IOException {
+        arguments = new Arguments(inputFilePath,10,1,false,"testOutput.dot");
+        new DotIO().dotIn(inputFilePath);
+    }
+
+
+	private void checkDFSScheduler(String path) {
+		try {
+			setup(path);
+			s = (new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner())).produceSchedule();
+			checkScheduleIsValid();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	
 	/**
 	 * Checks if a schedule is valid. A schedule is valid if and only if there is no overlap between

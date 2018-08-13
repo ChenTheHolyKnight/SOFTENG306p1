@@ -1,5 +1,6 @@
 .background {
-    -fx-background-color: #000000;
+    -fx-background-color: #191816;
+    //686858
 }
 
 .textBackground{
@@ -15,6 +16,6 @@
 }
 
 .tabBackgroundColour{
-    -fx-background-color:#69715F;
-    -fx-text-fill:#FFFFFF;
+     background: white;
+    -fx-text-fill: white;
 }

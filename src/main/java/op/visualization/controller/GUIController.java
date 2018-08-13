@@ -1,12 +1,11 @@
 package op.visualization.controller;
 
+import eu.hansolo.tilesfx.Tile;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
-import op.visualization.messages.MessageAddNodes;
-import op.visualization.messages.MessageEliminateChildren;
-import op.visualization.messages.MessageSetOptimalSolution;
 import op.visualization.messages.UpdateMessage;
 import org.controlsfx.control.ToggleSwitch;
 import org.graphstream.ui.fx_viewer.FxDefaultView;
@@ -25,6 +24,20 @@ public class GUIController {
 
     @FXML
     private AnchorPane schedulePane;
+
+    @FXML
+    public Tile cpuTile;
+
+    @FXML
+    public Tile memoryTile;
+
+
+    private Scene scene;
+
+    private boolean selected=false;
+
+
+
 
     /**
      * method to control the switch when the toggle switch is triggered
@@ -52,13 +65,26 @@ public class GUIController {
 
     }
 
-    /**
-     * Called when GUIController is instantiated. Sets up GUI.
-     */
+
+
+    public void setScene(Scene scene) {
+        this.scene = scene;
+    }
+
     @FXML
     public void initialize(){
         schedulePane.setOpacity(0.0);
         embedGraph();
+    }
+
+    public Tile getCPUTile(){
+        this.cpuTile.setSkinType(Tile.SkinType.BAR_GAUGE);
+        return cpuTile;
+    }
+
+    public Tile getMemoryTile(){
+        this.memoryTile.setSkinType(Tile.SkinType.BAR_GAUGE);
+        return memoryTile;
     }
 
     /**

@@ -24,6 +24,7 @@ public class SimpleScheduler extends Scheduler {
     private int startTime;
 
     public SimpleScheduler() {
+        super(1); // this implementation only schedules tasks on one processor
         startTime = 0;
     }
 
