@@ -1,6 +1,8 @@
 package op.model;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Representation of a schedule, which is an allocation of tasks to processors over a certain time.
@@ -8,14 +10,14 @@ import java.util.*;
 
 public class Schedule {
 
-    private HashMap<Integer,List<ScheduledTask>> processorTasksMap;
-    private HashMap<Task,ScheduledTask> taskMap;
+    private HashMap<Integer,List<ScheduledTask>> processorMap; // stores all scheduled tasks on a given processor
+    private HashMap<Task,ScheduledTask> taskMap; // stores the scheduled representation of tasks
 
     /**
      * Constructs an empty schedule instance
      */
     public Schedule() {
-        this.processorTasksMap = new HashMap<>();
+        this.processorMap = new HashMap<>();
         this.taskMap = new HashMap<>();
     }
 
@@ -27,14 +29,14 @@ public class Schedule {
     public Schedule(Schedule s, ScheduledTask stNew) {
 
         this.taskMap = (HashMap<Task, ScheduledTask>)((s.taskMap).clone());
-        this.processorTasksMap = (HashMap<Integer, List<ScheduledTask>>)((s.processorTasksMap).clone());
+        this.processorMap = (HashMap<Integer, List<ScheduledTask>>)((s.processorMap).clone());
 
         // replace the lists of scheduled tasks with an equivalent list, but with a different reference.
         // this is so that when these lists are changed in child schedules of s, it does not affect
         // the parent schedule. This is not necessary for the Task/ScheduledTask map because the values within
         // those objects cannot be changed by objects referencing them.
-        for (int i : this.processorTasksMap.keySet()) {
-            this.processorTasksMap.put(i, new ArrayList<ScheduledTask>(this.processorTasksMap.get(i)));
+        for (int i : this.processorMap.keySet()) {
+            this.processorMap.put(i, new ArrayList<ScheduledTask>(this.processorMap.get(i)));
         }
 
         this.addScheduledTask(stNew);
@@ -46,15 +48,11 @@ public class Schedule {
      */
     public boolean isComplete() {
 
-        List<Task> tasks=TaskGraph.getInstance().getAllTasks();
-        Set<Integer> scheduledProcessor=processorTasksMap.keySet();
-        List<ScheduledTask> scheduledTasks=new ArrayList<>();
+        List<Task> tasks = TaskGraph.getInstance().getAllTasks();
 
-        for(Integer ps:scheduledProcessor){
-            List<ScheduledTask> subScheduledTasks=processorTasksMap.get(ps);
-            scheduledTasks.addAll(subScheduledTasks);
-        }
-        if(scheduledTasks.size()==tasks.size()){
+        List<ScheduledTask> scheduledTasks = this.getAllScheduledTasks();
+
+        if(scheduledTasks.size() == tasks.size()){
             return true;
         }
         return false;
@@ -62,17 +60,17 @@ public class Schedule {
 
 
     /**
-     * Method to add a new scheduled task to this schedule instance
+     * Adds a new scheduled task to this schedule instance
      * @param scheduledTask the scheduled task to add
      */
     public void addScheduledTask(ScheduledTask scheduledTask){
-        int processorNum=scheduledTask.getProcessor();
-        if(processorTasksMap.get(processorNum)!= null){
-	        processorTasksMap.get(processorNum).add(scheduledTask);
+        int processorNum = scheduledTask.getProcessor();
+        if(processorMap.get(processorNum)!= null){
+	        processorMap.get(processorNum).add(scheduledTask);
         }else{
             List<ScheduledTask> tasks=new ArrayList<>();
             tasks.add(scheduledTask);
-            processorTasksMap.put(processorNum,tasks);
+            processorMap.put(processorNum,tasks);
         }
         taskMap.put(scheduledTask.getTask(), scheduledTask);
     }
@@ -88,12 +86,19 @@ public class Schedule {
     }
 
     /**
-     * Get the list of tasks allocated on the processor
+     * Get the list of tasks allocated on the specified processor
      * @param processorNum the number indicates the processor
-     * @return a list of scheduled tasks that scheduled on the processor
+     * @return a list of scheduled tasks that scheduled on the processor, null if this processor has no scheduled tasks
      */
-    public List<ScheduledTask> getScheduledTasks(int processorNum){
-        return processorTasksMap.get(processorNum);
+    public List<ScheduledTask> getScheduledTasksOfProcessor(int processorNum){
+
+        if (processorMap.get(processorNum) == null) {
+            return null;
+        } else {
+            // create new list so code using the returned list cannot modify this schedule's
+            // internal representation of the list.
+            return new ArrayList<ScheduledTask>(processorMap.get(processorNum));
+        }
     }
 
     /**
@@ -101,8 +106,10 @@ public class Schedule {
      * @return the time it would take for all scheduled tasks to be completed
      */
 	public int getLength() {
+
+	    //TODO change this to return cost function
         int length = 0;
-        for (List<ScheduledTask> tasks: processorTasksMap.values()) {
+        for (List<ScheduledTask> tasks: processorMap.values()) {
             ScheduledTask lastTask = tasks.get(tasks.size()-1);
             if (lastTask.getStartTime() + lastTask.getTask().getDuration() > length) {
                 length = lastTask.getStartTime() + lastTask.getTask().getDuration();
@@ -110,7 +117,35 @@ public class Schedule {
         }
         return length;
     }
-	
+
+    /**
+     * @param processorNum The processor to get the next free time of
+     * @return The earliest time that anything can be scheduled on the specified processor
+     */
+    public int getNextFreeTimeOfProcessor(int processorNum) {
+        List<ScheduledTask> tasksOnProcessor = processorMap.get(processorNum);
+        if (tasksOnProcessor == null) {
+            return 0; // the processor has no tasks on it, so it is free from t = 0
+        }
+        ScheduledTask lastTaskOnProcessor = tasksOnProcessor.get(tasksOnProcessor.size() - 1);
+        return lastTaskOnProcessor.getStartTime() + lastTaskOnProcessor.getTask().getDuration();
+    }
+
+    /**
+     * @return All tasks that are scheduled in this schedule instance
+     */
+    public List<ScheduledTask> getAllScheduledTasks() {
+
+        List<ScheduledTask> scheduledTasks = new ArrayList<>();
+
+        for (int proc : processorMap.keySet()) {
+            List<ScheduledTask> tasksOnCurrentProcessor = processorMap.get(proc);
+            scheduledTasks.addAll(tasksOnCurrentProcessor);
+        }
+
+        return scheduledTasks;
+    }
+
 	/**
 	 * Checks if this schedule is equal to another object.
 	 * Two schedules are equal if and only if every processor in the schedule has the same
@@ -118,14 +153,14 @@ public class Schedule {
 	 */
 	@Override
 	public boolean equals(Object schedule){
-		int numProcessors = processorTasksMap.size();
+		int numProcessors = processorMap.size();
 		if (schedule instanceof Schedule){
 			schedule = (Schedule) schedule;
 		} else {
 			return false;
 		}
 		for (int i=1; i<=numProcessors; i++) {
-			if (!processorTasksMap.values().contains(((Schedule) schedule).getScheduledTasks(i))) {
+			if (!processorMap.values().contains(((Schedule) schedule).getScheduledTasksOfProcessor(i))) {
 				return false;
 			}
 		}
@@ -140,7 +175,7 @@ public class Schedule {
 	public int hashCode() {
 		int result = 17;
 		
-		for (List<ScheduledTask> scheduledTasks : processorTasksMap.values()) {
+		for (List<ScheduledTask> scheduledTasks : processorMap.values()) {
 			for (ScheduledTask st : scheduledTasks) {
 				result = result + st.hashCode();
 			}

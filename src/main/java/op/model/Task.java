@@ -46,7 +46,6 @@ public class Task {
 
 	public void setBottomLevel() {
 		bottomLevel = calculateBottomLevel(this);
-		System.out.println("Task with id: " + getId() + " and bottom level: " + bottomLevel);
 	}
 
 	public int getBottomLevel() {
