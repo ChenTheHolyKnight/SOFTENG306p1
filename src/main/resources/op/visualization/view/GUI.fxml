@@ -17,34 +17,40 @@
             <String fx:value="textBackground" />
             <String fx:value="grayBackground" />
          </styleClass></AnchorPane>
-      <TabPane fx:id="tabPane" layoutX="681.0" onMouseClicked="#onTabClicked" prefHeight="600.0" prefWidth="300.0" side="RIGHT" styleClass="background" stylesheets="@Styles/TabPane.css" tabClosingPolicy="UNAVAILABLE">
-        <tabs>
-          <Tab text="Statistics">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="grayBackground" />
-            </content>
-          </Tab>
-          <Tab text="Performance">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-            </content>
-          </Tab>
-        </tabs>
-      </TabPane>
       <VBox layoutX="681.0" prefHeight="600.0" prefWidth="260.0">
          <children>
             <Label alignment="CENTER" prefHeight="30.0" prefWidth="260.0" styleClass="grayBackground" text="Display Options" textAlignment="CENTER" textFill="WHITE" />
-            <AnchorPane layoutY="5.0" prefHeight="16.0" prefWidth="260.0" styleClass="tileBackgroundColour">
+            <AnchorPane layoutY="5.0" prefHeight="31.0" prefWidth="260.0" styleClass="tileBackgroundColour">
                <children>
                   <Label layoutX="182.0" layoutY="1.0" prefHeight="26.0" prefWidth="52.0" text="Scheule" textFill="WHITE" />
                   <Label layoutX="61.0" layoutY="2.0" prefHeight="26.0" prefWidth="40.0" text="Tree" textAlignment="RIGHT" textFill="WHITE" />
                   <ToggleSwitch fx:id="graphSwitch" layoutX="110.0" layoutY="5.0" onMouseClicked="#onSwitchTriggered" prefHeight="18.0" prefWidth="40.0" />
                </children>
             </AnchorPane>
-            <Label alignment="CENTER" prefHeight="30.0" prefWidth="264.0" styleClass="grayBackground" text="CPU Usage" textAlignment="CENTER" textFill="WHITE" />
-            <Tile />
-            <Label alignment="CENTER" layoutX="10.0" layoutY="69.0" prefHeight="30.0" prefWidth="264.0" styleClass="grayBackground" text="Schedule Percentage" textAlignment="CENTER" textFill="WHITE" />
-            <Tile layoutX="10.0" layoutY="100.0" />
          </children></VBox>
+      <TabPane fx:id="tabPane" layoutX="680.0" layoutY="60.0" prefHeight="600.0" prefWidth="300.0" side="RIGHT" styleClass="background" stylesheets="@Styles/TabPane.css" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Statistics">
+            <content>
+                  <VBox>
+                     <children>
+                        <Label alignment="CENTER" prefHeight="30.0" prefWidth="264.0" styleClass="grayBackground" text="CPU Usage" textAlignment="CENTER" textFill="WHITE" />
+                        <Tile />
+                     </children>
+                  </VBox>
+            </content>
+          </Tab>
+          <Tab text="Performance">
+            <content>
+                  <VBox>
+                     <children>
+                        <Label alignment="CENTER" prefHeight="30.0" prefWidth="264.0" styleClass="grayBackground" text="Schedule Percentage" textAlignment="CENTER" textFill="WHITE" />
+                        <Tile />
+                     </children>
+                  </VBox>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
    </children>
 </AnchorPane>

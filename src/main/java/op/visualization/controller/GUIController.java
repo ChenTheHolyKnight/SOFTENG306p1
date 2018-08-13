@@ -22,11 +22,6 @@ public class GUIController {
     @FXML
     public AnchorPane schedulePane;
 
-    @FXML
-    public TabPane tabPane;
-
-    @FXML
-    public Tab statsTab;
 
     private Scene scene;
 
@@ -61,25 +56,7 @@ public class GUIController {
 
     }
 
-    @FXML
-    public void onTabClicked(){
-        Translate translate=new Translate();
-        Tab tab=tabPane.getSelectionModel().getSelectedItem();
-        AnchorPane pane=(AnchorPane) tab.getContent();
-        if(!selected) {
-            selected=true;
-            this.scene.getWindow().setWidth(this.scene.getWindow().getWidth() + tabPane.getWidth());
 
-
-            translate.setX(pane.getWidth());
-
-        }else{
-            selected=false;
-            this.scene.getWindow().setWidth(this.scene.getWindow().getWidth() - tabPane.getWidth());
-            translate.setX(-pane.getWidth());
-        }
-        tabPane.getTransforms().add(translate);
-    }
 
     public void setScene(Scene scene) {
         this.scene = scene;
