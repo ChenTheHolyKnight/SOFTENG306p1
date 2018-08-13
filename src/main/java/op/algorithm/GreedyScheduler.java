@@ -12,13 +12,12 @@ import java.util.List;
  */
 public class GreedyScheduler extends Scheduler {
 
-	private int numProcessors;
 	private HashMap<Integer, Integer> processorNextTime;
     private int FIRST_PROCESSOR = 1;
     
 
     public GreedyScheduler(int numProcessors) {
-    	this.numProcessors = numProcessors;
+    	super(numProcessors);
         processorNextTime = new HashMap<>();
 
         for (int processor = FIRST_PROCESSOR; processor <= numProcessors; processor++) {
@@ -33,13 +32,14 @@ public class GreedyScheduler extends Scheduler {
     @Override
     public Schedule produceSchedule() {
         Schedule schedule = new Schedule();
+        int numProcessors = super.getNumProcessors();
         for (Task task: SchedulerUtil.createTopologicalOrder(TaskGraph.getInstance().getAllTasks())) {
 
             int bestProcessor = FIRST_PROCESSOR;
             int earliestStartTime = Integer.MAX_VALUE;
 
             for (int processor = FIRST_PROCESSOR; processor <= numProcessors; processor++) {
-                int newEarliest = getEarliestStartTime(schedule, task, processor);
+                int newEarliest = super.getEarliestStartTime(schedule, task, processor);
                 if (newEarliest < earliestStartTime) {
                     earliestStartTime = newEarliest;
                     bestProcessor = processor;
@@ -52,32 +52,33 @@ public class GreedyScheduler extends Scheduler {
         return schedule;
     }
 
-    /**
-     * Finds the earliest start time a particular task can be scheduled on a particular processor.
-     * @param task
-     * @param processor
-     * @return
-     */
-    private int getEarliestStartTime(Schedule schedule, Task task, int processor) {
-        List<Dependency> incomingEdges = TaskGraph.getInstance().getIncomingDependencies(task);
-
-        // Estimate the earliest start time of the task as the next available time on the processor
-        int startTime = processorNextTime.get(processor);
-
-        for (Dependency incomingEdge: incomingEdges) {
-            Task startTask = incomingEdge.getStartTask();
-
-            // If a dependent task is not scheduled on the same processor, the start time of this task
-            // cannot be earlier than the end time of the dependent task plus the communication cost
-            if (schedule.getScheduledTask(startTask).getProcessor() != processor) {
-                int newStartTime = schedule.getScheduledTask(startTask).getStartTime() + startTask.getDuration()
-                        + incomingEdge.getWeight();
-
-                if (newStartTime > startTime) {
-                    startTime = newStartTime;
-                }
-            }
-        }
-        return startTime;
-    }
+//    /**
+//     * Finds the earliest start time a particular task can be scheduled on a particular processor.
+//     * @param task
+//     * @param processor
+//     * @return
+//     */
+//    @Override
+//    protected int getEarliestStartTime(Schedule schedule, Task task, int processor) {
+//        List<Dependency> incomingEdges = TaskGraph.getInstance().getIncomingDependencies(task);
+//
+//        // Estimate the earliest start time of the task as the next available time on the processor
+//        int startTime = processorNextTime.get(processor);
+//
+//        for (Dependency incomingEdge: incomingEdges) {
+//            Task startTask = incomingEdge.getStartTask();
+//
+//            // If a dependent task is not scheduled on the same processor, the start time of this task
+//            // cannot be earlier than the end time of the dependent task plus the communication cost
+//            if (schedule.getScheduledTask(startTask).getProcessor() != processor) {
+//                int newStartTime = schedule.getScheduledTask(startTask).getStartTime() + startTask.getDuration()
+//                        + incomingEdge.getWeight();
+//
+//                if (newStartTime > startTime) {
+//                    startTime = newStartTime;
+//                }
+//            }
+//        }
+//        return startTime;
+//    }
 }

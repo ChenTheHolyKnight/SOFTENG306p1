@@ -1,0 +1,20 @@
+.background {
+    -fx-background-color: #000000;
+}
+
+.textBackground{
+    -fx-background-color:#FFFFFF;
+}
+
+.grayBackground{
+    -fx-background-color:#69715F;
+}
+
+.tileBackgroundColour{
+    -fx-background-color:#2a2a2a;
+}
+
+.tabBackgroundColour{
+     background: white;
+    -fx-text-fill: white;
+}
