@@ -1,6 +1,9 @@
 package op.model;
 
-import op.algorithm.Algorithm;
+import op.algorithm.Scheduler;
+import op.algorithm.bound.CostFunction;
+
+import java.util.List;
 
 /**
  * Class to store the arguments that the user has input to run the program with.
@@ -13,7 +16,8 @@ public class Arguments {
     private int numCores;
     private boolean toVisualize;
     private String outputGraphFilename;
-    private Algorithm algorithm;
+    private Scheduler.Implementation algorithm;
+    private List<CostFunction.Implementation> costFunctions;
 
     /**
      *
@@ -59,7 +63,9 @@ public class Arguments {
      *
      * @return the algorithm implementation to run
      */
-    public Algorithm getAlgorithm() { return algorithm; }
+    public Scheduler.Implementation getAlgorithm() { return algorithm; }
+
+    public List<CostFunction.Implementation> getCostFunctions() { return costFunctions; }
     
     /**
      * Creates a new Arguments object.
@@ -68,14 +74,18 @@ public class Arguments {
      * @param numCores
      * @param toVisualize
      * @param outputFilename
+     * @param algorithm the specified algorithm to run
+     * @param costFunctions the specified cost functions to use
      */
     public Arguments(String inputFilename, int numProcessors, int numCores,
-                     boolean toVisualize, String outputFilename, Algorithm algorithm) {
+                     boolean toVisualize, String outputFilename,
+                     Scheduler.Implementation algorithm, List<CostFunction.Implementation> costFunctions) {
         this.inputGraphFilename = inputFilename;
         this.numProcessors = numProcessors;
         this.numCores = numCores;
         this.toVisualize = toVisualize;
         this.outputGraphFilename = outputFilename;
         this.algorithm = algorithm;
+        this.costFunctions = costFunctions;
     }
 }

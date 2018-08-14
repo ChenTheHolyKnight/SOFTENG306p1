@@ -1,8 +1,12 @@
 package op.io;
 
-import op.algorithm.Algorithm;
+import op.algorithm.Scheduler;
+import op.algorithm.bound.CostFunction;
 import org.apache.commons.cli.*;
 import op.model.Arguments;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -17,11 +21,14 @@ public class CommandLineIO {
     private static final String TO_VISUALIZE_FLAG = "v";
     private static final String OUTPUT_FILENAME_FLAG = "o";
     private static final String ALGORITHM_FLAG = "a";
+    private static final String COST_FUNCTION_FLAG = "f";
+    private static final String PRUNER_FLAG = "P"; //TODO: allow pruners to be specified from command line
 
     // Default values for user options
     private static final int NUM_CORES_DEFAULT = 1;
     private static final String OUTPUT_FILENAME_APPENDER_DEFAULT = "-output.dot";
-    private static final Algorithm ALGORITHM_IMPLEMENTATION = Algorithm.DFS;
+    private static final Scheduler.Implementation ALGORITHM_IMPLEMENTATION = Scheduler.Implementation.DFS;
+    private static final List<CostFunction.Implementation> COST_FUNCTIONS = new ArrayList<>(); // no cost funcs is default
 
     // Order of command line arguments with no flags
     private static final short INPUT_FILENAME_POSITION = 0;
@@ -35,6 +42,8 @@ public class CommandLineIO {
     private static final String ALGORITHM_DESCRIPTION =
             "the algorithm implementation to use for scheduling:" +
                     System.lineSeparator() + "dfs | astar | greedy | simple";
+    private static final String COST_FUNC_DESCRIPTION = "comma-separated list of cost functions to be used."
+            + System.lineSeparator() + "Acceptable values: bl | it ";
 
     private static final String HELP_MESSAGE =
             "<INPUT GRAPH FILENAME> <NUMBER OF PROCESSORS> [OPTIONS]";
@@ -83,6 +92,16 @@ public class CommandLineIO {
         addOption(TO_VISUALIZE_FLAG, false, TO_VISUALIZE_DESCRIPTION, false);
         addOption(OUTPUT_FILENAME_FLAG, true, OUTPUT_FILENAME_DESCRIPTION, false);
         addOption(ALGORITHM_FLAG, true, ALGORITHM_DESCRIPTION, false);
+
+        // the next options are more complex and must use the OptionsBuilder.
+        // build and set cost functions option
+        Option costFuncOption = Option.builder(COST_FUNCTION_FLAG)
+                .hasArgs()
+                .valueSeparator(',')
+                .required(false)
+                .desc(COST_FUNC_DESCRIPTION)
+                .build();
+        options.addOption(costFuncOption);
     }
 
     /**
@@ -114,9 +133,11 @@ public class CommandLineIO {
         String inputFilename = getInputFilename(cmd);
         String outputFilename = getOutputFilename(inputFilename, cmd);
         int numProcessors = getNumProcessors(cmd);
-        Algorithm algorithm = getAlgorithm(cmd);
+        Scheduler.Implementation algorithm = getAlgorithm(cmd);
+        List<CostFunction.Implementation> costFunctions = getCostFunctions(cmd);
 
-        return new Arguments(inputFilename, numProcessors, numCores, toVisualize, outputFilename, algorithm);
+        return new Arguments(inputFilename, numProcessors, numCores,
+                toVisualize, outputFilename, algorithm, costFunctions);
     }
 
     private int getNumCores(CommandLine cmd) throws InvalidUserInputException {
@@ -175,18 +196,43 @@ public class CommandLineIO {
         return numProcessors;
     }
 
-    private Algorithm getAlgorithm(CommandLine cmd) throws InvalidUserInputException {
+    private Scheduler.Implementation getAlgorithm(CommandLine cmd) throws InvalidUserInputException {
         String alg = cmd.getOptionValue(ALGORITHM_FLAG);
         if (alg == null) {
             return ALGORITHM_IMPLEMENTATION; // return default value
         } else {
-            for (Algorithm a : Algorithm.values()) {
+            for (Scheduler.Implementation a : Scheduler.Implementation.values()) {
                 if (alg.equals(a.getCmdRepresentation())) {
                     return a;
                 }
             }
             printHelpAndThrowError("Specified algorithm is not available. See available values above.");
             return null;
+        }
+    }
+
+    private List<CostFunction.Implementation> getCostFunctions(CommandLine cmd) throws InvalidUserInputException {
+        String[] values = cmd.getOptionValues(COST_FUNCTION_FLAG);
+        List<CostFunction.Implementation> funcs = new ArrayList<>();
+        if (values == null) {
+            return funcs; // empty list to represent no cost functions specified
+        } else {
+            for (String func : values) {
+                // add the appropriate cost function to the list, or throw an error if unacceptable value
+                boolean validSpecifier = false;
+                for (CostFunction.Implementation cf : CostFunction.Implementation.values()) {
+                    if (func.equals(cf.getCmdRepresentation())) {
+                        funcs.add(cf);
+                        validSpecifier = true;
+                        break;
+                    }
+                }
+                if (!validSpecifier) {
+                    printHelpAndThrowError("One or more of the cost function values is not supported."
+                            + " See correct usage above.");
+                }
+            }
+            return funcs;
         }
     }
     /**

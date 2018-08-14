@@ -1,10 +1,7 @@
 package op;
 
 import op.algorithm.*;
-import op.algorithm.bound.BottomLevelFunction;
-import op.algorithm.bound.CombinedCostFunction;
-import op.algorithm.bound.EmptyCostFunction;
-import op.algorithm.bound.IdleTimeFunction;
+import op.algorithm.bound.CostFunction;
 import op.io.InvalidUserInputException;
 import op.model.Schedule;
 import op.visualization.GUIApplication;
@@ -79,11 +76,16 @@ public class Application {
         Scheduler s = sf.createScheduler(
                 arguments.getAlgorithm(),
                 arguments.getNumProcessors(),
-                arguments.getNumCores()
+                arguments.getNumCores(),
+                arguments.getCostFunctions()
         );
 
         System.out.println("Starting " + arguments.getAlgorithm().getCmdRepresentation()
                             + " scheduler implementation...");
+        System.out.println("Using cost functions: ");
+        for (CostFunction.Implementation cf : arguments.getCostFunctions()) {
+            System.out.println(cf);
+        }
 
         long startTime = System.currentTimeMillis();
 

@@ -66,7 +66,7 @@ public class TestScheduler {
         Schedule s2 = new Schedule();
         
 		arguments = new Arguments(null,2,1,
-				false,null, null);
+				false,null, null, null);
 
         s.addScheduledTask(new ScheduledTask(new Task("1", 3), 0, 1));
 		s.addScheduledTask(new ScheduledTask(new Task("2", 2), 3, 1));
@@ -106,7 +106,7 @@ public class TestScheduler {
 	public void testScheduleIsValidOverlap() {
 		s = new Schedule();
         arguments = new Arguments(null,1,1,
-				false,null, null);
+				false,null, null, null);
 
         // set up a schedule with overlap
 		s.addScheduledTask(new ScheduledTask(new Task("1", 3), 0, 1));
@@ -129,7 +129,7 @@ public class TestScheduler {
 	public void testScheduleIsValidDependencyDisrespect() {
 		s = new Schedule();
         arguments = new Arguments(null,2,
-				1,false,null, null);
+				1,false,null, null, null);
         
         ArrayList<Task> tasks = new ArrayList<Task>();
         ArrayList<Dependency> dependencies = new ArrayList<Dependency>();
@@ -256,7 +256,7 @@ public class TestScheduler {
      */
     private void setup(String inputFilePath) throws IOException {
         arguments = new Arguments(inputFilePath,10,1,
-				false,"testOutput.dot", null);
+				false,"testOutput.dot", null, new ArrayList<>());
         new DotIO().dotIn(inputFilePath);
     }
 
@@ -264,7 +264,7 @@ public class TestScheduler {
 	private void checkDFSScheduler(String path) {
 		try {
 			setup(path);
-			s = (new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner(), new EmptyCostFunction())).produceSchedule();
+			s = (new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner(), new ArrayList<>())).produceSchedule();
 			checkScheduleIsValid();
 
 		} catch (IOException e) {
