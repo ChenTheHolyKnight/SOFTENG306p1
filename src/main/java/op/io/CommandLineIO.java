@@ -1,5 +1,6 @@
 package op.io;
 
+import op.algorithm.Algorithm;
 import org.apache.commons.cli.*;
 import op.model.Arguments;
 
@@ -15,10 +16,12 @@ public class CommandLineIO {
     private static final String NUM_CORES_FLAG = "p";
     private static final String TO_VISUALIZE_FLAG = "v";
     private static final String OUTPUT_FILENAME_FLAG = "o";
+    private static final String ALGORITHM_FLAG = "a";
 
     // Default values for user options
     private static final int NUM_CORES_DEFAULT = 1;
     private static final String OUTPUT_FILENAME_APPENDER_DEFAULT = "-output.dot";
+    private static final Algorithm ALGORITHM_IMPLEMENTATION = Algorithm.DFS;
 
     // Order of command line arguments with no flags
     private static final short INPUT_FILENAME_POSITION = 0;
@@ -29,6 +32,9 @@ public class CommandLineIO {
             "number of cores to execute program on (default is 1 core)";
     private static final String TO_VISUALIZE_DESCRIPTION = "visualise the search";
     private static final String OUTPUT_FILENAME_DESCRIPTION = "name of output file (default is INPUT-output.dot)";
+    private static final String ALGORITHM_DESCRIPTION =
+            "the algorithm implementation to use for scheduling:" +
+                    System.lineSeparator() + "dfs | astar | greedy | simple";
 
     private static final String HELP_MESSAGE =
             "<INPUT GRAPH FILENAME> <NUMBER OF PROCESSORS> [OPTIONS]";
@@ -76,6 +82,7 @@ public class CommandLineIO {
         addOption(NUM_CORES_FLAG, true, NUM_CORES_DESCRIPTION, false);
         addOption(TO_VISUALIZE_FLAG, false, TO_VISUALIZE_DESCRIPTION, false);
         addOption(OUTPUT_FILENAME_FLAG, true, OUTPUT_FILENAME_DESCRIPTION, false);
+        addOption(ALGORITHM_FLAG, true, ALGORITHM_DESCRIPTION, false);
     }
 
     /**
@@ -107,8 +114,9 @@ public class CommandLineIO {
         String inputFilename = getInputFilename(cmd);
         String outputFilename = getOutputFilename(inputFilename, cmd);
         int numProcessors = getNumProcessors(cmd);
+        Algorithm algorithm = getAlgorithm(cmd);
 
-        return new Arguments(inputFilename, numProcessors, numCores, toVisualize, outputFilename);
+        return new Arguments(inputFilename, numProcessors, numCores, toVisualize, outputFilename, algorithm);
     }
 
     private int getNumCores(CommandLine cmd) throws InvalidUserInputException {
@@ -167,6 +175,20 @@ public class CommandLineIO {
         return numProcessors;
     }
 
+    private Algorithm getAlgorithm(CommandLine cmd) throws InvalidUserInputException {
+        String alg = cmd.getOptionValue(ALGORITHM_FLAG);
+        if (alg == null) {
+            return ALGORITHM_IMPLEMENTATION; // return default value
+        } else {
+            for (Algorithm a : Algorithm.values()) {
+                if (alg.equals(a.getCmdRepresentation())) {
+                    return a;
+                }
+            }
+            printHelpAndThrowError("Specified algorithm is not available. See available values above.");
+            return null;
+        }
+    }
     /**
      * Checks the user has entered the correct number of arguments
      * @param cmd represents the command line
