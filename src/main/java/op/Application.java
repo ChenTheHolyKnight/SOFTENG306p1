@@ -5,6 +5,7 @@ import op.algorithm.bound.BottomLevelFunction;
 import op.algorithm.bound.CombinedCostFunction;
 import op.algorithm.bound.EmptyCostFunction;
 import op.algorithm.bound.IdleTimeFunction;
+import op.algorithm.prune.EmptyPruner;
 import op.io.InvalidUserInputException;
 import op.model.Schedule;
 import op.visualization.GUIApplication;

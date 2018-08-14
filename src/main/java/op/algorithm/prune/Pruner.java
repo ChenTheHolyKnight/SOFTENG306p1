@@ -1,4 +1,4 @@
-package op.algorithm;
+package op.algorithm.prune;
 
 import op.model.Schedule;
 
