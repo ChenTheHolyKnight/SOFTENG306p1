@@ -189,8 +189,8 @@ public class GUIController {
         chart.setBlockHeight( 50);
         chart.setPrefHeight(schedulePane.getPrefHeight());
         chart.setPrefWidth(schedulePane.getPrefWidth());
-        System.out.println("NOTFOUND "+this.getClass().getResource("../view/GUI.fxml"));
-        chart.getStylesheets().add(this.getClass().getResource("../view/Styles/ganttchart.css").toExternalForm());
+        System.out.println("NOTFOUND "+this.getClass().getResource(".../view/GUI.fxml"));
+        chart.getStylesheets().add(this.getClass().getResource(".../view/Styles/ganttchart.css").toExternalForm());
 
         //add chart to the pane
         schedulePane.getChildren().add(chart);
