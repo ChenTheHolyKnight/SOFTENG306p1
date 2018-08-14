@@ -18,6 +18,7 @@ import java.util.Timer;
 public class Visualizer extends Application {
 
     private GUIController controller;
+    private static final int SCENE_HEIGHT = 620;
 
     /**
      * Starts the visualization GUI
@@ -42,7 +43,7 @@ public class Visualizer extends Application {
         controller = loader.getController();
         controller.setScene(scene);
 
-        stage.setHeight(620);
+        stage.setHeight(SCENE_HEIGHT);
         stage.setResizable(false);
         stage.centerOnScreen();
 

@@ -1,6 +1,15 @@
+@font-face {
+    src: url('fonts/Lato-Reg.otf');
+}
+
+.root {
+    -fx-font-family: "Lato-Bold";
+    -fx-font-size: 14px;
+}
+
 .background {
-    -fx-background-color: #191816;
-    //686858
+    -fx-background-color: linear-gradient(#00003E, black);
+    /*686858*/
 }
 
 .textBackground{
@@ -8,11 +17,20 @@
 }
 
 .grayBackground{
-    -fx-background-color:#69715F;
+    /*-fx-background-color:#00003E;*/
+    -fx-background-color:
+            linear-gradient(#1F2226, #141518),
+            radial-gradient(center 50% -40%, radius 200%, #1F2226 45%, #141518 50%);
+        -fx-background-radius: 6, 5;
+        -fx-background-insets: 0, 1;
+        -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );
+        -fx-text-fill: #ffffff;
 }
 
 .tileBackgroundColour{
     -fx-background-color:#2a2a2a;
+    -fx-background-radius: 6, 5;
+    -fx-background-insets: 0, 1;
 }
 
 .tabBackgroundColour{

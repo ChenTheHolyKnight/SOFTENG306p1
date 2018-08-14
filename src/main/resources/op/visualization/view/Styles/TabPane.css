@@ -12,19 +12,19 @@
 }
 .tab-pane .tab
 {
-    -fx-background-color: #2a2a2a;
+    -fx-background-color: rgba(0,0,0,0);
 
 }
 
 .tab-pane .tab:selected
 {
-    -fx-background-color: #69715F;
+    -fx-background-color: #2a2a2a;
 }
 
 .tab .tab-label {
     -fx-alignment: CENTER;
     -fx-text-fill: #ffffff;
-    -fx-font-size: 12px;
+    -fx-font-size: 14px;
     -fx-font-weight: bold;
 }
 
