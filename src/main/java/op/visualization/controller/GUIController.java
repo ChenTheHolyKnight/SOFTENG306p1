@@ -6,12 +6,15 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.StackedBarChart;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import op.model.ScheduledTask;
 import op.model.TaskGraph;
+import op.visualization.GanttChart;
 import op.Application;
 import op.visualization.messages.UpdateMessage;
 import org.controlsfx.control.ToggleSwitch;
@@ -41,6 +44,14 @@ public class GUIController {
 
     @FXML
     private Tile memoryTile;
+
+
+    //axis of the Gantt chart
+    final NumberAxis xAxis = new NumberAxis();
+    final CategoryAxis yAxis = new CategoryAxis();
+
+    //the customized Gantt chart
+    final GanttChart<Number,String> chart = new GanttChart<Number,String>(xAxis,yAxis);
 
 
 
@@ -146,6 +157,32 @@ public class GUIController {
      * This is the method to initialize the Ganchart
      */
     private void initializeGanttChart(){
+        List<String> processors=new ArrayList<>();
+        for(int i=0;i<coreNum;i++){
+            processors.add("Processor"+(i+1));
+        }
+
+        //set up Axis and Chart
+        xAxis.setLabel("");
+        xAxis.setTickLabelFill(Color.CHOCOLATE); //need to change later on
+        xAxis.setMinorTickCount(4);
+
+        yAxis.setLabel("");
+        yAxis.setTickLabelFill(Color.CHOCOLATE); //need to change later on
+        yAxis.setTickLabelGap(10);
+        yAxis.setCategories(FXCollections.<String>observableArrayList(processors));
+
+
+        chart.setTitle("Machine Monitoring");
+        chart.setLegendVisible(false);
+        chart.setBlockHeight( 50);
+        chart.setPrefHeight(schedulePane.getPrefHeight());
+        chart.setPrefWidth(schedulePane.getPrefWidth());
+
+        
+        //add chart to the pane
+        schedulePane.getChildren().add(chart);
+
 
     }
 
