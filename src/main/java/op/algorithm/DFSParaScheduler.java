@@ -40,6 +40,7 @@ public class DFSParaScheduler extends BranchAndBoundScheduler {
         int threadSize = 3;
         ExecutorService executor = Executors.newFixedThreadPool(threadSize);
         DFSParaRunnable[] runnables = new DFSParaRunnable[threadSize];
+        // run sequentially until our stack is big enough to run in parallel
         while(scheduleStack.size()<threadSize){
             //make one thread and run it
             Schedule currentSchedule = scheduleStack.pop();
@@ -59,6 +60,7 @@ public class DFSParaScheduler extends BranchAndBoundScheduler {
                 }
             }
         }
+        // initiate threads and run them in parallel
         for (int i = 0; i<threadSize; i++){
             Schedule currentSchedule = scheduleStack.pop();
             beenChecked.add(currentSchedule.hashCode());
@@ -67,16 +69,14 @@ public class DFSParaScheduler extends BranchAndBoundScheduler {
         }
         executor.shutdown();
         while(!executor.isTerminated()){} // wait for runnables to finish
-        for (int i = 0; i<threadSize; i++) {
-            if(runnables[i].getSchedule() != null) {
+        for (int i = 0; i<threadSize; i++) { // get the best schedule from each thread
+            if(runnables[i].getSchedule() != null) { // there is a chance that thread did not reach a complete solution
                 if (runnables[i].getSchedule().getLength() < bestScheduleLength) {
                     bestScheduleLength = runnables[i].getSchedule().getLength();
                     bestSchedule = runnables[i].getSchedule();
                 }
             }
         }
-        // variables to keep track of the best schedule so far in the search
-
         System.out.println("Optimal length: " + bestSchedule.getLength());
         return bestSchedule;
     }
