@@ -5,13 +5,14 @@ import op.model.Schedule;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
-public class DFSParaRunnable extends BranchAndBoundScheduler implements Runnable {
+public class DFSParaRunnable extends DFSScheduler implements Runnable {
 
     private Schedule schedule;
+    private Schedule bestSchedule;
     private int bestScheduleLength;
     private List<Schedule> toAdd = new ArrayList<>();
-    private int length;
     /**
      * Creates a BranchAndBoundScheduler instance with the specified Pruner implementation.
      *
@@ -22,46 +23,51 @@ public class DFSParaRunnable extends BranchAndBoundScheduler implements Runnable
     public DFSParaRunnable(int numProcessors, Pruner p, CostFunction f, Schedule s, int bestLength) {
         super(numProcessors, p, f);
         this.schedule = s;
+
         this.bestScheduleLength = bestLength;
-        this.length = Integer.MAX_VALUE;
     }
 
     @Override
     public void run() {
         produceSchedule();
     }
+    public Schedule produceSchedule(){
+        // variables to keep track of the best schedule so far in the search
+        bestScheduleLength = Integer.MAX_VALUE;
+        Pruner p = getPruner();
+
+        // initialize stack with the empty schedule
+        Stack<Schedule> scheduleStack =  new Stack<Schedule>();
+        scheduleStack.push(schedule);
+
+        // start the search, and continue until all possible schedules have been processed
+        while (!scheduleStack.isEmpty()) {
+            Schedule currentSchedule = scheduleStack.pop();
+            DFSParaScheduler.beenChecked.add(currentSchedule.hashCode());
+            if (currentSchedule.isComplete()) {
+                // check if the complete schedule is better than our best schedule so far
+                if (currentSchedule.getLength() < bestScheduleLength) {
+                    bestSchedule = currentSchedule;
+                    bestScheduleLength = currentSchedule.getLength();
+                }
+            } else {
+                // not a complete schedule so add children to the stack to be processed later
+
+                List<Schedule> pruned = p.prune(super.getChildrenOfSchedule(currentSchedule), bestScheduleLength, getNumProcessors());
+                for (Schedule s: pruned){
+                    if (costFunctionIsPromising(s, bestScheduleLength) && !DFSParaScheduler.beenChecked.contains(s.hashCode())) {
+                        scheduleStack.push(s);
+                    }
+                }
+            }
+        }
+        return bestSchedule;
+    }
     private boolean costFunctionIsPromising(Schedule s, int bestSoFar) {
         int costFunction = super.getCostFunction().calculate(s);
         return costFunction < bestSoFar;
     }
-    @Override
-    public Schedule produceSchedule() {
-        if (schedule.isComplete()) {
-            length = schedule.getLength();
-            // check if the complete schedule is better than our best schedule so far
-            if (schedule.getLength() < bestScheduleLength) {
-                bestScheduleLength = (schedule.getLength());
-                //System.out.println("New best: " + bestScheduleLength);
-                //setBestYet(s);
-            }
-        } else {
-            // not a complete schedule so add children to the stack to be processed later
-            List<Schedule> pruned = getPruner().prune(super.getChildrenOfSchedule(schedule), bestScheduleLength, getNumProcessors());
-            for (Schedule sched : pruned){
-                if (costFunctionIsPromising(sched, bestScheduleLength)) {
-                    toAdd.add(sched);
-                }
-            }
-        }
-        return schedule;
-    }
     public Schedule getSchedule(){
-        return schedule;
-    }
-    public int getScheduleLength(){
-        return length;
-    }
-    public List<Schedule> getToAdd(){
-        return toAdd;
+        return bestSchedule;
     }
 }
