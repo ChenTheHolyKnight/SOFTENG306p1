@@ -22,8 +22,8 @@ public abstract class BranchAndBoundScheduler extends Scheduler {
      * @param numProcessors the number of processors to schedule tasks on
      * @param f the cost function implementation to use for this scheduler
      */
-    public BranchAndBoundScheduler(int numProcessors, Pruner p, CostFunction f) {
-        super(numProcessors);
+    public BranchAndBoundScheduler(int numProcessors, boolean toVisualize, Pruner p, CostFunction f) {
+        super(numProcessors, toVisualize);
         this.pruner = p;
         this.costFunction = f;
     }

@@ -1,23 +1,18 @@
 package op.visualization.controller;
 
 import op.visualization.messages.MessageAddNodes;
-import op.visualization.messages.MessageEliminateChildren;
+import op.visualization.messages.MessageEliminateNodes;
 import op.visualization.messages.MessageSetOptimalSolution;
 import op.visualization.messages.UpdateMessage;
 import org.graphstream.graph.Edge;
-import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
-import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.ui.graphicGraph.GraphicGraph;
-import org.graphstream.ui.graphicGraph.GraphicNode;
-import org.graphstream.ui.view.Viewer;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * A singleton class representing the display for the Graphstream graph.
@@ -28,25 +23,27 @@ import java.util.stream.IntStream;
 public class GraphController {
 	
 	private static final String STYLE_CLASS = "ui.class";
+	private static int Y_BOUND = 90;
+	private static int X_BOUND = 90;
+
 	private static GraphController instance = new GraphController();
 	private GraphicGraph graph;
+	private Random random;
 	
 	private GraphController () {
 		graph =  new GraphicGraph("graph");
 		graph.setAttribute("ui.stylesheet", GRAPH_DISPLAY_STYLESHEET);
-		addNodes();
+		random = new Random();
+		//addNodes();
 	}
 
     /**
      * Test method. To be moved to test class.
      */
-	private void addNodes() {
-	    Random random = new Random();
+	/*private void addNodes() {
 
 	    for (int i = 0; i < 20; i++){
-            graph.addNode(""+i);
-            graph.getNode(""+i).setAttribute("x", random.nextInt(90));
-            graph.getNode(""+i).setAttribute("y", 100-5*i);
+            placeNode(""+i);
         }
         List<String> children = new ArrayList<>();
 	    children.add("2");
@@ -73,7 +70,7 @@ public class GraphController {
         addNodes("11", children3);
 
         eliminateChildren("11");
-    }
+    }*/
 	
 	/**
 	 * Gets the singleton instance of GraphController
@@ -92,11 +89,11 @@ public class GraphController {
         if (u instanceof MessageAddNodes) {
             addNodes(((MessageAddNodes) u).getParentNodeId(), ((MessageAddNodes) u).getChildNodeIds());
         }
-        if (u instanceof MessageEliminateChildren) {
-            eliminateChildren(((MessageEliminateChildren) u).getParentNodeId());
+        if (u instanceof MessageEliminateNodes) {
+            eliminateNodes(((MessageEliminateNodes) u).getNodeIds());
         }
         if (u instanceof MessageSetOptimalSolution) {
-            setOptimalSolution(((MessageSetOptimalSolution) u).getOptimalDescendantLine());
+            setOptimalSolution(((MessageSetOptimalSolution) u).getOptimalSolution());
         }
     }
 	
@@ -104,53 +101,90 @@ public class GraphController {
 	 * Adds new nodes to the graph visualisation
 	 *
      * @param parentNodeId the ID of the parent node to add
-	 * @param childNodeIds the Id of the children nodes to add
+	 * @param childNodeIds the Id of the children nodes to add; can be null if the node has no children
 	 */
-	private void addNodes(String parentNodeId, List<String> childNodeIds) {
+	private void addNodes(String parentNodeId, Set<String> childNodeIds) {
 		if (graph.getNode(parentNodeId) == null) {
-			graph.addNode(parentNodeId);
+		    // Add the parent node if it does not exist
+            placeNode(parentNodeId);
 		}
-        for (String nodeId: childNodeIds) {
-            // Add the child node if it does not exist
-            if (graph.getNode(nodeId) == null) {
-                graph.addNode(nodeId);
-            }
-            // Add the edge if it does not exist
-            if (graph.getEdge(parentNodeId + ":" + nodeId) == null) {
-                graph.addEdge(parentNodeId + nodeId, parentNodeId, nodeId, true);
+		if (childNodeIds != null) {
+            for (String childNodeId: childNodeIds) {
+                // Add the child node if it does not exist
+                if (graph.getNode(childNodeId) == null) {
+                    placeNode(childNodeId);
+                }
+                // Add the edge if it does not exist
+                if (graph.getEdge(createEdgeId(parentNodeId, childNodeId)) == null) {
+                    graph.addEdge(createEdgeId(parentNodeId, childNodeId), parentNodeId, childNodeId, true);
+                }
             }
         }
 	}
 
     /**
-     * Removes the descendants of a given node from the solution tree
-     * @param nodeId
+     * Removes the given nodes from the solution tree
+     * @param nodeIds nodes to remove
      */
-	private void eliminateChildren (String nodeId) {
-		Node n = graph.getNode(nodeId);
-		n.setAttribute(STYLE_CLASS, "eliminated");
-		for (Edge e : n.leavingEdges().collect(Collectors.toList())){
-			e.setAttribute(STYLE_CLASS, "eliminated");
-			eliminateChildren(e.getTargetNode().getId());
-		}
-	}
-
-    /**
-     * Marks the given nodes as the optimal solution
-     * @param nodeIds the nodes that represent the optimal solution
-     */
-	private void setOptimalSolution(List<String> nodeIds) {
-	    for (String nodeId : nodeIds) {
+    private void eliminateNodes (Set<String> nodeIds) {
+        for (String nodeId: nodeIds) {
             Node n = graph.getNode(nodeId);
-            n.setAttribute(STYLE_CLASS, "optimal");
+            n.setAttribute(STYLE_CLASS, "eliminated");
             for (Edge e : n.leavingEdges().collect(Collectors.toList())){
                 if (nodeIds.contains(e.getTargetNode().getId())) {
-                    e.setAttribute(STYLE_CLASS, "optimal");
-                    eliminateChildren(e.getTargetNode().getId());
+                    e.setAttribute(STYLE_CLASS, "eliminated");
                 }
-
             }
         }
+    }
+
+    /**
+     * Marks the given node and all its subschedules as the optimal solution
+     * @param nodeId the nodes that represents the optimal solution
+     */
+	private void setOptimalSolution(String nodeId) {
+        Node n = graph.getNode(nodeId);
+        n.setAttribute(STYLE_CLASS, "optimal");
+        for (Edge e : n.enteringEdges().collect(Collectors.toList())){
+            e.setAttribute(STYLE_CLASS, "optimal");
+            setOptimalSolution(e.getTargetNode().getId());
+        }
+    }
+
+    /**
+     * Produces an ID for an edge between two nodes
+     * @param sourceNodeId ID of the source node
+     * @param targetNodeId ID of the target node
+     * @return the edge ID
+     */
+    private String createEdgeId(String sourceNodeId, String targetNodeId) {
+	    return sourceNodeId + ":" + targetNodeId;
+    }
+
+    /**
+     * Adds a new node to the graph by choosing co-ordinates for the node
+     * @param nodeId
+     */
+    private void placeNode(String nodeId) {
+        graph.addNode(nodeId);
+        graph.getNode(nodeId).setAttribute("x", newNodeXPosition());
+        graph.getNode(nodeId).setAttribute("y", newNodeYPosition());
+    }
+
+    /**
+     * Finds an x co-ordinate to place a new node on the graph
+     * @return x co-ordinate
+     */
+    private int newNodeXPosition() {
+        return random.nextInt(X_BOUND);
+    }
+
+    /**
+     * Finds a y co-ordinate to place a new node on the graph
+     * @return y co-ordinate
+     */
+    private int newNodeYPosition() {
+        return random.nextInt(Y_BOUND);
     }
 
     /**
@@ -189,7 +223,6 @@ public class GraphController {
             + "node.eliminated { "
 			    + "shape: cross; "
                     + "fill-color: #CCCCCC, #704040;"
-                    + "fill-mode: gradient-radial;"
                     + "shadow-color: #875F5F, rgba(0, 0, 0, 0);"
 		    + "}"
 				
@@ -199,11 +232,14 @@ public class GraphController {
 		    + " }"
 
             + "node.optimal {"
-                + "fill-color: red;"
+                    + "fill-color: #CCCCCC, #407040;"
+                    + "shadow-color: #5F875F, rgba(0, 0, 0, 0);"
+                    + "size: 15px, 15px;"
             + "}"
 
             + "edge.optimal {"
-                + "fill-color: red;"
+                    + "fill-color: rgba(64, 112, 64, 128);"
+                    + "shadow-color: rgba(64, 112, 64, 128), rgba(0, 0, 0, 0);"
             + "}";
 	
 }

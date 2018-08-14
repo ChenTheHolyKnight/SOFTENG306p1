@@ -15,8 +15,8 @@ public class GreedyScheduler extends Scheduler {
     private int FIRST_PROCESSOR = 1;
     
 
-    public GreedyScheduler(int numProcessors) {
-    	super(numProcessors);
+    public GreedyScheduler(int numProcessors, boolean toVisualize) {
+    	super(numProcessors, toVisualize);
     }
 
     /**

@@ -168,7 +168,7 @@ public class TestScheduler {
 	    try {
 
             setup(PATH_TO_TEST);
-            s = (new SimpleScheduler()).produceSchedule();
+            s = (new SimpleScheduler(false)).produceSchedule();
             checkScheduleIsValid();
         } catch (IOException e) {
 	        e.printStackTrace();
@@ -238,7 +238,7 @@ public class TestScheduler {
     private void checkGreedyScheduler(String path) {
         try {
             setup(path);
-            s = (new GreedyScheduler(arguments.getNumProcessors())).produceSchedule();
+            s = (new GreedyScheduler(arguments.getNumProcessors(), false)).produceSchedule();
             checkScheduleIsValid();
 
         } catch (IOException e) {
@@ -260,7 +260,8 @@ public class TestScheduler {
 	private void checkDFSScheduler(String path) {
 		try {
 			setup(path);
-			s = (new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner(), new EmptyCostFunction())).produceSchedule();
+			s = (new DFSScheduler(arguments.getNumProcessors(), false, new EmptyPruner(),
+					new EmptyCostFunction())).produceSchedule();
 			checkScheduleIsValid();
 
 		} catch (IOException e) {

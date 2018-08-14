@@ -3,8 +3,10 @@ package op.algorithm;
 import op.algorithm.bound.CostFunction;
 import op.model.Schedule;
 import op.model.TaskGraph;
+import op.visualization.messages.MessageAddNodes;
 
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 
 /**
@@ -20,8 +22,8 @@ public class DFSScheduler extends BranchAndBoundScheduler {
      * @param p The pruner implementation to use
      * @param f The cost function implementation to use
      */
-    public DFSScheduler(int numProcessors, Pruner p, CostFunction f) {
-        super(numProcessors, p, f);
+    public DFSScheduler(int numProcessors, boolean toVisualize, Pruner p, CostFunction f) {
+        super(numProcessors, toVisualize, p, f);
     }
 
     /**
@@ -37,7 +39,9 @@ public class DFSScheduler extends BranchAndBoundScheduler {
 
         // initialize stack with the empty schedule
         Stack<Schedule> scheduleStack =  new Stack<Schedule>();
-        scheduleStack.push(new Schedule());
+        Schedule emptySchedule = new Schedule();
+        scheduleStack.push(emptySchedule);
+        newSchedulesUpdate(emptySchedule, null);
 
         // start the search, and continue until all possible schedules have been processed
         while (!scheduleStack.isEmpty()) {
@@ -51,8 +55,10 @@ public class DFSScheduler extends BranchAndBoundScheduler {
                 }
             } else {
                 // not a complete schedule so add children to the stack to be processed later
-
-                List<Schedule> pruned = p.prune(super.getChildrenOfSchedule(currentSchedule), bestScheduleLength, getNumProcessors());
+                List<Schedule> children = getChildrenOfSchedule(currentSchedule);
+                newSchedulesUpdate(currentSchedule, children);
+                List<Schedule> pruned = p.prune(children, bestScheduleLength, getNumProcessors());
+                removedSchedulesUpdate(pruned, children);
                 for (Schedule s: pruned){
                     if (costFunctionIsPromising(s, bestScheduleLength)) {
                         scheduleStack.push(s);
@@ -61,6 +67,7 @@ public class DFSScheduler extends BranchAndBoundScheduler {
             }
         }
 
+        optimalSolutionUpdate(bestSchedule);
         System.out.println("Optimal length: " + bestSchedule.getLength());
         return bestSchedule;
     }

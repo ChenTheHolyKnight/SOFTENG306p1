@@ -33,10 +33,7 @@ public class Application {
         application.readDot(dotParser);
 
         // Produce a schedule
-        Schedule schedule = application.produceSchedule();
-
-        // Start visualization
-        application.startVisualization(args);
+        Schedule schedule = application.produceSchedule(args);
 
         // Write out the schedule
         application.writeDot(dotParser, schedule);
@@ -75,14 +72,21 @@ public class Application {
      * To be run concurrently with startVisualization()
      * @return a schedule
      */
-    private Schedule produceSchedule() {
+    private Schedule produceSchedule(String[] args) {
 
-        //scheduler = new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner(), new IdleTimeFunction(arguments.getNumProcessors()));
-        //scheduler = new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner(), new BottomLevelFunction());
-        //scheduler = new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner(), new EmptyCostFunction());
-        scheduler = new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner(), new CombinedCostFunction(arguments.getNumProcessors()));
+        //scheduler = new DFSScheduler(arguments.getNumProcessors(), arguments.getToVisualize(), new EmptyPruner(),
+        //        new IdleTimeFunction(arguments.getNumProcessors()));
+        //scheduler = new DFSScheduler(arguments.getNumProcessors(), arguments.getToVisualize(), new EmptyPruner(),
+        //        new BottomLevelFunction());
+        //scheduler = new DFSScheduler(arguments.getNumProcessors(), arguments.getToVisualize(), new EmptyPruner(),
+        //        new EmptyCostFunction());
+        scheduler = new DFSScheduler(arguments.getNumProcessors(), arguments.getToVisualize(), new EmptyPruner(),
+                new CombinedCostFunction(arguments.getNumProcessors()));
 
         long startTime = System.currentTimeMillis();
+
+        // Start visualization
+        startVisualization(args);
 
         Schedule schedule = scheduler.produceSchedule();
 

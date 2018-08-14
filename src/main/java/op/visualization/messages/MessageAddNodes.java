@@ -1,6 +1,7 @@
 package op.visualization.messages;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Message to add new nodes to the graph display
@@ -10,13 +11,13 @@ import java.util.List;
  */
 public class MessageAddNodes implements UpdateMessage {
 	private String parentNodeId;
-	private List<String> childNodeIds;
+	private Set<String> childNodeIds;
 
 	/**
 	 * @param parentNodeId the ID of the existing parent node
 	 * @param childNodeIds the IDs of the children nodes to add
 	 */
-	public MessageAddNodes(String parentNodeId, List<String> childNodeIds) {
+	public MessageAddNodes(String parentNodeId, Set<String> childNodeIds) {
 		this.parentNodeId = parentNodeId;
 		this.childNodeIds = childNodeIds;
 	}
@@ -25,7 +26,7 @@ public class MessageAddNodes implements UpdateMessage {
 		return parentNodeId;
 	}
 	
-	public List<String> getChildNodeIds() {
+	public Set<String> getChildNodeIds() {
 		return childNodeIds;
 	}
 }
