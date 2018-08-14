@@ -204,8 +204,8 @@ public class GUIController {
         int weight=task.getTask().getDuration();
         int processorNum=task.getProcessor();
         XYChart.Series series=seriesHashMap.get(processorNum-1);
-        series.getData().add(new XYChart.Data(0, yAxis.getCategories().get(processorNum-1),
-                new GanttChart.ExtraData( 1, "status-blue")));
+        series.getData().add(new XYChart.Data(task.getStartTime(), yAxis.getCategories().get(processorNum-1),
+                new GanttChart.ExtraData( weight, "status-blue")));
         chart.getData().add(series);
 
     }

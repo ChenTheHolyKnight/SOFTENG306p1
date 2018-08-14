@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import op.algorithm.GreedyScheduler;
 import op.visualization.controller.GUIController;
 import op.visualization.messages.UpdateMessage;
 
@@ -54,6 +55,12 @@ public class Visualizer extends Application{
         Tile cpuTile=controller.getCPUTile();
         Tile memTile=controller.getMemoryTile();
         timer.schedule(new SystemInfo(cpuTile,memTile), 0, 100);
+
+
+        //start Scheduling
+        GreedyScheduler scheduler=new GreedyScheduler(coreNum);
+        scheduler.setController(controller);
+        scheduler.produceSchedule();
 
         stage.setScene(scene);
         stage.show();
