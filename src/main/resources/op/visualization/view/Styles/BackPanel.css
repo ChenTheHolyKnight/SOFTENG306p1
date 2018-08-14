@@ -37,3 +37,8 @@
      background: white;
     -fx-text-fill: white;
 }
+
+.scheduleBackground{
+    -fx-background-color: #00003E, #000000;
+    -fx-fill-mode: gradient-vertical;
+}

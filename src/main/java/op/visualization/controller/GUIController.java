@@ -4,6 +4,7 @@ import eu.hansolo.tilesfx.Tile;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.chart.StackedBarChart;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
@@ -32,6 +33,10 @@ public class GUIController {
 
     @FXML
     private Tile memoryTile;
+
+    @FXML
+    public StackedBarChart<String,Number> barChart;
+
 
     private Scene scene;
 
