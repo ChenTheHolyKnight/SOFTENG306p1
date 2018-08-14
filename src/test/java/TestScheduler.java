@@ -10,10 +10,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import op.algorithm.DFSScheduler;
-import op.algorithm.EmptyPruner;
 import op.algorithm.GreedyScheduler;
 import op.algorithm.SimpleScheduler;
 import op.algorithm.bound.EmptyCostFunction;
+import op.algorithm.prune.EmptyPruner;
+
 import org.junit.After;
 import org.junit.Test;
 
