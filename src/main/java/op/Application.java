@@ -99,8 +99,8 @@ public class Application {
      */
     private void startVisualization(String[] args) {
         if (arguments.getToVisualize()) {
-            new Thread(() -> {
-                visualizer = new Visualizer();
+            Visualizer visualizer = new Visualizer();
+            visualizer.setCore(arguments.getNumCores());
                 //scheduler.addListener(visualizer);
                 visualizer.startVisualization(args);
             }).start();

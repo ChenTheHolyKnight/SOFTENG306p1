@@ -20,6 +20,7 @@ public class Visualizer extends Application{
 
     private GUIController controller;
     private static final int SCENE_HEIGHT = 620;
+    private int coreNum;
 
     /**
      * Starts the visualization GUI
@@ -43,6 +44,7 @@ public class Visualizer extends Application{
 
         controller = loader.getController();
         controller.setScene(scene);
+        controller.setCoreNum(coreNum);
 
         stage.setHeight(SCENE_HEIGHT);
         stage.setResizable(false);
@@ -68,4 +70,12 @@ public class Visualizer extends Application{
         controller.updateGraph(u);
     }
 
+
+    /**
+     * Set the number of cores
+     * @param coreNum the number of cores.
+     */
+    public void setCore(int coreNum){
+        this.coreNum=coreNum;
+    }
 }

@@ -13,17 +13,17 @@
 <?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.ToggleSwitch?>
 
-<AnchorPane prefHeight="600.0" prefWidth="900.0" styleClass="background" stylesheets="@Styles/BackPanel.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="op.visualization.controller.GUIController">
+<AnchorPane prefHeight="600.0" prefWidth="900.0" styleClass="background" stylesheets="@Styles/BackPanel.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="op.visualization.controller.GUIController">
    <children>
       <AnchorPane fx:id="graphPane" prefHeight="502.0" prefWidth="681.0" styleClass="textBackground" />
       <AnchorPane fx:id="schedulePane" opacity="0.51" prefHeight="502.0" prefWidth="681.0" styleClass="scheduleBackground">
          <children>
-            <StackedBarChart layoutY="1.0" prefHeight="502.0" prefWidth="682.0">
+            <StackedBarChart fx:id="barChart" layoutY="1.0" prefHeight="502.0" prefWidth="682.0">
               <xAxis>
-                <CategoryAxis prefHeight="33.0" prefWidth="627.0" side="BOTTOM" tickLabelFill="WHITE" />
+                <CategoryAxis side="BOTTOM" tickLabelFill="WHITE" fx:id="xAxis" />
               </xAxis>
               <yAxis>
-                <NumberAxis prefHeight="440.0" prefWidth="40.0" side="LEFT" tickLabelFill="WHITE" />
+                <NumberAxis side="LEFT" tickLabelFill="WHITE" />
               </yAxis>
             </StackedBarChart>
          </children></AnchorPane>
