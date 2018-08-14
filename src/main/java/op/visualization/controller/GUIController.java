@@ -42,11 +42,9 @@ public class GUIController {
     @FXML
     private Tile memoryTile;
 
-    @FXML
-    public StackedBarChart<String,Number> barChart;
 
-    @FXML
-    public CategoryAxis xAxis;
+
+
 
 
     private Scene scene;
@@ -88,6 +86,9 @@ public class GUIController {
         this.scene = scene;
     }
 
+    /**
+     * initialize the controller
+     */
     @FXML
     public void initialize(){
         schedulePane.setOpacity(0.0);
@@ -95,11 +96,17 @@ public class GUIController {
         initializeGanttChart();
     }
 
+    /**
+     * Get the CPU Tile with certain skin
+     */
     public Tile getCPUTile(){
         this.cpuTile.setSkinType(Tile.SkinType.BAR_GAUGE);
         return cpuTile;
     }
 
+    /**
+     * Get the Memory Tile with certain skin
+     */
     public Tile getMemoryTile(){
         this.memoryTile.setSkinType(Tile.SkinType.BAR_GAUGE);
         return memoryTile;
@@ -134,18 +141,17 @@ public class GUIController {
     public void setCoreNum(int coreNum){
         this.coreNum=coreNum;
     }
+
     /**
-     * This is the method to initialize the Ganchart*/
+     * This is the method to initialize the Ganchart
+     */
     private void initializeGanttChart(){
-        List<String> strs=new ArrayList<>();
-        for(int i=0;i<this.coreNum;i++){
-            String str="Processor"+(i+1);
-            strs.add(str);
-        }
-        xAxis.setCategories(FXCollections.<String>observableArrayList(strs));
+
     }
 
-
+    /**
+     * The method to add the scheduled task to the Gantt chart
+     */
     public void addScheduledTaskToChart(ScheduledTask task){
         int weight=task.getTask().getDuration();
 
