@@ -75,24 +75,25 @@ public class Application {
      * @return a schedule
      */
     private Schedule produceSchedule() {
-        Scheduler idleTimeScheduler = new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner(), new IdleTimeFunction(arguments.getNumProcessors()));
-        Scheduler bottomLevelScheduler = new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner(), new BottomLevelFunction());
-        Scheduler slowScheduler = new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner(), new EmptyCostFunction());
+        //Scheduler idleTimeScheduler = new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner(), new IdleTimeFunction(arguments.getNumProcessors()));
+        //Scheduler bottomLevelScheduler = new DFSParaScheduler(arguments.getNumProcessors(), new EmptyPruner(), new BottomLevelFunction());
+        //Scheduler slowScheduler = new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner(), new EmptyCostFunction());
         long startTime = System.currentTimeMillis();
-        Schedule bottomLevelSchedule = bottomLevelScheduler.produceSchedule();
-        System.out.println("Time with bottom level cost function: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+bottomLevelSchedule.getLength());
+        //Schedule bottomLevelSchedule = bottomLevelScheduler.produceSchedule();
+        //System.out.println("Time with bottom level cost function: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+bottomLevelSchedule.getLength());
         Scheduler combinedScheduler = new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner(), new CombinedCostFunction(arguments.getNumProcessors()));
         startTime = System.currentTimeMillis();
         Schedule combinedSchedule = combinedScheduler.produceSchedule();
         System.out.println("Time with both cost functions: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+combinedSchedule.getLength());
+        Scheduler combinedParaScheduler = new DFSParaScheduler(arguments.getNumProcessors(), new EmptyPruner(), new CombinedCostFunction(arguments.getNumProcessors()));
         startTime = System.currentTimeMillis();
-        Schedule idleTimeSchedule = idleTimeScheduler.produceSchedule();
-        System.out.println("Time with idle time cost function: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+idleTimeSchedule.getLength());
+        Schedule combinedParaSchedule = combinedParaScheduler.produceSchedule();
+        System.out.println("Time with both cost function parallel: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+combinedParaSchedule.getLength());
 //        startTime = System.currentTimeMillis();
 //        Schedule slowSchedule = slowScheduler.produceSchedule();
 //        System.out.println("Time without cost function: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+slowSchedule.getLength());
 //        return slowSchedule;
-        return idleTimeSchedule;
+        return combinedParaSchedule;
     }
 
     /**
