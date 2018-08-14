@@ -30,14 +30,14 @@ public class DFSParaScheduler extends BranchAndBoundScheduler {
         *   Run sequentially on 1 thread
         *   when stack in thread reaches size of number of processors
         *   create new threads (n-1, continue using existing thread)
-        *   those threads run to completiong
+        *   those threads run to completion
         *   compare results of threads
         */
         Schedule bestSchedule = new Schedule();
         Stack<Schedule> scheduleStack = new Stack<Schedule>();
         scheduleStack.push(bestSchedule);
         int bestScheduleLength = Integer.MAX_VALUE;
-        int threadSize = 4;
+        int threadSize = 3;
         ExecutorService executor = Executors.newFixedThreadPool(threadSize);
         DFSParaRunnable[] runnables = new DFSParaRunnable[threadSize];
         while(scheduleStack.size()<threadSize){
