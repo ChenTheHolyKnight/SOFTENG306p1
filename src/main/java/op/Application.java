@@ -11,6 +11,8 @@ import op.io.CommandLineIO;
 import op.io.DotIO;
 import op.model.Arguments;
 import op.visualization.Visualizer;
+import op.visualization.controller.GUIController;
+import scala.App;
 
 import java.io.IOException;
 
@@ -20,6 +22,8 @@ import java.io.IOException;
 public class Application {
 	private Arguments arguments;
 	private Scheduler scheduler;
+	private long startTime;
+	private Visualizer visualizer;
 	
     public static void main(String[] args) {
 
@@ -32,8 +36,14 @@ public class Application {
         DotIO dotParser = new DotIO();
         application.readDot(dotParser);
 
-        // Produce a schedule
-        Schedule schedule = application.produceSchedule(args);
+        // Create scheduler
+        application.createScheduler();
+
+        // Produce a schedule - create a new thread to do this.
+        Schedule schedule = application.produceSchedule();
+
+        // Start visualization
+        application.startVisualization(args);
 
         // Write out the schedule
         application.writeDot(dotParser, schedule);
@@ -68,12 +78,9 @@ public class Application {
     }
 
     /**
-     * Schedules tasks on processors
-     * To be run concurrently with startVisualization()
-     * @return a schedule
+     * Produces a scheduler to schedule tasks on
      */
-    private Schedule produceSchedule(String[] args) {
-
+    private void createScheduler() {
         //scheduler = new DFSScheduler(arguments.getNumProcessors(), arguments.getToVisualize(), new EmptyPruner(),
         //        new IdleTimeFunction(arguments.getNumProcessors()));
         //scheduler = new DFSScheduler(arguments.getNumProcessors(), arguments.getToVisualize(), new EmptyPruner(),
@@ -83,11 +90,28 @@ public class Application {
         scheduler = new DFSScheduler(arguments.getNumProcessors(), arguments.getToVisualize(), new EmptyPruner(),
                 new CombinedCostFunction(arguments.getNumProcessors()));
 
-        long startTime = System.currentTimeMillis();
+        startTime = System.currentTimeMillis();
+    }
 
-        // Start visualization
-        startVisualization(args);
+    /**
+     * Visualizes the search for a solution schedule
+     * To be run concurrently with produceSchedule()
+     */
+    private void startVisualization(String[] args) {
+        if (arguments.getToVisualize()) {
+            visualizer = new Visualizer();
+            visualizer.startVisualization(args);
+        }
+    }
 
+    /**
+     * Schedules tasks on processors
+     * To be run concurrently with startVisualization()
+     * @return a schedule
+     */
+    private Schedule produceSchedule() {
+
+        scheduler.addListener(visualizer);
         Schedule schedule = scheduler.produceSchedule();
 
         System.out.println("Time without cost function: " + (System.currentTimeMillis() - startTime) +
@@ -100,18 +124,6 @@ public class Application {
         //        " ms       Schedule Length: " + schedule.getLength());
 
         return schedule;
-    }
-
-    /**
-     * Visualizes the search for a solution schedule
-     * To be run concurrently with produceSchedule()
-     */
-    private void startVisualization(String[] args) {
-        if (arguments.getToVisualize()) {
-            Visualizer visualizer = new Visualizer();
-        	scheduler.addListener(visualizer);
-        	visualizer.startVisualization(args);
-        }
     }
 
     /**

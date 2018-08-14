@@ -8,10 +8,7 @@ import org.graphstream.graph.Edge;
 import org.graphstream.graph.Node;
 import org.graphstream.ui.graphicGraph.GraphicGraph;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -23,8 +20,8 @@ import java.util.stream.Collectors;
 public class GraphController {
 	
 	private static final String STYLE_CLASS = "ui.class";
-	private static int Y_BOUND = 90;
-	private static int X_BOUND = 90;
+	private static int Y_BOUND = 80;
+	private static int X_BOUND = 80;
 
 	private static GraphController instance = new GraphController();
 	private GraphicGraph graph;
@@ -35,6 +32,7 @@ public class GraphController {
 		graph.setAttribute("ui.stylesheet", GRAPH_DISPLAY_STYLESHEET);
 		random = new Random();
 		//addNodes();
+		//addMoreNodes();
 	}
 
     /**
@@ -42,18 +40,21 @@ public class GraphController {
      */
 	/*private void addNodes() {
 
-	    for (int i = 0; i < 20; i++){
-            placeNode(""+i);
+        for (int i = 0; i < 20; i++) {
+            placeNode("" + i);
         }
-        List<String> children = new ArrayList<>();
-	    children.add("2");
+        Set<String> children = new HashSet<>();
+        children.add("2");
         children.add("3");
         children.add("4");
         children.add("5");
         children.add("6");
         addNodes("1", children);
 
-        List<String> children2 = new ArrayList<>();
+    }
+
+    private void addMoreNodes() {
+        Set<String> children2 = new HashSet<>();
         children2.add("7");
         children2.add("8");
         children2.add("9");
@@ -61,7 +62,7 @@ public class GraphController {
         children2.add("11");
         addNodes("6", children2);
 
-        List<String> children3 = new ArrayList<>();
+        Set<String> children3 = new HashSet<>();
         children3.add("12");
         children3.add("13");
         children3.add("14");
@@ -69,7 +70,6 @@ public class GraphController {
         children3.add("16");
         addNodes("11", children3);
 
-        eliminateChildren("11");
     }*/
 	
 	/**

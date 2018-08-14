@@ -4,8 +4,10 @@ import eu.hansolo.tilesfx.Tile;
 import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
+import op.Application;
 import op.visualization.messages.UpdateMessage;
 import org.controlsfx.control.ToggleSwitch;
 import org.graphstream.ui.fx_viewer.FxDefaultView;
@@ -26,18 +28,14 @@ public class GUIController {
     private AnchorPane schedulePane;
 
     @FXML
-    public Tile cpuTile;
+    private Tile cpuTile;
 
     @FXML
-    public Tile memoryTile;
-
+    private Tile memoryTile;
 
     private Scene scene;
 
     private boolean selected=false;
-
-
-
 
     /**
      * method to control the switch when the toggle switch is triggered
@@ -64,8 +62,6 @@ public class GUIController {
         }
 
     }
-
-
 
     public void setScene(Scene scene) {
         this.scene = scene;
@@ -104,5 +100,7 @@ public class GUIController {
      */
     public void updateGraph(UpdateMessage u) {
         GraphController.getInstance().updateGraph(u);
+        graphPane.requestLayout();
+        graphPane.layout();
     }
 }

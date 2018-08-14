@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import op.visualization.controller.GUIController;
 import op.visualization.messages.UpdateMessage;
 
+import java.io.IOException;
 import java.util.Timer;
 
 /**
@@ -63,6 +64,7 @@ public class Visualizer extends Application {
      * @param u the update message containing the necessary information about which state should be changed
      */
     public void update(UpdateMessage u) {
+        // run on JavaFX thread
         controller.updateGraph(u);
     }
 }
