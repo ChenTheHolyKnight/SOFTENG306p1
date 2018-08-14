@@ -18,10 +18,10 @@ public class DFSScheduler extends BranchAndBoundScheduler {
      * Instantiates a DFSScheduler with the specified params
      * @param numProcessors The number of processors to schedule tasks on
      * @param p The pruner implementation to use
-     * @param f The cost function implementation to use
+     * @param cf The cost function implementations to use
      */
-    public DFSScheduler(int numProcessors, Pruner p, CostFunction f) {
-        super(numProcessors, p, f);
+    public DFSScheduler(int numProcessors, Pruner p, List<CostFunction> cf) {
+        super(numProcessors, p, cf);
     }
 
     /**
@@ -68,9 +68,21 @@ public class DFSScheduler extends BranchAndBoundScheduler {
     // helper to tell us when a partial schedule is worth pursuing any further.
     // returns true if the cost function is less than the known best length
     // returns false if the cost function is greater than or equal to the known best, because all schedules based on
-    // this schedule are guaranteed to be worse than our known best.
+    // this schedule are guaranteed to be worse than, or no better than our known best.
     private boolean costFunctionIsPromising(Schedule s, int bestSoFar) {
-        int costFunction = super.getCostFunction().calculate(s);
-        return costFunction < bestSoFar;
+
+        List<CostFunction> costFunctions = super.getCostFunctions();
+
+        // calculate the cost functions using each implementation then take the maximum of them
+        // because it will be the tightest lower bound
+        int tightestBound = 0;
+        for (CostFunction cf : costFunctions) {
+            int currentFunc = cf.calculate(s);
+            if (currentFunc > tightestBound) {
+                tightestBound = currentFunc;
+            }
+        }
+
+        return tightestBound < bestSoFar;
     }
 }
