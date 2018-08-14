@@ -26,6 +26,8 @@ import org.graphstream.ui.fx_viewer.FxViewer;
 import org.graphstream.ui.graphicGraph.GraphicGraph;
 import org.graphstream.ui.view.GraphRenderer;
 
+import java.net.URL;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -68,6 +70,7 @@ public class GUIController {
 
     private int coreNum=5;
 
+    private URL path;
 
 
 
@@ -110,6 +113,7 @@ public class GUIController {
     public void initialize(){
         schedulePane.setOpacity(0.0);
         embedGraph();
+        System.out.println(this.getClass().getResource("../view/Styles/ganttchart.css"));
         initializeGanttChart();
     }
 
@@ -185,7 +189,8 @@ public class GUIController {
         chart.setBlockHeight( 50);
         chart.setPrefHeight(schedulePane.getPrefHeight());
         chart.setPrefWidth(schedulePane.getPrefWidth());
-        chart.getStylesheets().add(GUIController.class.getResource("../view/Styles/ganttchart.css").toExternalForm());
+        System.out.println("NOTFOUND "+this.getClass().getResource("../view/GUI.fxml"));
+        chart.getStylesheets().add(this.getClass().getResource("../view/Styles/ganttchart.css").toExternalForm());
 
         //add chart to the pane
         schedulePane.getChildren().add(chart);
@@ -208,5 +213,12 @@ public class GUIController {
                 new GanttChart.ExtraData( weight, "status-blue")));
         chart.getData().add(series);
 
+    }
+
+    /**
+     * set the css path
+     */
+    public void setPath(URL path){
+        this.path=path;
     }
 }
