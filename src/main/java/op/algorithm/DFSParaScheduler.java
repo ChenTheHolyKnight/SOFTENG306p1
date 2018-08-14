@@ -37,7 +37,7 @@ public class DFSParaScheduler extends BranchAndBoundScheduler {
         Stack<Schedule> scheduleStack = new Stack<Schedule>();
         scheduleStack.push(bestSchedule);
         int bestScheduleLength = Integer.MAX_VALUE;
-        int threadSize = 1;
+        int threadSize = 4;
         ExecutorService executor = Executors.newFixedThreadPool(threadSize);
         DFSParaRunnable[] runnables = new DFSParaRunnable[threadSize];
         while(scheduleStack.size()<threadSize){
