@@ -1,5 +1,6 @@
 package op.algorithm;
 
+import op.algorithm.bound.CostFunction;
 import op.model.Schedule;
 import op.model.TaskGraph;
 
@@ -17,9 +18,10 @@ public class DFSScheduler extends BranchAndBoundScheduler {
      * Instantiates a DFSScheduler with the specified params
      * @param numProcessors The number of processors to schedule tasks on
      * @param p The pruner implementation to use
+     * @param f The cost function implementation to use
      */
-    public DFSScheduler(int numProcessors, Pruner p) {
-        super(numProcessors, p);
+    public DFSScheduler(int numProcessors, Pruner p, CostFunction f) {
+        super(numProcessors, p, f);
     }
 
     /**
@@ -52,12 +54,23 @@ public class DFSScheduler extends BranchAndBoundScheduler {
 
                 List<Schedule> pruned = p.prune(super.getChildrenOfSchedule(currentSchedule), bestScheduleLength, getNumProcessors());
                 for (Schedule s: pruned){
-                    scheduleStack.push(s);
+                    if (costFunctionIsPromising(s, bestScheduleLength)) {
+                        scheduleStack.push(s);
+                    }
                 }
             }
         }
 
         System.out.println("Optimal length: " + bestSchedule.getLength());
         return bestSchedule;
+    }
+
+    // helper to tell us when a partial schedule is worth pursuing any further.
+    // returns true if the cost function is less than the known best length
+    // returns false if the cost function is greater than or equal to the known best, because all schedules based on
+    // this schedule are guaranteed to be worse than our known best.
+    private boolean costFunctionIsPromising(Schedule s, int bestSoFar) {
+        int costFunction = super.getCostFunction().calculate(s);
+        return costFunction < bestSoFar;
     }
 }

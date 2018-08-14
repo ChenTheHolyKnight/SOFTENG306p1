@@ -1,6 +1,10 @@
 package op;
 
 import op.algorithm.*;
+import op.algorithm.bound.BottomLevelFunction;
+import op.algorithm.bound.CombinedCostFunction;
+import op.algorithm.bound.EmptyCostFunction;
+import op.algorithm.bound.IdleTimeFunction;
 import op.io.InvalidUserInputException;
 import op.model.Schedule;
 import op.io.CommandLineIO;
@@ -72,15 +76,24 @@ public class Application {
      * @return a schedule
      */
     private Schedule produceSchedule() {
-        scheduler = new GreedyScheduler(arguments.getNumProcessors());
-        //scheduler = new DFSScheduler(arguments.getNumProcessors(), new IdleTimePruner());
-        //scheduler = new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner());
 
-        //long startTime = System.currentTimeMillis();
+        //scheduler = new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner(), new IdleTimeFunction(arguments.getNumProcessors()));
+        //scheduler = new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner(), new BottomLevelFunction());
+        //scheduler = new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner(), new EmptyCostFunction());
+        scheduler = new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner(), new CombinedCostFunction(arguments.getNumProcessors()));
+
+        long startTime = System.currentTimeMillis();
+
         Schedule schedule = scheduler.produceSchedule();
 
-        //System.out.println("Time with pruning: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+schedule.getLength());
-        //System.out.println("Time without pruning: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+slowSchedule.getLength());
+        System.out.println("Time without cost function: " + (System.currentTimeMillis() - startTime) +
+                " ms       Schedule Length: " + schedule.getLength());
+        //System.out.println("Time with bottom level cost function: " + (System.currentTimeMillis() - startTime) +
+        //        " ms       Schedule Length: " + schedule.getLength());
+        //System.out.println("Time with both cost functions: " + (System.currentTimeMillis() - startTime) +
+        //        " ms       Schedule Length: " + schedule.getLength());
+        //System.out.println("Time with idle time cost function: " + (System.currentTimeMillis() - startTime) +
+        //        " ms       Schedule Length: " + schedule.getLength());
 
         return schedule;
     }

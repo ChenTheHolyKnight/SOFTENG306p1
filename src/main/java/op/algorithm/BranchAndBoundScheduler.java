@@ -1,5 +1,6 @@
 package op.algorithm;
 
+import op.algorithm.bound.CostFunction;
 import op.model.*;
 
 import java.util.ArrayList;
@@ -13,14 +14,18 @@ import java.util.List;
 public abstract class BranchAndBoundScheduler extends Scheduler {
 
     private Pruner pruner;
+    private CostFunction costFunction;
 
     /**
      * Creates a BranchAndBoundScheduler instance with the specified Pruner implementation.
      * @param p The Pruner implementation to be used in the scheduling algorithm
+     * @param numProcessors the number of processors to schedule tasks on
+     * @param f the cost function implementation to use for this scheduler
      */
-    public BranchAndBoundScheduler(int numProcessors, Pruner p) {
+    public BranchAndBoundScheduler(int numProcessors, Pruner p, CostFunction f) {
         super(numProcessors);
         this.pruner = p;
+        this.costFunction = f;
     }
 
     /**
@@ -30,6 +35,12 @@ public abstract class BranchAndBoundScheduler extends Scheduler {
     protected Pruner getPruner() {
         return this.pruner;
     }
+
+    /**
+     * Called by subclasses to access the CostFunction implementation
+     * @return the cost function implementation that has been set for this instance
+     */
+    protected CostFunction getCostFunction() { return this.costFunction; }
 
     /**
      * Method that branch and bound implementations can use to get the children from a current schedule.
@@ -48,7 +59,6 @@ public abstract class BranchAndBoundScheduler extends Scheduler {
         for (Task t : freeTasks) {
             for (int i = 1; i <= super.getNumProcessors(); i++) {
                 int startTime = super.getEarliestStartTime(s, t, i);
-
                 children.add(new Schedule(s, new ScheduledTask(t, startTime, i)));
             }
         }
@@ -66,7 +76,7 @@ public abstract class BranchAndBoundScheduler extends Scheduler {
 
             if (s.getScheduledTask(t) == null) {
                 // the current task is not yet scheduled, check its dependencies
-                List<Dependency> deps = tg.getIncomingDependencies(t);
+                List<Dependency> deps = t.getIncomingDependencies();
 
                 if (deps.isEmpty()) {
                     freeTasks.add(t); // no dependencies so this task must be free
