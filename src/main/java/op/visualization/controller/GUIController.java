@@ -10,6 +10,7 @@ import javafx.scene.chart.StackedBarChart;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
+import op.model.ScheduledTask;
 import op.model.TaskGraph;
 import op.Application;
 import op.visualization.messages.UpdateMessage;
@@ -142,6 +143,11 @@ public class GUIController {
             strs.add(str);
         }
         xAxis.setCategories(FXCollections.<String>observableArrayList(strs));
+    }
+
+
+    public void addScheduledTaskToChart(ScheduledTask task){
+        int weight=task.getTask().getDuration();
 
     }
 }
