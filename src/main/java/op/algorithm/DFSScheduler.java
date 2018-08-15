@@ -1,6 +1,7 @@
 package op.algorithm;
 
 import op.algorithm.bound.CostFunction;
+import op.algorithm.bound.CostFunctionManager;
 import op.algorithm.prune.Pruner;
 import op.algorithm.prune.PrunerManager;
 import op.model.Schedule;
@@ -19,11 +20,11 @@ public class DFSScheduler extends BranchAndBoundScheduler {
     /**
      * Instantiates a DFSScheduler with the specified params
      * @param numProcessors The number of processors to schedule tasks on
-     * @param p The pruner implementation to use
-     * @param cf The cost function implementations to use
+     * @param p The pruner manager to use
+     * @param cfm The cost function manager to use
      */
-    public DFSScheduler(int numProcessors, PrunerManager p, List<CostFunction> cf) {
-        super(numProcessors, p, cf);
+    public DFSScheduler(int numProcessors, PrunerManager p, CostFunctionManager cfm) {
+        super(numProcessors, p, cfm);
     }
 
     /**
@@ -54,7 +55,7 @@ public class DFSScheduler extends BranchAndBoundScheduler {
             } else {
                 // not a complete schedule so add children to the stack to be processed later
 
-                List<Schedule> pruned = pm.execute(super.getChildrenOfSchedule(currentSchedule), bestScheduleLength, getNumProcessors());
+                List<Schedule> pruned = pm.execute(super.getChildrenOfSchedule(currentSchedule));
                 for (Schedule s: pruned){
                     if (costFunctionIsPromising(s, bestScheduleLength)) {
                         scheduleStack.push(s);
@@ -73,8 +74,9 @@ public class DFSScheduler extends BranchAndBoundScheduler {
     // this schedule are guaranteed to be worse than, or no better than our known best.
     private boolean costFunctionIsPromising(Schedule s, int bestSoFar) {
 
-        List<CostFunction> costFunctions = super.getCostFunctions();
+        CostFunctionManager cfm = super.getCostFunctionManager();
 
+        // TODO: fix this eith new const function implementation
         // calculate the cost functions using each implementation then take the maximum of them
         // because it will be the tightest lower bound
         int tightestBound = 0;

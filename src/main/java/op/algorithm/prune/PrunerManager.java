@@ -18,7 +18,6 @@ public class PrunerManager {
     public enum Pruners {
 
         EQUIVALENT_SCHEDULE("es"),
-        IDLE_TIME("it"),
         NODE_EQUIVALENCE("ne");
 
         private String cmdRepresentation;
@@ -32,11 +31,6 @@ public class PrunerManager {
     }
 	
 	private List<Pruner> pruners = new ArrayList<Pruner>();
-	
-	public void addIdleTimePruner(){
-		IdleTimePruner p = new IdleTimePruner();
-		if (!pruners.contains(p)) pruners.add(p);
-	}
 	
 	public void addEquivalentSchedulePruner() {
 		EquivalentSchedulePruner p = new EquivalentSchedulePruner();
@@ -55,12 +49,12 @@ public class PrunerManager {
 	 * @param numProcessors
 	 * @return The newly pruned List of schedules
 	 */
-	public List<Schedule> execute(List<Schedule> toPrune, int bestScheduleLength, int numProcessors) {
+	public List<Schedule> execute(List<Schedule> toPrune) {
 		if (pruners.size() != 0){
 			List<Schedule> pruned = new ArrayList<Schedule>();
 			pruned.addAll(toPrune);
 			for (Pruner p: pruners) {
-				pruned = p.prune(pruned, bestScheduleLength, numProcessors);
+				pruned = p.prune(pruned);
 			}
 			return pruned;
 		}

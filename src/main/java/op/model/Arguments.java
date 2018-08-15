@@ -1,7 +1,7 @@
 package op.model;
 
 import op.algorithm.Scheduler;
-import op.algorithm.bound.CostFunction;
+import op.algorithm.bound.CostFunctionManager;
 import op.algorithm.prune.PrunerManager;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public class Arguments {
     private boolean toVisualize;
     private String outputGraphFilename;
     private Scheduler.Implementation algorithm;
-    private List<CostFunction.Implementation> costFunctions;
+    private List<CostFunctionManager.Functions> costFunctions;
     private List<PrunerManager.Pruners> pruners;
 
     /**
@@ -69,7 +69,7 @@ public class Arguments {
     	return algorithm; 
     }
 
-    public List<CostFunction.Implementation> getCostFunctions() { 
+    public List<CostFunctionManager.Functions> getCostFunctions() { 
     	return costFunctions; 
     }
     
@@ -91,7 +91,7 @@ public class Arguments {
     public Arguments(String inputFilename, int numProcessors, int numCores,
                      boolean toVisualize, String outputFilename,
                      Scheduler.Implementation algorithm, 
-                     List<CostFunction.Implementation> costFunctions, 
+                     List<CostFunctionManager.Functions> costFunctions, 
                      List<PrunerManager.Pruners> pruners) {
         this.inputGraphFilename = inputFilename;
         this.numProcessors = numProcessors;
