@@ -10,8 +10,31 @@ import java.util.List;
 /**
  * Base class for any scheduling algorithm implementation.
  * Any subclasses must implement the produceSchedule method.
+ * @author Darcy Cox
  */
 public abstract class Scheduler {
+
+    /**
+     * Enum specifying all available scheduling algorithm implementations
+     */
+    public enum Implementation {
+        DFS("dfs"),
+        ASTAR("astar"),
+        SIMPLE("simple"),
+        GREEDY("greedy");
+
+        private String cmdRepresentation;
+
+        Implementation(String cmdRepresentation) {
+            this.cmdRepresentation = cmdRepresentation;
+        }
+
+        public String getCmdRepresentation() {
+            return this.cmdRepresentation;
+        }
+
+    }
+
 
     // objects that are interested in being updated by the Scheduler
     private List<Visualiser> listeners;
