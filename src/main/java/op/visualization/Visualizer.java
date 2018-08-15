@@ -22,6 +22,7 @@ public class Visualizer extends Application{
     private GUIController controller;
     private static final int SCENE_HEIGHT = 620;
     private int coreNum;
+    private Timer timer;
 
     /**
      * Starts the visualization GUI
@@ -54,7 +55,7 @@ public class Visualizer extends Application{
         stage.setResizable(false);
         stage.centerOnScreen();
 
-        Timer timer = new Timer();
+        timer = new Timer();
         Tile cpuTile=controller.getCPUTile();
         Tile memTile=controller.getMemoryTile();
         timer.schedule(new SystemInfo(cpuTile,memTile), 0, 100);
@@ -87,5 +88,10 @@ public class Visualizer extends Application{
      */
     public void setCore(int coreNum){
         this.coreNum=coreNum;
+    }
+
+    @Override
+    public void stop(){
+        timer.cancel();
     }
 }

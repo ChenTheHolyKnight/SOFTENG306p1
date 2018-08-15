@@ -113,7 +113,7 @@ public class GUIController {
     public void initialize(){
         schedulePane.setOpacity(0.0);
         embedGraph();
-        System.out.println(this.getClass().getResource("../view/Styles/ganttchart.css"));
+        //System.out.println(this.getClass().getResource("../view/Styles/ganttchart.css"));
         initializeGanttChart();
     }
 
