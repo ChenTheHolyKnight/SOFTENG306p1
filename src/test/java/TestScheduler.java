@@ -8,7 +8,6 @@ import op.algorithm.DFSScheduler;
 import op.algorithm.GreedyScheduler;
 import op.algorithm.SimpleScheduler;
 import op.algorithm.prune.PrunerManager;
-
 import org.junit.After;
 import org.junit.Test;
 
