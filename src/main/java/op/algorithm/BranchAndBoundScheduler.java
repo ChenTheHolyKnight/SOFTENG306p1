@@ -15,18 +15,19 @@ import java.util.List;
 public abstract class BranchAndBoundScheduler extends Scheduler {
 
     private Pruner pruner;
-    private CostFunction costFunction;
+    // a branch and bound scheduler may use any combination of cost functions.
+    private List<CostFunction> costFunctions;
 
     /**
      * Creates a BranchAndBoundScheduler instance with the specified Pruner implementation.
      * @param p The Pruner implementation to be used in the scheduling algorithm
      * @param numProcessors the number of processors to schedule tasks on
-     * @param f the cost function implementation to use for this scheduler
+     * @param cf a list of cost function implementations to use for this scheduler
      */
-    public BranchAndBoundScheduler(int numProcessors, Pruner p, CostFunction f) {
+    public BranchAndBoundScheduler(int numProcessors, Pruner p, List<CostFunction> cf) {
         super(numProcessors);
         this.pruner = p;
-        this.costFunction = f;
+        this.costFunctions = cf;
     }
 
     /**
@@ -38,10 +39,10 @@ public abstract class BranchAndBoundScheduler extends Scheduler {
     }
 
     /**
-     * Called by subclasses to access the CostFunction implementation
-     * @return the cost function implementation that has been set for this instance
+     * Called by subclasses to access the CostFunction implementations
+     * @return the cost function implementations that have been set for this instance
      */
-    protected CostFunction getCostFunction() { return this.costFunction; }
+    protected List<CostFunction> getCostFunctions() { return this.costFunctions; }
 
     /**
      * Method that branch and bound implementations can use to get the children from a current schedule.
