@@ -42,13 +42,7 @@ public class Dependency {
 		if (!(this.startTask.getId().equals(other.startTask.getId()))) {
 			return false;
 		}
-		if (this.startTask.getDuration() != other.startTask.getDuration()) {
-			return false;
-		}
 		if (!(this.endTask.getId().equals(other.endTask.getId()))) {
-			return false;
-		}
-		if (this.endTask.getDuration() != other.endTask.getDuration()) {
 			return false;
 		}
 		if (this.weight != other.weight) {
@@ -56,5 +50,18 @@ public class Dependency {
 		}
 
 		return true; // we made it past all checks so the dependencies are equal
+	}
+	
+	@Override
+	public int hashCode() {
+		int result = 17;
+		
+		result = 31 * result + startTask.getId().hashCode();
+		result = 31 * result + endTask.getId().hashCode();
+		result = 31 * result + startTask.getDuration();
+		result = 31 * result + endTask.getDuration();
+		result = 31 * result + weight;
+		
+		return result;
 	}
 }
