@@ -1,6 +1,7 @@
 package op.algorithm;
 
 import op.algorithm.bound.CostFunction;
+import op.algorithm.bound.CostFunctionManager;
 import op.algorithm.prune.Pruner;
 import op.algorithm.prune.PrunerManager;
 import op.model.Schedule;
@@ -20,11 +21,11 @@ public class ParallelRunnable extends DFSScheduler implements Runnable {
      * Creates a BranchAndBoundScheduler instance with the specified Pruner implementation.
      *
      * @param numProcessors the number of processors to schedule tasks on
-     * @param p             The Pruner implementation to be used in the scheduling algorithm
-     * @param f             the cost function implementation to use for this scheduler
+     * @param pm           The Pruner implementation to be used in the scheduling algorithm
+     * @param cfm          the cost function implementation to use for this scheduler
      */
-    public ParallelRunnable(int numProcessors, PrunerManager p, List<CostFunction> cf, Stack<Schedule> s) {
-        super(numProcessors, p , cf);
+    public ParallelRunnable(int numProcessors, PrunerManager pm, CostFunctionManager cfm, Stack<Schedule> s) {
+        super(numProcessors, pm , cfm);
         this.scheduleStack = s;
     }
 
@@ -49,9 +50,10 @@ public class ParallelRunnable extends DFSScheduler implements Runnable {
             } else {
                 // not a complete schedule so add children to the stack to be processed later
 
-                List<Schedule> pruned = pm.execute(getChildrenOfSchedule(currentSchedule), bestScheduleLength, getNumProcessors());
+                List<Schedule> pruned = pm.execute(getChildrenOfSchedule(currentSchedule));
                 for (Schedule s: pruned){
-                    if (costFunctionIsPromising(s, bestScheduleLength)) {
+                    boolean costFunctionIsPromising = super.getCostFunctionManager().calculate(s) < bestScheduleLength;
+                    if (costFunctionIsPromising) {
                         scheduleStack.push(s);
                     }
                 }

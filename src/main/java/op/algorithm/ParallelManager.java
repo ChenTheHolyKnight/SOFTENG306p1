@@ -1,6 +1,7 @@
 package op.algorithm;
 
 import op.algorithm.bound.CostFunction;
+import op.algorithm.bound.CostFunctionManager;
 import op.algorithm.prune.PrunerManager;
 import op.model.Schedule;
 
@@ -19,11 +20,11 @@ public class ParallelManager extends DFSScheduler {
      * Instantiates a DFSScheduler with the specified params
      *
      * @param numProcessors The number of processors to schedule tasks on
-     * @param p             The pruner implementation to use
-     * @param cf             The cost function implementation to use
+     * @param pm             The pruner manager to use
+     * @param cfm             The cost function manager to use
      */
-    public ParallelManager(int numProcessors, PrunerManager p, List<CostFunction> cf, int numThreads) {
-        super(numProcessors, p, cf);
+    public ParallelManager(int numProcessors, PrunerManager pm, CostFunctionManager cfm, int numThreads) {
+        super(numProcessors, pm, cfm);
         this.numThreads = numThreads;
     }
 
@@ -50,9 +51,10 @@ public class ParallelManager extends DFSScheduler {
                     bestScheduleLength = currentSchedule.getLength();
                 }
             } else {
-                List<Schedule> pruned = pm.execute(getChildrenOfSchedule(currentSchedule), bestScheduleLength, getNumProcessors());
+                List<Schedule> pruned = pm.execute(getChildrenOfSchedule(currentSchedule));
                 for (Schedule s: pruned){
-                    if (costFunctionIsPromising(s, bestScheduleLength) && !schedulesSeen.contains(s.hashCode())) {
+                    boolean costFunctionIsPromising = super.getCostFunctionManager().calculate(s) < bestScheduleLength;
+                    if (costFunctionIsPromising && !schedulesSeen.contains(s.hashCode())) {
                         scheduleStack.push(s);
                         schedulesSeen.add(s.hashCode()); // make sure each schedule going onto the stack is unique
                     }
@@ -71,7 +73,7 @@ public class ParallelManager extends DFSScheduler {
         ExecutorService executor = Executors.newFixedThreadPool(numThreads);
         ParallelRunnable[] runnables = new ParallelRunnable[numThreads];
         for (int i = 0; i<numThreads; i++){
-            runnables[i] = new ParallelRunnable(getNumProcessors(), getPrunerManager(), getCostFunctions(), threadStacks[i]);
+            runnables[i] = new ParallelRunnable(getNumProcessors(), getPrunerManager(), getCostFunctionManager(), threadStacks[i]);
             executor.execute(runnables[i]);
         }
         executor.shutdown();

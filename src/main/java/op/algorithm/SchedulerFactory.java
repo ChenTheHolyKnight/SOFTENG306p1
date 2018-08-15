@@ -61,7 +61,7 @@ public class SchedulerFactory {
         Scheduler scheduler = null;
         switch (a) {
             case PARA:
-                scheduler = new ParallelManager(numProcessors, prunerManager, costFuncConcrete, numCores);
+                scheduler = new ParallelManager(numProcessors, prunerManager, costFunctionManager, numCores);
                 break;
             case DFS:
                 scheduler = new DFSScheduler(numProcessors, prunerManager, costFunctionManager);
