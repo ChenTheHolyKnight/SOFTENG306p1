@@ -225,7 +225,7 @@ public class GUIController {
         yAxis.setCategories(FXCollections.<String>observableArrayList(processors));
 
 
-        chart.setTitle("Machine Monitoring");
+        chart.setTitle("Scheduling Visualization");
         chart.setLegendVisible(false);
         chart.setBlockHeight( 50);
         chart.setPrefHeight(schedulePane.getPrefHeight());

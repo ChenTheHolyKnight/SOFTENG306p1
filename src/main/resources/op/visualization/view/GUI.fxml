@@ -10,10 +10,10 @@
 <?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.ToggleSwitch?>
 
-<AnchorPane prefHeight="600.0" prefWidth="900.0" styleClass="background" stylesheets="@Styles/BackPanel.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="op.visualization.controller.GUIController">
+<AnchorPane prefHeight="600.0" prefWidth="900.0" styleClass="background" stylesheets="@Styles/BackPanel.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="op.visualization.controller.GUIController">
    <children>
       <AnchorPane fx:id="graphPane" prefHeight="502.0" prefWidth="681.0" styleClass="textBackground" />
-      <AnchorPane fx:id="schedulePane" opacity="0.51" prefHeight="502.0" prefWidth="681.0" styleClass="scheduleBackground" />
+      <AnchorPane fx:id="schedulePane" opacity="0.51" prefHeight="502.0" prefWidth="681.0" styleClass="background" />
       <VBox layoutX="681.0" prefHeight="600.0" prefWidth="260.0">
          <children>
             <Label alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="270.0" styleClass="grayBackground" text="Display Options" textAlignment="CENTER" textFill="WHITE" />

@@ -11,3 +11,6 @@
 .chart-horizontal-grid-lines {
     -fx-stroke: #000000;
 }
+.chart-title{
+    -fx-text-fill: #ffffff;
+}
