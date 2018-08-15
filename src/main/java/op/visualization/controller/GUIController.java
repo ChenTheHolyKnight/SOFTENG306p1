@@ -189,15 +189,17 @@ public class GUIController {
         chart.setBlockHeight( 50);
         chart.setPrefHeight(schedulePane.getPrefHeight());
         chart.setPrefWidth(schedulePane.getPrefWidth());
-        System.out.println("NOTFOUND "+this.getClass().getResource(".../view/GUI.fxml"));
-        chart.getStylesheets().add(this.getClass().getResource(".../view/Styles/ganttchart.css").toExternalForm());
+        chart.getStylesheets().add("op/visualization/view/Styles/ganttchart.css");
+        seriesHashMap.keySet().forEach(key->{
+            chart.getData().add(seriesHashMap.get(key));
+        });
 
         //add chart to the pane
         schedulePane.getChildren().add(chart);
 
-        Task task=new Task("1",2);
+        /*Task task=new Task("1",2);
         ScheduledTask task1=new ScheduledTask(task,1,2);
-        addScheduledTaskToChart(task1);
+        addScheduledTaskToChart(task1);*/
 
 
     }
@@ -211,8 +213,8 @@ public class GUIController {
         XYChart.Series series=seriesHashMap.get(processorNum-1);
         series.getData().add(new XYChart.Data(task.getStartTime(), yAxis.getCategories().get(processorNum-1),
                 new GanttChart.ExtraData( weight, "status-blue")));
-        chart.getData().add(series);
 
+        //chart.getData().add(series);
     }
 
     /**

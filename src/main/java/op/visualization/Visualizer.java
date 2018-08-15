@@ -43,7 +43,7 @@ public class Visualizer extends Application{
         Parent root=loader.load();
         Scene scene = new Scene(root);
 
-        System.out.println(Visualizer.class.getResource("view/Styles/ganttchart.css"));
+       // System.out.println(Visualizer.class.getResource("view/Styles/ganttchart.css"));
 
         controller = loader.getController();
         controller.setScene(scene);
@@ -63,7 +63,7 @@ public class Visualizer extends Application{
         //start Scheduling
         GreedyScheduler scheduler=new GreedyScheduler(coreNum);
         scheduler.setController(controller);
-        //scheduler.produceSchedule();
+        scheduler.produceSchedule();
 
         stage.setScene(scene);
         stage.show();
