@@ -11,7 +11,7 @@ public interface CostFunction {
     /**
      * Enum defining the different implementations of cost functions available
      */
-    enum Implementation {
+    public enum Implementation {
 
         BOTTOM_LEVEL("bl"),
         IDLE_TIME("it");

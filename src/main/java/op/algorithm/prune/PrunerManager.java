@@ -11,6 +11,26 @@ import op.model.Schedule;
  *
  */
 public class PrunerManager {
+    
+	/**
+     * Enum defining the different implementations of pruners available
+     */
+    public enum Pruners {
+
+        EQUIVALENT_SCHEDULE("es"),
+        IDLE_TIME("it"),
+        NODE_EQUIVALENCE("ne");
+
+        private String cmdRepresentation;
+        Pruners(String cmdRepresentation) {
+            this.cmdRepresentation = cmdRepresentation;
+        }
+
+        public String getCmdRepresentation() {
+            return this.cmdRepresentation;
+        }
+    }
+	
 	private List<Pruner> pruners = new ArrayList<Pruner>();
 	
 	public void addIdleTimePruner(){
@@ -28,6 +48,7 @@ public class PrunerManager {
 		if (!pruners.contains(p)) pruners.add(p);
 	}
 	
+	
 	/**
 	 * Executes the prune method of every added pruner to the pruner manager on the list of Schedules passed in.
 	 * @param toPrune The list of schedules to prune
@@ -36,11 +57,14 @@ public class PrunerManager {
 	 * @return The newly pruned List of schedules
 	 */
 	public List<Schedule> execute(List<Schedule> toPrune, int bestScheduleLength, int numProcessors) {
-		List<Schedule> pruned = new ArrayList<Schedule>();
-		pruned.addAll(toPrune);
-		for (Pruner p: pruners) {
-			pruned = p.prune(pruned, bestScheduleLength, numProcessors);
+		if (pruners.size() != 0){
+			List<Schedule> pruned = new ArrayList<Schedule>();
+			pruned.addAll(toPrune);
+			for (Pruner p: pruners) {
+				pruned = p.prune(pruned, bestScheduleLength, numProcessors);
+			}
+			return pruned;
 		}
-		return pruned;
+		return toPrune;
 	}
 }
