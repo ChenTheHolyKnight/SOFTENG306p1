@@ -1,38 +1,35 @@
 package op.algorithm.prune;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
 import op.model.Schedule;
 
+/**
+ * A manager class for the Pruner interface. Can add as many pruners as user chooses, then can execute 
+ * the pruners on a list of Schedules.
+ * @author Ravid Aharon
+ *
+ */
 public class PrunerManager {
-	private Set<Pruner> pruners = new HashSet<Pruner>();
-	
-	private List<Schedule> toPrune;
-	private int bestScheduleLength;
-	private int numProcessors;
-	
-	public PrunerManager(List<Schedule> toPrune, int bestScheduleLength, int numProcessors) {
-		this.toPrune = toPrune;
-		this.bestScheduleLength = bestScheduleLength;
-		this.numProcessors = numProcessors;
-	}
+	private List<Pruner> pruners = new ArrayList<Pruner>();
 	
 	public void addIdleTimePruner(){
-		pruners.add(new IdleTimePruner());
+		IdleTimePruner p = new IdleTimePruner();
+		if (!pruners.contains(p)) pruners.add(p);
 	}
 	
 	public void addEquivalentSchedulePruner() {
-		pruners.add(new EquivalentSchedulePruner());
+		EquivalentSchedulePruner p = new EquivalentSchedulePruner();
+		if (!pruners.contains(p)) pruners.add(p);
 	}
 	
 	public void addNodeEquivalencePruner() {
-		pruners.add(new NodeEquivalencePruner());
+		NodeEquivalencePruner p =  new NodeEquivalencePruner();
+		if (!pruners.contains(p)) pruners.add(p);
 	}
 	
-	public List<Schedule> execute() {
+	public List<Schedule> execute(List<Schedule> toPrune, int bestScheduleLength, int numProcessors) {
+		System.out.println(pruners.size());
 		List<Schedule> pruned = new ArrayList<Schedule>();
 		pruned.addAll(toPrune);
 		for (Pruner p: pruners) {

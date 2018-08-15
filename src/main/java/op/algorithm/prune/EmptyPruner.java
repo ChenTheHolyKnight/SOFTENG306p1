@@ -12,4 +12,12 @@ public class EmptyPruner implements Pruner {
     public List<Schedule> prune(List<Schedule> toPrune, int bestScheduleLength, int numProcessors) {
         return toPrune;
     }
+    
+    @Override
+	public boolean equals (Object o) {
+		if (o instanceof EmptyPruner) {
+			return true;
+		}
+		return false;
+	}
 }

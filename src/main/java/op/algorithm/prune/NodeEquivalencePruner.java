@@ -12,4 +12,11 @@ public class NodeEquivalencePruner implements Pruner{
 		return toPrune;
 	}
 
+	@Override
+	public boolean equals (Object o) {
+		if (o instanceof NodeEquivalencePruner) {
+			return true;
+		}
+		return false;
+	}
 }

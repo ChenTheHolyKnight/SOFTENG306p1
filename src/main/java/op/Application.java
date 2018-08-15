@@ -6,6 +6,7 @@ import op.algorithm.bound.CombinedCostFunction;
 import op.algorithm.bound.EmptyCostFunction;
 import op.algorithm.bound.IdleTimeFunction;
 import op.algorithm.prune.EmptyPruner;
+import op.algorithm.prune.PrunerManager;
 import op.io.InvalidUserInputException;
 import op.model.Schedule;
 import op.visualization.GUIApplication;
@@ -22,7 +23,7 @@ public class Application {
 	private Arguments arguments;
 	
     public static void main(String[] args) {
-
+    	
         Application application = new Application();
 
         // Read from command line

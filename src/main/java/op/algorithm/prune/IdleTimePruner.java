@@ -20,4 +20,12 @@ public class IdleTimePruner implements Pruner {
         //System.out.println(pruned.size());
         return pruned;
     }
+    
+    @Override
+	public boolean equals (Object o) {
+		if (o instanceof IdleTimePruner) {
+			return true;
+		}
+		return false;
+	}
 }
