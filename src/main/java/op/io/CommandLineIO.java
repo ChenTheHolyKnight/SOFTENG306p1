@@ -28,7 +28,7 @@ public class CommandLineIO {
     private static final int NUM_CORES_DEFAULT = 1;
     private static final String OUTPUT_FILENAME_APPENDER_DEFAULT = "-output.dot";
     private static final Scheduler.Implementation ALGORITHM_IMPLEMENTATION = Scheduler.Implementation.DFS;
-    private static final List<CostFunction.Implementation> COST_FUNCTIONS = new ArrayList<>(); // no cost funcs is default
+    private static final List<CostFunction.Implementation> COST_FUNCTIONS = new ArrayList<>();
 
     // Order of command line arguments with no flags
     private static final short INPUT_FILENAME_POSITION = 0;

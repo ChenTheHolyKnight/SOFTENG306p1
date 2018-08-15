@@ -1,6 +1,8 @@
 package op.algorithm;
 
+import op.algorithm.bound.CostFunction;
 import op.model.Dependency;
+import op.model.Schedule;
 import op.model.Task;
 
 import java.util.*;
@@ -53,5 +55,25 @@ public class SchedulerUtil {
             }
         });
         return starts;
+    }
+
+    /**
+     * Finds the tightest bound for the length of a schedule, given specified cost functions
+     * @param s the schedule
+     * @param costFunctions a list of cost functions
+     * @return the tightest bound
+     */
+    public static int getTightestBound(Schedule s, List<CostFunction> costFunctions) {
+
+        // calculate the cost functions using each implementation then take the maximum of them
+        // because it will be the tightest lower bound
+        int tightestBound = 0;
+        for (CostFunction cf : costFunctions) {
+            int currentFunc = cf.calculate(s);
+            if (currentFunc > tightestBound) {
+                tightestBound = currentFunc;
+            }
+        }
+        return tightestBound;
     }
 }

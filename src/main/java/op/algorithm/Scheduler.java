@@ -46,7 +46,7 @@ public abstract class Scheduler {
      */
     public Scheduler(int numProcessors) {
         this.numProcessors = numProcessors;
-        this.listeners = new ArrayList<Visualiser>();
+        this.listeners = new ArrayList<>();
     }
 
     /**
