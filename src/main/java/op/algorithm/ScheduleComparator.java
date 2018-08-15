@@ -1,6 +1,7 @@
 package op.algorithm;
 
 import op.algorithm.bound.CostFunction;
+import op.algorithm.bound.CostFunctionManager;
 import op.model.Schedule;
 
 import java.util.Comparator;
@@ -14,10 +15,10 @@ import java.util.List;
  */
 public class ScheduleComparator implements Comparator<Schedule> {
 
-    private List<CostFunction> costFunctions;
+    private CostFunctionManager costFunctionManager;
 
-    public ScheduleComparator(List<CostFunction> costFunctions) {
-        this.costFunctions = costFunctions;
+    public ScheduleComparator(CostFunctionManager costFunctionManager) {
+        this.costFunctionManager = costFunctionManager;
     }
 
     /**
@@ -29,6 +30,6 @@ public class ScheduleComparator implements Comparator<Schedule> {
      */
     @Override
     public int compare(Schedule s1, Schedule s2) {
-        return SchedulerUtil.getTightestBound(s1, costFunctions) - SchedulerUtil.getTightestBound(s2, costFunctions);
+        return SchedulerUtil.getTightestBound(s1, costFunctionManager) - SchedulerUtil.getTightestBound(s2, costFunctionManager);
     }
 }

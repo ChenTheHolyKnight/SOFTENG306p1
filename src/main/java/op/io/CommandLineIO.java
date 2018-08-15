@@ -2,6 +2,9 @@ package op.io;
 
 import op.algorithm.Scheduler;
 import op.algorithm.bound.CostFunction;
+import op.algorithm.bound.CostFunctionManager;
+import op.algorithm.prune.PrunerManager;
+
 import org.apache.commons.cli.*;
 import op.model.Arguments;
 
@@ -22,13 +25,13 @@ public class CommandLineIO {
     private static final String OUTPUT_FILENAME_FLAG = "o";
     private static final String ALGORITHM_FLAG = "a";
     private static final String COST_FUNCTION_FLAG = "f";
-    private static final String PRUNER_FLAG = "P"; //TODO: allow pruners to be specified from command line
+    private static final String PRUNER_FLAG = "P";
 
     // Default values for user options
     private static final int NUM_CORES_DEFAULT = 1;
     private static final String OUTPUT_FILENAME_APPENDER_DEFAULT = "-output.dot";
     private static final Scheduler.Implementation ALGORITHM_IMPLEMENTATION = Scheduler.Implementation.DFS;
-    private static final List<CostFunction.Implementation> COST_FUNCTIONS = new ArrayList<>();
+    private static final List<CostFunctionManager.Functions> COST_FUNCTIONS = new ArrayList<>(); // no cost funcs is default
 
     // Order of command line arguments with no flags
     private static final short INPUT_FILENAME_POSITION = 0;
@@ -41,9 +44,11 @@ public class CommandLineIO {
     private static final String OUTPUT_FILENAME_DESCRIPTION = "name of output file (default is INPUT-output.dot)";
     private static final String ALGORITHM_DESCRIPTION =
             "the algorithm implementation to use for scheduling:" +
-                    System.lineSeparator() + "dfs | astar | greedy | simple";
+                    System.lineSeparator() + "parallel | dfs | astar | greedy | simple";
     private static final String COST_FUNC_DESCRIPTION = "comma-separated list of cost functions to be used."
             + System.lineSeparator() + "Acceptable values: bl | it ";
+    private static final String PRUNER_DESCRIPTION = "Pruner to be used."
+    		+ System.lineSeparator() + "Acceptable values: es | ne";
 
     private static final String HELP_MESSAGE =
             "<INPUT GRAPH FILENAME> <NUMBER OF PROCESSORS> [OPTIONS]";
@@ -102,6 +107,15 @@ public class CommandLineIO {
                 .desc(COST_FUNC_DESCRIPTION)
                 .build();
         options.addOption(costFuncOption);
+        
+        // build and set the pruner option
+        Option prunerOption = Option.builder(PRUNER_FLAG)
+        		.hasArg()
+                .valueSeparator(',')
+        		.required(false)
+        		.desc(PRUNER_DESCRIPTION)
+        		.build();
+        options.addOption(prunerOption);
     }
 
     /**
@@ -134,13 +148,14 @@ public class CommandLineIO {
         String outputFilename = getOutputFilename(inputFilename, cmd);
         int numProcessors = getNumProcessors(cmd);
         Scheduler.Implementation algorithm = getAlgorithm(cmd);
-        List<CostFunction.Implementation> costFunctions = getCostFunctions(cmd);
+        List<CostFunctionManager.Functions> costFunctions = getCostFunctions(cmd);
+        List<PrunerManager.Pruners> pruners = getPruners(cmd);
 
         return new Arguments(inputFilename, numProcessors, numCores,
-                toVisualize, outputFilename, algorithm, costFunctions);
+                toVisualize, outputFilename, algorithm, costFunctions, pruners);
     }
 
-    private int getNumCores(CommandLine cmd) throws InvalidUserInputException {
+	private int getNumCores(CommandLine cmd) throws InvalidUserInputException {
         String numCoresRaw = cmd.getOptionValue(NUM_CORES_FLAG);
         if (numCoresRaw == null) {
             return NUM_CORES_DEFAULT;
@@ -211,16 +226,16 @@ public class CommandLineIO {
         }
     }
 
-    private List<CostFunction.Implementation> getCostFunctions(CommandLine cmd) throws InvalidUserInputException {
+    private List<CostFunctionManager.Functions> getCostFunctions(CommandLine cmd) throws InvalidUserInputException {
         String[] values = cmd.getOptionValues(COST_FUNCTION_FLAG);
-        List<CostFunction.Implementation> funcs = new ArrayList<>();
+        List<CostFunctionManager.Functions> funcs = new ArrayList<>();
         if (values == null) {
             return funcs; // empty list to represent no cost functions specified
         } else {
             for (String func : values) {
                 // add the appropriate cost function to the list, or throw an error if unacceptable value
                 boolean validSpecifier = false;
-                for (CostFunction.Implementation cf : CostFunction.Implementation.values()) {
+                for (CostFunctionManager.Functions cf : CostFunctionManager.Functions.values()) {
                     if (func.equals(cf.getCmdRepresentation())) {
                         funcs.add(cf);
                         validSpecifier = true;
@@ -235,6 +250,32 @@ public class CommandLineIO {
             return funcs;
         }
     }
+    
+    private List<PrunerManager.Pruners> getPruners(CommandLine cmd) throws InvalidUserInputException {
+    	String[] values = cmd.getOptionValues(PRUNER_FLAG);
+        List<PrunerManager.Pruners> funcs = new ArrayList<>();
+    	if (values == null) {
+    		return funcs;
+    	} else { 
+    		for (String func : values) {
+                // add the appropriate cost function to the list, or throw an error if unacceptable value
+                boolean validSpecifier = false;
+                for (PrunerManager.Pruners pruner : PrunerManager.Pruners.values()) {
+                    if (func.equals(pruner.getCmdRepresentation())) {
+                        funcs.add(pruner);
+                        validSpecifier = true;
+                        break;
+                    }
+                }
+                if (!validSpecifier) {
+                    printHelpAndThrowError("One or more of the pruner values is not supported."
+                            + " See correct usage above.");
+                }
+            }
+            return funcs;
+        }
+    }
+    
     /**
      * Checks the user has entered the correct number of arguments
      * @param cmd represents the command line

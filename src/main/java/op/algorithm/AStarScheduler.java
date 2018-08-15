@@ -1,6 +1,8 @@
 package op.algorithm;
 
 import op.algorithm.bound.CostFunction;
+import op.algorithm.bound.CostFunctionManager;
+import op.algorithm.prune.PrunerManager;
 import op.model.Schedule;
 
 import java.util.*;
@@ -15,11 +17,11 @@ public class AStarScheduler extends BranchAndBoundScheduler {
     /**
      * Creates a new A* scheduler
      * @param numProcessors number of processors to schedule the algorithm on
-     * @param p pruner implementation
-     * @param cf list of cost function implementations to use
+     * @param pm pruner manager
+     * @param cm list of cost function implementations to use
      */
-    public AStarScheduler(int numProcessors, Pruner p, List<CostFunction> cf) {
-        super(numProcessors, p, cf);
+    public AStarScheduler(int numProcessors, PrunerManager pm, CostFunctionManager cm) {
+        super(numProcessors, pm, cm);
     }
 
 
@@ -32,8 +34,9 @@ public class AStarScheduler extends BranchAndBoundScheduler {
 
         // Add empty schedule the first node to be explored
         Queue<Schedule> open = new PriorityQueue<>(11,
-                new ScheduleComparator(getCostFunctions()));
+                new ScheduleComparator(getCostFunctionManager()));
         open.add(new Schedule());
+        PrunerManager pm = getPrunerManager();
 
         // Start the search
         while (!open.isEmpty()) {
@@ -45,8 +48,7 @@ public class AStarScheduler extends BranchAndBoundScheduler {
                 return currentSchedule;
 
             } else {
-                for (Schedule s: getChildrenOfSchedule(currentSchedule)){
-                    // TODO: Only add promising schedules to the queue
+                for (Schedule s: pm.execute(getChildrenOfSchedule(currentSchedule))){
                     open.add(s);
                 }
             }

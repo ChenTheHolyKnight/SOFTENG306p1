@@ -5,43 +5,38 @@ import op.algorithm.bound.CostFunctionManager;
 import op.algorithm.prune.Pruner;
 import op.algorithm.prune.PrunerManager;
 import op.model.Schedule;
-import op.model.TaskGraph;
 
 import java.util.List;
 import java.util.Stack;
 
 /**
- * Scheduler implementation that uses a DFS branch and bound approach with an arbitrary Pruner implementation to help
- * decide when to bound a certain branch.
- * @author Darcy Cox
+ * A runnable object for the parallel implementation of DFS
+ * @author Sam Broadhead
  */
-public class DFSScheduler extends BranchAndBoundScheduler {
+public class ParallelRunnable extends DFSScheduler implements Runnable {
 
+    private Stack<Schedule> scheduleStack;
+    private Schedule bestSchedule;
     /**
-     * Instantiates a DFSScheduler with the specified params
-     * @param numProcessors The number of processors to schedule tasks on
-     * @param p The pruner manager to use
-     * @param cfm The cost function manager to use
+     * Creates a BranchAndBoundScheduler instance with the specified Pruner implementation.
+     *
+     * @param numProcessors the number of processors to schedule tasks on
+     * @param pm           The Pruner implementation to be used in the scheduling algorithm
+     * @param cfm          the cost function implementation to use for this scheduler
      */
-    public DFSScheduler(int numProcessors, PrunerManager p, CostFunctionManager cfm) {
-        super(numProcessors, p, cfm);
+    public ParallelRunnable(int numProcessors, PrunerManager pm, CostFunctionManager cfm, Stack<Schedule> s) {
+        super(numProcessors, pm , cfm);
+        this.scheduleStack = s;
     }
 
-    /**
-     * @return a schedule with the optimal length
-     */
     @Override
-    public Schedule produceSchedule() {
-
+    public void run() {
+        produceSchedule();
+    }
+    public Schedule produceSchedule(){
         // variables to keep track of the best schedule so far in the search
-        Schedule bestSchedule = null;
         int bestScheduleLength = Integer.MAX_VALUE;
         PrunerManager pm = getPrunerManager();
-        CostFunctionManager cfm = getCostFunctionManager();
-
-        // initialize stack with the empty schedule
-        Stack<Schedule> scheduleStack =  new Stack<Schedule>();
-        scheduleStack.push(new Schedule());
 
         // start the search, and continue until all possible schedules have been processed
         while (!scheduleStack.isEmpty()) {
@@ -54,16 +49,20 @@ public class DFSScheduler extends BranchAndBoundScheduler {
                 }
             } else {
                 // not a complete schedule so add children to the stack to be processed later
-                List<Schedule> pruned = pm.execute(super.getChildrenOfSchedule(currentSchedule));
+
+                List<Schedule> pruned = pm.execute(getChildrenOfSchedule(currentSchedule));
                 for (Schedule s: pruned){
-                    if (cfm.calculate(s)< bestScheduleLength) {
+                    boolean costFunctionIsPromising = super.getCostFunctionManager().calculate(s) < bestScheduleLength;
+                    if (costFunctionIsPromising) {
                         scheduleStack.push(s);
                     }
                 }
             }
         }
-
-        System.out.println("Optimal length: " + bestSchedule.getLength());
         return bestSchedule;
     }
+    public Schedule getSchedule(){
+        return bestSchedule;
+    }
+
 }

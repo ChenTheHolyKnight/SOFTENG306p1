@@ -2,6 +2,8 @@ package op;
 
 import op.algorithm.*;
 import op.algorithm.bound.CostFunction;
+import op.algorithm.bound.CostFunctionManager;
+import op.algorithm.prune.PrunerManager;
 import op.io.InvalidUserInputException;
 import op.model.Schedule;
 import op.io.CommandLineIO;
@@ -20,7 +22,7 @@ public class Application {
 	private Arguments arguments;
 	
     public static void main(String[] args) {
-
+    	
         Application application = new Application();
 
         // Read from command line
@@ -79,14 +81,19 @@ public class Application {
                 arguments.getAlgorithm(),
                 arguments.getNumProcessors(),
                 arguments.getNumCores(),
-                arguments.getCostFunctions()
+                arguments.getCostFunctions(),
+                arguments.getPruners()
         );
 
         System.out.println("Starting " + arguments.getAlgorithm().getCmdRepresentation()
                             + " scheduler implementation...");
         System.out.println("Using cost functions: ");
-        for (CostFunction.Implementation cf : arguments.getCostFunctions()) {
+        for (CostFunctionManager.Functions cf : arguments.getCostFunctions()) {
             System.out.println(cf);
+        }
+        System.out.println("Using pruners: ");
+        for (PrunerManager.Pruners p : arguments.getPruners()) {
+            System.out.println(p);
         }
 
         long startTime = System.currentTimeMillis();
@@ -97,7 +104,6 @@ public class Application {
         System.out.println("Schedule calculated in:\t" + (System.currentTimeMillis()-startTime) + "ms");
 
         return schedule;
-
     }
 
     /**

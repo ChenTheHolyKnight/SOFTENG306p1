@@ -1,6 +1,9 @@
 package op.algorithm;
 
 import op.algorithm.bound.CostFunction;
+import op.algorithm.bound.CostFunctionManager;
+import op.algorithm.prune.Pruner;
+import op.algorithm.prune.PrunerManager;
 import op.model.*;
 
 import java.util.ArrayList;
@@ -13,35 +16,37 @@ import java.util.List;
  */
 public abstract class BranchAndBoundScheduler extends Scheduler {
 
-    private Pruner pruner;
+    private PrunerManager prunerManager;
     // a branch and bound scheduler may use any combination of cost functions.
-    private List<CostFunction> costFunctions;
+    private CostFunctionManager costFunctionManager;
 
     /**
      * Creates a BranchAndBoundScheduler instance with the specified Pruner implementation.
-     * @param p The Pruner implementation to be used in the scheduling algorithm
+     * @param p The Pruner Manager to be used in the scheduling algorithm
      * @param numProcessors the number of processors to schedule tasks on
-     * @param cf a list of cost function implementations to use for this scheduler
+     * @param cfm a cost function manager to use for this scheduler
      */
-    public BranchAndBoundScheduler(int numProcessors, Pruner p, List<CostFunction> cf) {
+    public BranchAndBoundScheduler(int numProcessors, PrunerManager p, CostFunctionManager cfm) {
         super(numProcessors);
-        this.pruner = p;
-        this.costFunctions = cf;
+        this.prunerManager = p;
+        this.costFunctionManager = cfm;
     }
 
     /**
-     * Called by subclasses to access their specified Pruner implementation
-     * @return The Pruner implementation for the subclass to use as
+     * Called by subclasses to access their specified PrunerManager
+     * @return The Pruner implementation for the subclass to use
      */
-    protected Pruner getPruner() {
-        return this.pruner;
+    protected PrunerManager getPrunerManager() {
+        return this.prunerManager;
     }
 
     /**
      * Called by subclasses to access the CostFunction implementations
-     * @return the cost function implementations that have been set for this instance
+     * @return the cost function manager that has been set for this instance
      */
-    protected List<CostFunction> getCostFunctions() { return this.costFunctions; }
+    protected CostFunctionManager getCostFunctionManager() { 
+    	return this.costFunctionManager; 
+    	}
 
     /**
      * Method that branch and bound implementations can use to get the children from a current schedule.
@@ -110,7 +115,7 @@ public abstract class BranchAndBoundScheduler extends Scheduler {
      */
     protected boolean costFunctionIsPromising(Schedule s, int bestSoFar) {
 
-        return SchedulerUtil.getTightestBound(s, getCostFunctions()) < bestSoFar;
+        return SchedulerUtil.getTightestBound(s, getCostFunctionManager()) < bestSoFar;
     }
 
 }
