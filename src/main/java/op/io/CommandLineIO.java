@@ -148,10 +148,10 @@ public class CommandLineIO {
         int numProcessors = getNumProcessors(cmd);
         Scheduler.Implementation algorithm = getAlgorithm(cmd);
         List<CostFunction.Implementation> costFunctions = getCostFunctions(cmd);
-        List<PrunerManager.Pruners> prunerManager = hirePrunerManager(cmd);
+        List<PrunerManager.Pruners> pruners = getPruners(cmd);
 
         return new Arguments(inputFilename, numProcessors, numCores,
-                toVisualize, outputFilename, algorithm, costFunctions, prunerManager);
+                toVisualize, outputFilename, algorithm, costFunctions, pruners);
     }
 
 	private int getNumCores(CommandLine cmd) throws InvalidUserInputException {
@@ -250,11 +250,9 @@ public class CommandLineIO {
         }
     }
     
-    // TODO this
-    private List<PrunerManager.Pruners> hirePrunerManager(CommandLine cmd) throws InvalidUserInputException {
+    private List<PrunerManager.Pruners> getPruners(CommandLine cmd) throws InvalidUserInputException {
     	String[] values = cmd.getOptionValues(PRUNER_FLAG);
-        List<PrunerManager.Pruners> funcs = new ArrayList<>();
-    	
+        List<PrunerManager.Pruners> funcs = new ArrayList<>();    	
     	if (values == null) {
     		return funcs;
     	} else { 
@@ -269,7 +267,7 @@ public class CommandLineIO {
                     }
                 }
                 if (!validSpecifier) {
-                    printHelpAndThrowError("One or more of the cost function values is not supported."
+                    printHelpAndThrowError("One or more of the pruner values is not supported."
                             + " See correct usage above.");
                 }
             }
