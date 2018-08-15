@@ -12,7 +12,7 @@ import java.util.Stack;
  * A runnable object for the parallel implementation of DFS
  * @author Sam Broadhead
  */
-public class DFSParaRunnable extends DFSScheduler implements Runnable {
+public class ParallelRunnable extends DFSScheduler implements Runnable {
 
     private Stack<Schedule> scheduleStack;
     private Schedule bestSchedule;
@@ -23,7 +23,7 @@ public class DFSParaRunnable extends DFSScheduler implements Runnable {
      * @param p             The Pruner implementation to be used in the scheduling algorithm
      * @param f             the cost function implementation to use for this scheduler
      */
-    public DFSParaRunnable(int numProcessors, PrunerManager p, List<CostFunction> cf, Stack<Schedule> s) {
+    public ParallelRunnable(int numProcessors, PrunerManager p, List<CostFunction> cf, Stack<Schedule> s) {
         super(numProcessors, p , cf);
         this.scheduleStack = s;
     }

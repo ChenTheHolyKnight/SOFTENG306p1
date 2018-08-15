@@ -252,7 +252,7 @@ public class CommandLineIO {
     
     private List<PrunerManager.Pruners> getPruners(CommandLine cmd) throws InvalidUserInputException {
     	String[] values = cmd.getOptionValues(PRUNER_FLAG);
-        List<PrunerManager.Pruners> funcs = new ArrayList<>();    	
+        List<PrunerManager.Pruners> funcs = new ArrayList<>();
     	if (values == null) {
     		return funcs;
     	} else { 

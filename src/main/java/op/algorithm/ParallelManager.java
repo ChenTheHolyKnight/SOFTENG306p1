@@ -1,7 +1,6 @@
 package op.algorithm;
 
 import op.algorithm.bound.CostFunction;
-import op.algorithm.prune.Pruner;
 import op.algorithm.prune.PrunerManager;
 import op.model.Schedule;
 
@@ -14,7 +13,7 @@ import java.util.concurrent.*;
  * Parallel DFS algorithm manager.
  * @author Sam Broadhead
  */
-public class DFSParaScheduler extends DFSScheduler {
+public class ParallelManager extends DFSScheduler {
     private int numThreads;
     /**
      * Instantiates a DFSScheduler with the specified params
@@ -23,7 +22,7 @@ public class DFSParaScheduler extends DFSScheduler {
      * @param p             The pruner implementation to use
      * @param cf             The cost function implementation to use
      */
-    public DFSParaScheduler(int numProcessors, PrunerManager p, List<CostFunction> cf, int numThreads) {
+    public ParallelManager(int numProcessors, PrunerManager p, List<CostFunction> cf, int numThreads) {
         super(numProcessors, p, cf);
         this.numThreads = numThreads;
     }
@@ -70,9 +69,9 @@ public class DFSParaScheduler extends DFSScheduler {
         }
         // initiate threads and run them in parallel
         ExecutorService executor = Executors.newFixedThreadPool(numThreads);
-        DFSParaRunnable[] runnables = new DFSParaRunnable[numThreads];
+        ParallelRunnable[] runnables = new ParallelRunnable[numThreads];
         for (int i = 0; i<numThreads; i++){
-            runnables[i] = new DFSParaRunnable(getNumProcessors(), getPrunerManager(), getCostFunctions(), threadStacks[i]);
+            runnables[i] = new ParallelRunnable(getNumProcessors(), getPrunerManager(), getCostFunctions(), threadStacks[i]);
             executor.execute(runnables[i]);
         }
         executor.shutdown();
