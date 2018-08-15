@@ -1,6 +1,8 @@
 package op.algorithm;
 
 import op.algorithm.bound.CostFunction;
+import op.algorithm.prune.Pruner;
+import op.algorithm.prune.PrunerManager;
 import op.model.Schedule;
 import op.model.TaskGraph;
 
@@ -20,7 +22,7 @@ public class DFSScheduler extends BranchAndBoundScheduler {
      * @param p The pruner implementation to use
      * @param cf The cost function implementations to use
      */
-    public DFSScheduler(int numProcessors, Pruner p, List<CostFunction> cf) {
+    public DFSScheduler(int numProcessors, PrunerManager p, List<CostFunction> cf) {
         super(numProcessors, p, cf);
     }
 
@@ -33,7 +35,7 @@ public class DFSScheduler extends BranchAndBoundScheduler {
         // variables to keep track of the best schedule so far in the search
         Schedule bestSchedule = null;
         int bestScheduleLength = Integer.MAX_VALUE;
-        Pruner p = getPruner();
+        PrunerManager pm = getPrunerManager();
 
         // initialize stack with the empty schedule
         Stack<Schedule> scheduleStack =  new Stack<Schedule>();
@@ -51,7 +53,7 @@ public class DFSScheduler extends BranchAndBoundScheduler {
             } else {
                 // not a complete schedule so add children to the stack to be processed later
 
-                List<Schedule> pruned = p.prune(super.getChildrenOfSchedule(currentSchedule), bestScheduleLength, getNumProcessors());
+                List<Schedule> pruned = pm.execute(super.getChildrenOfSchedule(currentSchedule), bestScheduleLength, getNumProcessors());
                 for (Schedule s: pruned){
                     if (costFunctionIsPromising(s, bestScheduleLength)) {
                         scheduleStack.push(s);

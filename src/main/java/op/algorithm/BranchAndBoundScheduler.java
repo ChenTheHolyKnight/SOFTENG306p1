@@ -1,6 +1,8 @@
 package op.algorithm;
 
 import op.algorithm.bound.CostFunction;
+import op.algorithm.prune.Pruner;
+import op.algorithm.prune.PrunerManager;
 import op.model.*;
 
 import java.util.ArrayList;
@@ -13,7 +15,7 @@ import java.util.List;
  */
 public abstract class BranchAndBoundScheduler extends Scheduler {
 
-    private Pruner pruner;
+    private PrunerManager prunerManager;
     // a branch and bound scheduler may use any combination of cost functions.
     private List<CostFunction> costFunctions;
 
@@ -23,9 +25,9 @@ public abstract class BranchAndBoundScheduler extends Scheduler {
      * @param numProcessors the number of processors to schedule tasks on
      * @param cf a list of cost function implementations to use for this scheduler
      */
-    public BranchAndBoundScheduler(int numProcessors, Pruner p, List<CostFunction> cf) {
+    public BranchAndBoundScheduler(int numProcessors, PrunerManager p, List<CostFunction> cf) {
         super(numProcessors);
-        this.pruner = p;
+        this.prunerManager = p;
         this.costFunctions = cf;
     }
 
@@ -33,8 +35,8 @@ public abstract class BranchAndBoundScheduler extends Scheduler {
      * Called by subclasses to access their specified Pruner implementation
      * @return The Pruner implementation for the subclass to use as
      */
-    protected Pruner getPruner() {
-        return this.pruner;
+    protected PrunerManager getPrunerManager() {
+        return this.prunerManager;
     }
 
     /**

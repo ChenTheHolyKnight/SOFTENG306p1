@@ -4,6 +4,7 @@ import op.algorithm.bound.BottomLevelFunction;
 import op.algorithm.bound.CostFunction;
 import op.algorithm.bound.EmptyCostFunction;
 import op.algorithm.bound.IdleTimeFunction;
+import op.algorithm.prune.PrunerManager;
 import op.model.Schedule;
 
 import java.util.ArrayList;
@@ -23,12 +24,29 @@ public class SchedulerFactory {
      * @return The created scheduler
      */
     public Scheduler createScheduler(Scheduler.Implementation a, int numProcessors,
-                                     int numCores, List<CostFunction.Implementation> costFuncs) {
-
-        //TODO add list of pruners
-
+                                     int numCores, List<CostFunction.Implementation> costFuncs,
+                                     List<PrunerManager.Pruners> pruners) {
+    	List<CostFunction> costFuncConcrete = new ArrayList<>();
+        PrunerManager prunerManager = new PrunerManager();
+        
+        // build the PrunerManager for the scheduler to use, based on the provided Enum values
+        if (!pruners.isEmpty()) {
+            for (PrunerManager.Pruners pruner : pruners) {
+                switch (pruner) {
+                    case EQUIVALENT_SCHEDULE:
+                        prunerManager.addEquivalentSchedulePruner();
+                    	break;
+                    case IDLE_TIME:
+                    	prunerManager.addIdleTimePruner();
+                        break;
+                    case NODE_EQUIVALENCE:
+                    	prunerManager.addNodeEquivalencePruner();
+                }
+            }
+        }
+        
+        
         // build the list of cost functions for the scheduler to use, based on the provided Enum values
-        List<CostFunction> costFuncConcrete = new ArrayList<>();
         if (!costFuncs.isEmpty()) {
             for (CostFunction.Implementation cf : costFuncs) {
                 switch (cf) {
@@ -48,7 +66,7 @@ public class SchedulerFactory {
                 scheduler = new DFSParaScheduler(numProcessors, new EmptyPruner(), costFuncConcrete, numCores);
                 break;
             case DFS:
-                scheduler = new DFSScheduler(numProcessors, new EmptyPruner(), costFuncConcrete);
+                scheduler = new DFSScheduler(numProcessors, prunerManager, costFuncConcrete);
                 break;
             case ASTAR:
                 //TODO

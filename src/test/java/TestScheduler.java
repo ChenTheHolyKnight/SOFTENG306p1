@@ -1,23 +1,16 @@
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
 import java.util.ArrayList;
 
-import java.util.HashMap;
-
-import java.util.List;
-
 import op.algorithm.DFSScheduler;
-import op.algorithm.EmptyPruner;
 import op.algorithm.GreedyScheduler;
 import op.algorithm.SimpleScheduler;
-import op.algorithm.bound.EmptyCostFunction;
+import op.algorithm.prune.PrunerManager;
 import org.junit.After;
 import org.junit.Test;
 
-import junit.framework.Assert;
 import op.io.DotIO;
 import op.model.Arguments;
 import op.model.Dependency;
@@ -66,7 +59,7 @@ public class TestScheduler {
         Schedule s2 = new Schedule();
         
 		arguments = new Arguments(null,2,1,
-				false,null, null, null);
+				false,null, null, null, null);
 
         s.addScheduledTask(new ScheduledTask(new Task("1", 3), 0, 1));
 		s.addScheduledTask(new ScheduledTask(new Task("2", 2), 3, 1));
@@ -106,7 +99,7 @@ public class TestScheduler {
 	public void testScheduleIsValidOverlap() {
 		s = new Schedule();
         arguments = new Arguments(null,1,1,
-				false,null, null, null);
+				false,null, null, null, null);
 
         // set up a schedule with overlap
 		s.addScheduledTask(new ScheduledTask(new Task("1", 3), 0, 1));
@@ -129,7 +122,7 @@ public class TestScheduler {
 	public void testScheduleIsValidDependencyDisrespect() {
 		s = new Schedule();
         arguments = new Arguments(null,2,
-				1,false,null, null, null);
+				1,false,null, null, null, null);
         
         ArrayList<Task> tasks = new ArrayList<Task>();
         ArrayList<Dependency> dependencies = new ArrayList<Dependency>();
@@ -256,7 +249,7 @@ public class TestScheduler {
      */
     private void setup(String inputFilePath) throws IOException {
         arguments = new Arguments(inputFilePath,10,1,
-				false,"testOutput.dot", null, new ArrayList<>());
+				false,"testOutput.dot", null, new ArrayList<>(), new ArrayList<>());
         new DotIO().dotIn(inputFilePath);
     }
 
@@ -264,7 +257,7 @@ public class TestScheduler {
 	private void checkDFSScheduler(String path) {
 		try {
 			setup(path);
-			s = (new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner(), new ArrayList<>())).produceSchedule();
+			s = (new DFSScheduler(arguments.getNumProcessors(), new PrunerManager(), new ArrayList<>())).produceSchedule();
 			checkScheduleIsValid();
 
 		} catch (IOException e) {
