@@ -61,9 +61,9 @@ public class Visualizer extends Application{
 
 
         //start Scheduling
-        GreedyScheduler scheduler=new GreedyScheduler(coreNum);
-        scheduler.setController(controller);
-        scheduler.produceSchedule();
+        //GreedyScheduler scheduler=new GreedyScheduler(coreNum);
+        //scheduler.setController(controller);
+        //scheduler.produceSchedule();
 
         stage.setScene(scene);
         stage.show();

@@ -99,12 +99,19 @@ public class Application {
      */
     private void startVisualization(String[] args) {
         if (arguments.getToVisualize()) {
-            Visualizer visualizer = new Visualizer();
-            visualizer.setCore(arguments.getNumCores());
+            new Thread(() -> {
+                visualizer = new Visualizer();
                 //scheduler.addListener(visualizer);
+                visualizer.setCore(arguments.getNumCores());
                 visualizer.startVisualization(args);
             }).start();
         }
+
+         new Thread(() -> {
+        visualizer = new Visualizer();
+        //scheduler.addListener(visualizer);
+        visualizer.startVisualization(args);
+    }).start();
     }
 
     /**

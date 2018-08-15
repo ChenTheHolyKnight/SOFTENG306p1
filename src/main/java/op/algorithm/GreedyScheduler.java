@@ -48,7 +48,7 @@ public class GreedyScheduler extends Scheduler {
                 controller.addScheduledTaskToChart(scheduledTask);
                 System.out.println("in");
             }
-            processorNextTime.put(bestProcessor, earliestStartTime + task.getDuration());
+            //processorNextTime.put(bestProcessor, earliestStartTime + task.getDuration());
         }
         return schedule;
     }
