@@ -47,7 +47,7 @@ public class DFSScheduler extends BranchAndBoundScheduler {
                 if (currentSchedule.getLength() < bestScheduleLength) {
                     bestSchedule = currentSchedule;
                     bestScheduleLength = currentSchedule.getLength();
-                    //System.out.println("New best: " + bestScheduleLength);
+                    System.out.println("New best: " + bestScheduleLength);
                 }
             } else {
                 // not a complete schedule so add children to the stack to be processed later
