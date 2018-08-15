@@ -45,8 +45,6 @@ public class PrunerManager {
 	/**
 	 * Executes the prune method of every added pruner to the pruner manager on the list of Schedules passed in.
 	 * @param toPrune The list of schedules to prune
-	 * @param bestScheduleLength 
-	 * @param numProcessors
 	 * @return The newly pruned List of schedules
 	 */
 	public List<Schedule> execute(List<Schedule> toPrune) {

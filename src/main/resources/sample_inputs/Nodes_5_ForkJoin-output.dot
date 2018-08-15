@@ -1,13 +1,13 @@
 digraph "Fork Join" {
-	1	[Weight=70,Start=140,Processor=2];
-	4	[Weight=40,Start=210,Processor=2];
-	3	[Weight=100,Start=54,Processor=1];
-	2	[Weight=90,Start=50,Processor=2];
-	0	[Weight=50,Start=0,Processor=2];
-	1 -> 4	[Weight=4];
-	3 -> 4	[Weight=2];
-	2 -> 4	[Weight=6];
+	0	[Weight=50,Start=0,Processor=1];
+	2	[Weight=90,Start=57,Processor=3];
+	3	[Weight=100,Start=50,Processor=1];
+	4	[Weight=40,Start=152,Processor=3];
+	1	[Weight=70,Start=59,Processor=2];
+	0 -> 2	[Weight=7];
 	0 -> 3	[Weight=4];
 	0 -> 1	[Weight=9];
-	0 -> 2	[Weight=7];
+	2 -> 4	[Weight=6];
+	3 -> 4	[Weight=2];
+	1 -> 4	[Weight=4];
 }
