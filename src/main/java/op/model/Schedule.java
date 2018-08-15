@@ -170,6 +170,7 @@ public class Schedule {
 	/**
 	 * gets the hashcode for this schedule.
 	 * The hashcode is calculated based off all the scheduled tasks on all processors.
+	 * If two Schedules have the same hashcode, they are considered equal. 
 	 */
 	@Override 
 	public int hashCode() {
