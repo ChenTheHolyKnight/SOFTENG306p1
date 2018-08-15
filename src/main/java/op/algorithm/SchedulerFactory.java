@@ -44,6 +44,9 @@ public class SchedulerFactory {
         // construct the scheduler
         Scheduler scheduler = null;
         switch (a) {
+            case PARA:
+                scheduler = new DFSParaScheduler(numProcessors, new EmptyPruner(), costFuncConcrete, numCores);
+                break;
             case DFS:
                 scheduler = new DFSScheduler(numProcessors, new EmptyPruner(), costFuncConcrete);
                 break;

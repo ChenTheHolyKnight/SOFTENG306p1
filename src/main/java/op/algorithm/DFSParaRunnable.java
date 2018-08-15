@@ -6,6 +6,10 @@ import op.model.Schedule;
 import java.util.List;
 import java.util.Stack;
 
+/**
+ * A runnable object for the parallel implementation of DFS
+ * @author Sam Broadhead
+ */
 public class DFSParaRunnable extends DFSScheduler implements Runnable {
 
     private Stack<Schedule> scheduleStack;
@@ -17,8 +21,8 @@ public class DFSParaRunnable extends DFSScheduler implements Runnable {
      * @param p             The Pruner implementation to be used in the scheduling algorithm
      * @param f             the cost function implementation to use for this scheduler
      */
-    public DFSParaRunnable(int numProcessors, Pruner p, CostFunction f, Stack<Schedule> s) {
-        super(numProcessors, p , f);
+    public DFSParaRunnable(int numProcessors, Pruner p, List<CostFunction> cf, Stack<Schedule> s) {
+        super(numProcessors, p , cf);
         this.scheduleStack = s;
     }
 
@@ -30,9 +34,6 @@ public class DFSParaRunnable extends DFSScheduler implements Runnable {
         // variables to keep track of the best schedule so far in the search
         int bestScheduleLength = Integer.MAX_VALUE;
 
-        // initialize stack with the empty schedule
-        //Stack<Schedule> scheduleStack =  new Stack<>();
-        //scheduleStack.push(schedule);
         // start the search, and continue until all possible schedules have been processed
         while (!scheduleStack.isEmpty()) {
             Schedule currentSchedule = scheduleStack.pop();

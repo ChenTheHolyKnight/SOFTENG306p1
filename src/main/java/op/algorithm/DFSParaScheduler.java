@@ -8,6 +8,10 @@ import java.util.List;
 import java.util.Stack;
 import java.util.concurrent.*;
 
+/**
+ * Parallel DFS algorithm manager.
+ * @author Sam Broadhead
+ */
 public class DFSParaScheduler extends DFSScheduler {
     private int numThreads;
     /**
@@ -15,10 +19,10 @@ public class DFSParaScheduler extends DFSScheduler {
      *
      * @param numProcessors The number of processors to schedule tasks on
      * @param p             The pruner implementation to use
-     * @param f             The cost function implementation to use
+     * @param cf             The cost function implementation to use
      */
-    public DFSParaScheduler(int numProcessors, Pruner p, CostFunction f, int numThreads) {
-        super(numProcessors, p, f);
+    public DFSParaScheduler(int numProcessors, Pruner p, List<CostFunction> cf, int numThreads) {
+        super(numProcessors, p, cf);
         this.numThreads = numThreads;
     }
 
@@ -32,7 +36,6 @@ public class DFSParaScheduler extends DFSScheduler {
         Stack<Schedule> scheduleStack = new Stack<Schedule>();
         scheduleStack.push(bestSchedule);
         int bestScheduleLength = Integer.MAX_VALUE;
-        numThreads = 30;
         // run sequentially until our stack is big enough to run in parallel
         while(scheduleStack.size()< numThreads){
             //make one thread and run it
@@ -66,14 +69,13 @@ public class DFSParaScheduler extends DFSScheduler {
         ExecutorService executor = Executors.newFixedThreadPool(numThreads);
         DFSParaRunnable[] runnables = new DFSParaRunnable[numThreads];
         for (int i = 0; i<numThreads; i++){
-            runnables[i] = new DFSParaRunnable(getNumProcessors(), getPruner(), getCostFunction(), threadStacks[i]);
+            runnables[i] = new DFSParaRunnable(getNumProcessors(), getPruner(), getCostFunctions(), threadStacks[i]);
             executor.execute(runnables[i]);
         }
         executor.shutdown();
         while(!executor.isTerminated()){} // wait for runnables to finish
         for (int i = 0; i<numThreads; i++) { // get the best schedule from each thread
             if(runnables[i].getSchedule() != null) { // there is a chance that thread did not reach a complete solution
-                System.out.println(runnables[i].getSchedule());
                 if (runnables[i].getSchedule().getLength() < bestScheduleLength) {
                     bestScheduleLength = runnables[i].getSchedule().getLength();
                     bestSchedule = runnables[i].getSchedule();
