@@ -1,6 +1,7 @@
 package op.algorithm;
 
 import op.algorithm.bound.CostFunction;
+import op.algorithm.bound.CostFunctionManager;
 import op.algorithm.prune.Pruner;
 import op.algorithm.prune.PrunerManager;
 import op.model.Schedule;
@@ -19,11 +20,11 @@ public class DFSScheduler extends BranchAndBoundScheduler {
     /**
      * Instantiates a DFSScheduler with the specified params
      * @param numProcessors The number of processors to schedule tasks on
-     * @param p The pruner implementation to use
-     * @param cf The cost function implementations to use
+     * @param p The pruner manager to use
+     * @param cfm The cost function manager to use
      */
-    public DFSScheduler(int numProcessors, PrunerManager p, List<CostFunction> cf) {
-        super(numProcessors, p, cf);
+    public DFSScheduler(int numProcessors, PrunerManager p, CostFunctionManager cfm) {
+        super(numProcessors, p, cfm);
     }
 
     /**
@@ -36,6 +37,7 @@ public class DFSScheduler extends BranchAndBoundScheduler {
         Schedule bestSchedule = null;
         int bestScheduleLength = Integer.MAX_VALUE;
         PrunerManager pm = getPrunerManager();
+        CostFunctionManager cfm = getCostFunctionManager();
 
         // initialize stack with the empty schedule
         Stack<Schedule> scheduleStack =  new Stack<Schedule>();
@@ -53,9 +55,9 @@ public class DFSScheduler extends BranchAndBoundScheduler {
             } else {
                 // not a complete schedule so add children to the stack to be processed later
 
-                List<Schedule> pruned = pm.execute(super.getChildrenOfSchedule(currentSchedule), bestScheduleLength, getNumProcessors());
+                List<Schedule> pruned = pm.execute(super.getChildrenOfSchedule(currentSchedule));
                 for (Schedule s: pruned){
-                    if (costFunctionIsPromising(s, bestScheduleLength)) {
+                    if (cfm.calculate(s)< bestScheduleLength) {
                         scheduleStack.push(s);
                     }
                 }
@@ -64,26 +66,5 @@ public class DFSScheduler extends BranchAndBoundScheduler {
 
         System.out.println("Optimal length: " + bestSchedule.getLength());
         return bestSchedule;
-    }
-
-    // helper to tell us when a partial schedule is worth pursuing any further.
-    // returns true if the cost function is less than the known best length
-    // returns false if the cost function is greater than or equal to the known best, because all schedules based on
-    // this schedule are guaranteed to be worse than, or no better than our known best.
-    protected boolean costFunctionIsPromising(Schedule s, int bestSoFar) {
-
-        List<CostFunction> costFunctions = super.getCostFunctions();
-
-        // calculate the cost functions using each implementation then take the maximum of them
-        // because it will be the tightest lower bound
-        int tightestBound = 0;
-        for (CostFunction cf : costFunctions) {
-            int currentFunc = cf.calculate(s);
-            if (currentFunc > tightestBound) {
-                tightestBound = currentFunc;
-            }
-        }
-
-        return tightestBound < bestSoFar;
     }
 }

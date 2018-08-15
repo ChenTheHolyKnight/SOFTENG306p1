@@ -18,16 +18,19 @@ import op.model.Task;
 public class NodeEquivalencePruner implements Pruner{
 
 	@Override
-	public List<Schedule> prune(List<Schedule> toPrune, int bestScheduleLength, int numProcessors) {
+	public List<Schedule> prune(List<Schedule> toPrune) {	
+		List<Schedule> toRemove = new ArrayList<Schedule>();
 		for (Schedule s1 : toPrune) {
 			for (Schedule s2 : toPrune) {
 				if (toPrune.indexOf(s1) != toPrune.indexOf(s2)) {
-					if (areEquivalentTasks(s1.getMostRecentScheduledTask(), s2.getMostRecentScheduledTask())) {
-						toPrune.remove(s1);
+					if (areEquivalentTasks(
+							s1.getMostRecentScheduledTask(), s2.getMostRecentScheduledTask())) {
+						toRemove.add(s2);
 					}
 				}
 			}
 		}
+		toPrune.removeAll(toRemove);
 		return toPrune;
 	}
 	

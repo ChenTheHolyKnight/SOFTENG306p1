@@ -14,9 +14,7 @@ public interface Pruner {
 	 * Given a list of Schedules, the prune method will return a subset of this list where the subset
 	 * contains only schedules which are not pruned by a specific pruner.
 	 * @param toPrune The list of schedules to prune
-	 * @param bestScheduleLength The best Schedule length so far
-	 * @param numProcessors The max number of processors for the schedules
 	 * @return A subset of the list, containing the schedules which were not pruned.
 	 */
-    List<Schedule> prune(List<Schedule> toPrune, int bestScheduleLength, int numProcessors);
+    List<Schedule> prune(List<Schedule> toPrune);
 }

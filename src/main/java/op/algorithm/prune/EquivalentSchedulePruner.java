@@ -17,7 +17,7 @@ import op.model.Schedule;
 public class EquivalentSchedulePruner implements Pruner{
 
 	@Override
-	public List<Schedule> prune(List<Schedule> toPrune, int bestScheduleLength, int numProcessors) {
+	public List<Schedule> prune(List<Schedule> toPrune) {
 		Set<Schedule> set = new LinkedHashSet<Schedule>(toPrune);
 		toPrune.clear();
 		toPrune.addAll(set);

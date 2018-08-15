@@ -2,6 +2,8 @@ package op.algorithm;
 
 import op.algorithm.bound.BottomLevelFunction;
 import op.algorithm.bound.CostFunction;
+import op.algorithm.bound.CostFunctionManager;
+import op.algorithm.bound.EmptyCostFunction;
 import op.algorithm.bound.IdleTimeFunction;
 import op.algorithm.prune.PrunerManager;
 
@@ -22,9 +24,9 @@ public class SchedulerFactory {
      * @return The created scheduler
      */
     public Scheduler createScheduler(Scheduler.Implementation a, int numProcessors,
-                                     int numCores, List<CostFunction.Implementation> costFuncs,
+                                     int numCores, List<CostFunctionManager.Functions> costFuncs,
                                      List<PrunerManager.Pruners> pruners) {
-    	List<CostFunction> costFuncConcrete = new ArrayList<>();
+    	CostFunctionManager costFunctionManager = new CostFunctionManager(numProcessors);
         PrunerManager prunerManager = new PrunerManager();
         
         // build the PrunerManager for the scheduler to use, based on the provided Enum values
@@ -33,9 +35,6 @@ public class SchedulerFactory {
                 switch (pruner) {
                     case EQUIVALENT_SCHEDULE:
                         prunerManager.addEquivalentSchedulePruner();
-                        break;
-                    case IDLE_TIME:
-                    	prunerManager.addIdleTimePruner();
                         break;
                     case NODE_EQUIVALENCE:
                     	prunerManager.addNodeEquivalencePruner();
@@ -47,13 +46,13 @@ public class SchedulerFactory {
         
         // build the list of cost functions for the scheduler to use, based on the provided Enum values
         if (!costFuncs.isEmpty()) {
-            for (CostFunction.Implementation cf : costFuncs) {
+            for (CostFunctionManager.Functions cf : costFuncs) {
                 switch (cf) {
                     case IDLE_TIME:
-                        costFuncConcrete.add(new IdleTimeFunction(numProcessors));
+                        costFunctionManager.addIdleTimeFunction();;
                         break;
                     case BOTTOM_LEVEL:
-                        costFuncConcrete.add(new BottomLevelFunction());
+                        costFunctionManager.addBottomLevelFunction();;
                 }
             }
         }
@@ -62,10 +61,10 @@ public class SchedulerFactory {
         Scheduler scheduler = null;
         switch (a) {
             case PARA:
-                scheduler = new ParallelManager(numProcessors, prunerManager, costFuncConcrete, numCores);
+                scheduler = new ParallelManager(numProcessors, prunerManager, costFunctionManager, numCores);
                 break;
             case DFS:
-                scheduler = new DFSScheduler(numProcessors, prunerManager, costFuncConcrete);
+                scheduler = new DFSScheduler(numProcessors, prunerManager, costFunctionManager);
                 break;
             case ASTAR:
                 //TODO

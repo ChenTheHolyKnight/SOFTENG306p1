@@ -58,8 +58,6 @@ public class Dependency {
 		
 		result = 31 * result + startTask.getId().hashCode();
 		result = 31 * result + endTask.getId().hashCode();
-		result = 31 * result + startTask.getDuration();
-		result = 31 * result + endTask.getDuration();
 		result = 31 * result + weight;
 		
 		return result;
