@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import op.algorithm.DFSScheduler;
 import op.algorithm.GreedyScheduler;
 import op.algorithm.SimpleScheduler;
+import op.algorithm.bound.CostFunctionManager;
 import op.algorithm.prune.PrunerManager;
 import org.junit.After;
 import org.junit.Test;
@@ -257,7 +258,7 @@ public class TestScheduler {
 	private void checkDFSScheduler(String path) {
 		try {
 			setup(path);
-			s = (new DFSScheduler(arguments.getNumProcessors(), new PrunerManager(), new ArrayList<>())).produceSchedule();
+			s = (new DFSScheduler(arguments.getNumProcessors(), new PrunerManager(), new CostFunctionManager(1))).produceSchedule();
 			checkScheduleIsValid();
 
 		} catch (IOException e) {

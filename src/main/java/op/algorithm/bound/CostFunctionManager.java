@@ -5,6 +5,7 @@ import java.util.List;
 
 import op.algorithm.prune.EquivalentSchedulePruner;
 import op.algorithm.prune.NodeEquivalencePruner;
+import op.model.Schedule;
 
 /**
  * A manager class for the Cost Function interface. Can add as many cost functions as user 
@@ -47,5 +48,24 @@ public class CostFunctionManager {
 		BottomLevelFunction f =  new BottomLevelFunction();
 		if (!costFunctions.contains(f)) costFunctions.add(f);
 	}
+	
+	
+	/**
+	 * Calculates the cost function with the tightest lower bound
+	 * @return cost function with the tightest lower bound
+	 */
+    public int calculate(Schedule s) {
+		int tightestBound = 0;
 
+		// calculate the different cost functions then take the maximum of them
+        // because it will be the tightest lower bound
+		for (CostFunction cf : costFunctions) {
+            int currentFunc = cf.calculate(s);
+            if (currentFunc > tightestBound) {
+                tightestBound = currentFunc;
+            }
+        }
+		
+		return tightestBound;
+	}
 }

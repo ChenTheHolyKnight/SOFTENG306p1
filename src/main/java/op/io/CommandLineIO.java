@@ -110,7 +110,7 @@ public class CommandLineIO {
         
         // build and set the pruner option
         Option prunerOption = Option.builder(PRUNER_FLAG)
-        		.hasArg()
+        		.hasArgs()
                 .valueSeparator(',')
         		.required(false)
         		.desc(PRUNER_DESCRIPTION)
