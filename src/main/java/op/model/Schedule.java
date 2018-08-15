@@ -12,7 +12,8 @@ public class Schedule {
 
     private HashMap<Integer,List<ScheduledTask>> processorMap; // stores all scheduled tasks on a given processor
     private HashMap<Task,ScheduledTask> taskMap; // stores the scheduled representation of tasks
-
+    
+    private ScheduledTask latestScheduledTask;
     /**
      * Constructs an empty schedule instance
      */
@@ -38,7 +39,8 @@ public class Schedule {
         for (int i : this.processorMap.keySet()) {
             this.processorMap.put(i, new ArrayList<ScheduledTask>(this.processorMap.get(i)));
         }
-
+        
+        this.latestScheduledTask = stNew;
         this.addScheduledTask(stNew);
     }
   
@@ -83,6 +85,14 @@ public class Schedule {
      */
     public ScheduledTask getScheduledTask(Task t) {
         return taskMap.get(t);
+    }
+    
+    /**
+     * Gets the latest ScheduledTask added to this schedule
+     * @return the latest ShceduledTask added to the schedule
+     */
+    public ScheduledTask getLatestScheduledTask(){
+    	return latestScheduledTask;
     }
 
     /**
