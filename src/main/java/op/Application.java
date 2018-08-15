@@ -30,7 +30,7 @@ public class Application {
         Application application = new Application();
 
         // Read from command line
-        application.initArguments(args);
+        Arguments arg=application.initArguments(args);
 
         // Read dot file
         DotIO dotParser = new DotIO();
@@ -39,14 +39,16 @@ public class Application {
         // Create scheduler
         application.createScheduler();
 
-        // Start visualization
-        application.startVisualization(args);
+        // Start visualization if -v is found in the arguments
+        if(arg.getToVisualize())
+            application.startVisualization(args);
+        else {
+            // Produce a schedule - create a new thread to do this.
+            Schedule schedule = application.produceSchedule();
 
-        // Produce a schedule - create a new thread to do this.
-        Schedule schedule = application.produceSchedule();
-
-        // Write out the schedule
-        application.writeDot(dotParser, schedule);
+            // Write out the schedule
+            application.writeDot(dotParser, schedule);
+        }
     }
 
     /**
@@ -55,12 +57,14 @@ public class Application {
      * To be run as an IO_Task with ParallelIT
      * @param args command line arguments
      */
-    private void initArguments(String[] args) {
+    private Arguments initArguments(String[] args) {
         try {
             arguments = new CommandLineIO().parseArgs(args);
+            return arguments;
         } catch (InvalidUserInputException e) {
             fatalError(e.getMessage());
         }
+        return null;
     }
 
     /**
@@ -98,20 +102,15 @@ public class Application {
      * To be run concurrently with produceSchedule()
      */
     private void startVisualization(String[] args) {
-        if (arguments.getToVisualize()) {
+        //if (arguments.getToVisualize()) {
             new Thread(() -> {
                 visualizer = new Visualizer();
                 //scheduler.addListener(visualizer);
                 visualizer.setCore(arguments.getNumCores());
                 visualizer.startVisualization(args);
             }).start();
-        }
+        //}
 
-         new Thread(() -> {
-        visualizer = new Visualizer();
-        //scheduler.addListener(visualizer);
-        visualizer.startVisualization(args);
-    }).start();
     }
 
     /**
