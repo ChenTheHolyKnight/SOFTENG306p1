@@ -2,15 +2,19 @@ package op.algorithm;
 
 import op.algorithm.bound.CostFunction;
 import op.model.Schedule;
+import op.model.Task;
+import op.model.TaskGraph;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class DFSParaScheduler extends BranchAndBoundScheduler {
-    public static List<Integer> beenChecked = new ArrayList<>();
+    //public static List<Integer> beenChecked = new ArrayList<>();
+    public static CopyOnWriteArrayList<Integer> beenChecked = new CopyOnWriteArrayList<>();
     /**
      * Instantiates a DFSScheduler with the specified params
      *
@@ -60,11 +64,13 @@ public class DFSParaScheduler extends BranchAndBoundScheduler {
                 }
             }
         }
+        TaskGraph tg = TaskGraph.getInstance();
+        List<Task> allTasks = tg.getAllTasks();
         // initiate threads and run them in parallel
         for (int i = 0; i<threadSize; i++){
             Schedule currentSchedule = scheduleStack.pop();
             beenChecked.add(currentSchedule.hashCode());
-            runnables[i] = new DFSParaRunnable(getNumProcessors(), getPruner(), getCostFunction(), currentSchedule, bestScheduleLength);
+            runnables[i] = new DFSParaRunnable(getNumProcessors(), getPruner(), getCostFunction(), currentSchedule, allTasks);
             executor.execute(runnables[i]);
         }
         executor.shutdown();
