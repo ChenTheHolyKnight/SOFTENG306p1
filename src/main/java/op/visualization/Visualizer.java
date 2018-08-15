@@ -16,7 +16,7 @@ import java.util.Timer;
  * Interface that any visualisation implementation must conform to.
  * Defines how other components can control the visualisation
  */
-public class Visualizer extends Application {
+public class Visualizer extends Application{
 
     private GUIController controller;
     private static final int SCENE_HEIGHT = 620;
@@ -67,4 +67,5 @@ public class Visualizer extends Application {
         // run on JavaFX thread
         controller.updateGraph(u);
     }
+
 }

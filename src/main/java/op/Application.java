@@ -39,11 +39,11 @@ public class Application {
         // Create scheduler
         application.createScheduler();
 
-        // Produce a schedule - create a new thread to do this.
-        Schedule schedule = application.produceSchedule();
-
         // Start visualization
         application.startVisualization(args);
+
+        // Produce a schedule - create a new thread to do this.
+        Schedule schedule = application.produceSchedule();
 
         // Write out the schedule
         application.writeDot(dotParser, schedule);
@@ -99,8 +99,11 @@ public class Application {
      */
     private void startVisualization(String[] args) {
         if (arguments.getToVisualize()) {
-            visualizer = new Visualizer();
-            visualizer.startVisualization(args);
+            new Thread(() -> {
+                visualizer = new Visualizer();
+                //scheduler.addListener(visualizer);
+                visualizer.startVisualization(args);
+            }).start();
         }
     }
 
@@ -111,7 +114,6 @@ public class Application {
      */
     private Schedule produceSchedule() {
 
-        scheduler.addListener(visualizer);
         Schedule schedule = scheduler.produceSchedule();
 
         System.out.println("Time without cost function: " + (System.currentTimeMillis() - startTime) +

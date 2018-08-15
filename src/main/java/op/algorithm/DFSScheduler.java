@@ -58,7 +58,7 @@ public class DFSScheduler extends BranchAndBoundScheduler {
                 List<Schedule> children = getChildrenOfSchedule(currentSchedule);
                 newSchedulesUpdate(currentSchedule, children);
                 List<Schedule> pruned = p.prune(children, bestScheduleLength, getNumProcessors());
-                removedSchedulesUpdate(pruned, children);
+                //removedSchedulesUpdate(pruned, children);
                 for (Schedule s: pruned){
                     if (costFunctionIsPromising(s, bestScheduleLength)) {
                         scheduleStack.push(s);
