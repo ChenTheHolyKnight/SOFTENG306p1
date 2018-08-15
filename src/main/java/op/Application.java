@@ -81,10 +81,10 @@ public class Application {
         long startTime = System.currentTimeMillis();
         //Schedule bottomLevelSchedule = bottomLevelScheduler.produceSchedule();
         //System.out.println("Time with bottom level cost function: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+bottomLevelSchedule.getLength());
-        //Scheduler combinedScheduler = new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner(), new CombinedCostFunction(arguments.getNumProcessors()));
-        //startTime = System.currentTimeMillis();
-        //Schedule combinedSchedule = combinedScheduler.produceSchedule();
-        //System.out.println("Time with both cost functions: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+combinedSchedule.getLength());
+       // Scheduler combinedScheduler = new DFSScheduler(arguments.getNumProcessors(), new EmptyPruner(), new CombinedCostFunction(arguments.getNumProcessors()));
+       // startTime = System.currentTimeMillis();
+       // Schedule combinedSchedule = combinedScheduler.produceSchedule();
+       // System.out.println("Time with both cost functions: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+combinedSchedule.getLength());
         Scheduler combinedParaScheduler = new DFSParaScheduler(arguments.getNumProcessors(), new EmptyPruner(), new CombinedCostFunction(arguments.getNumProcessors()));
         startTime = System.currentTimeMillis();
         Schedule combinedSchedule = combinedParaScheduler.produceSchedule();

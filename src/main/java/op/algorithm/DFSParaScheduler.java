@@ -41,7 +41,7 @@ public class DFSParaScheduler extends BranchAndBoundScheduler {
         Stack<Schedule> scheduleStack = new Stack<Schedule>();
         scheduleStack.push(bestSchedule);
         int bestScheduleLength = Integer.MAX_VALUE;
-        int threadSize = 4;
+        int threadSize = 2;
         // run sequentially until our stack is big enough to run in parallel
         while(scheduleStack.size()< threadSize){
             //make one thread and run it
