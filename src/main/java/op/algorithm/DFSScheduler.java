@@ -69,7 +69,7 @@ public class DFSScheduler extends BranchAndBoundScheduler {
     // returns true if the cost function is less than the known best length
     // returns false if the cost function is greater than or equal to the known best, because all schedules based on
     // this schedule are guaranteed to be worse than our known best.
-    private boolean costFunctionIsPromising(Schedule s, int bestSoFar) {
+    protected boolean costFunctionIsPromising(Schedule s, int bestSoFar) {
         int costFunction = super.getCostFunction().calculate(s);
         return costFunction < bestSoFar;
     }
