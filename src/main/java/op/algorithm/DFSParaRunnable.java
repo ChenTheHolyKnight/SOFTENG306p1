@@ -16,7 +16,7 @@ public class DFSParaRunnable extends Scheduler implements Runnable {
     private Schedule bestSchedule;
     private Pruner p;
     private CostFunction f;
-    private  List<Task> allTasks;
+    private List<Task> allTasks;
     /**
      * Creates a BranchAndBoundScheduler instance with the specified Pruner implementation.
      *
@@ -26,9 +26,9 @@ public class DFSParaRunnable extends Scheduler implements Runnable {
      */
     public DFSParaRunnable(int numProcessors, Pruner p, CostFunction f, Schedule s, List<Task> allTasks) {
         super(numProcessors);
-        this.schedule = s;
         this.p = p;
         this.f = f;
+        this.schedule = s;
         this.allTasks = allTasks;
     }
 
@@ -41,14 +41,11 @@ public class DFSParaRunnable extends Scheduler implements Runnable {
         int bestScheduleLength = Integer.MAX_VALUE;
 
         // initialize stack with the empty schedule
-        Stack<Schedule> scheduleStack =  new Stack<Schedule>();
+        Stack<Schedule> scheduleStack =  new Stack<>();
         scheduleStack.push(schedule);
-
         // start the search, and continue until all possible schedules have been processed
         while (!scheduleStack.isEmpty()) {
-            //System.out.println(this);
             Schedule currentSchedule = scheduleStack.pop();
-            DFSParaScheduler.beenChecked.add(currentSchedule.hashCode());
             if (currentSchedule.isComplete()) {
                 // check if the complete schedule is better than our best schedule so far
                 if (currentSchedule.getLength() < bestScheduleLength) {
@@ -58,9 +55,9 @@ public class DFSParaRunnable extends Scheduler implements Runnable {
             } else {
                 // not a complete schedule so add children to the stack to be processed later
 
-                List<Schedule> pruned = p.prune(this.getChildrenOfSchedule(currentSchedule), bestScheduleLength, getNumProcessors());
+                List<Schedule> pruned = p.prune(getChildrenOfSchedule(currentSchedule), bestScheduleLength, getNumProcessors());
                 for (Schedule s: pruned){
-                    if (costFunctionIsPromising(s, bestScheduleLength) && !DFSParaScheduler.beenChecked.contains(s.hashCode())) {
+                    if (costFunctionIsPromising(s, bestScheduleLength)) {
                         scheduleStack.push(s);
                     }
                 }
@@ -68,27 +65,43 @@ public class DFSParaRunnable extends Scheduler implements Runnable {
         }
         return bestSchedule;
     }
+    public Schedule getSchedule(){
+        return bestSchedule;
+    }
     private boolean costFunctionIsPromising(Schedule s, int bestSoFar) {
         int costFunction = f.calculate(s);
         return costFunction < bestSoFar;
     }
-    public Schedule getSchedule(){
-        return bestSchedule;
-    }
-    protected List<Schedule> getChildrenOfSchedule(Schedule s) {
+    private List<Schedule> getChildrenOfSchedule(Schedule s) {
         List<Schedule> children = new ArrayList<Schedule>();
+
+        List<Task> freeTasks = getFreeTasks(s);
+
+        // build a new schedule for every valid free task to processor allocation and add to the list of children
+        for (Task t : freeTasks) {
+            for (int i = 1; i <= super.getNumProcessors(); i++) {
+                int startTime = super.getEarliestStartTime(s, t, i);
+                children.add(new Schedule(s, new ScheduledTask(t, startTime, i)));
+            }
+        }
+
+        return children;
+    }
+
+
+    // gets all free tasks based on a task graph and a (partial) schedule
+    // a free task is one whose dependencies are already scheduled, and is not scheduled itself
+    private List<Task> getFreeTasks(Schedule s) {
+
         List<Task> freeTasks = new ArrayList<Task>();
         for (Task t : allTasks) {
 
             if (s.getScheduledTask(t) == null) {
                 // the current task is not yet scheduled, check its dependencies
                 List<Dependency> deps = t.getIncomingDependencies();
-
                 if (deps.isEmpty()) {
                     freeTasks.add(t); // no dependencies so this task must be free
-
                 } else {
-
                     boolean dependenciesAllScheduled = true;
                     for (Dependency d : deps) {
                         Task startTask = d.getStartTask();
@@ -103,14 +116,7 @@ public class DFSParaRunnable extends Scheduler implements Runnable {
                 }
             }
         }
-        // build a new schedule for every valid free task to processor allocation and add to the list of children
-        for (Task t : freeTasks) {
-            for (int i = 1; i <= super.getNumProcessors(); i++) {
-                int startTime = super.getEarliestStartTime(s, t, i);
-                children.add(new Schedule(s, new ScheduledTask(t, startTime, i)));
-            }
-        }
 
-        return children;
+        return freeTasks;
     }
 }

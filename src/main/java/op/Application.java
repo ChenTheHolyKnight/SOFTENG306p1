@@ -87,13 +87,13 @@ public class Application {
         //System.out.println("Time with both cost functions: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+combinedSchedule.getLength());
         Scheduler combinedParaScheduler = new DFSParaScheduler(arguments.getNumProcessors(), new EmptyPruner(), new CombinedCostFunction(arguments.getNumProcessors()));
         startTime = System.currentTimeMillis();
-        Schedule combinedParaSchedule = combinedParaScheduler.produceSchedule();
-        System.out.println("Time with both cost function parallel: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+combinedParaSchedule.getLength());
+        Schedule combinedSchedule = combinedParaScheduler.produceSchedule();
+        System.out.println("Time with both cost function parallel: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+combinedSchedule.getLength());
 //        startTime = System.currentTimeMillis();
 //        Schedule slowSchedule = slowScheduler.produceSchedule();
 //        System.out.println("Time without cost function: "+(System.currentTimeMillis() - startTime)+"ms       Schedule Length: "+slowSchedule.getLength());
 //        return slowSchedule;
-        return combinedParaSchedule;
+        return combinedSchedule;
     }
 
     /**

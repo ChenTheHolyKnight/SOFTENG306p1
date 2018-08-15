@@ -37,13 +37,11 @@ public class DFSScheduler extends BranchAndBoundScheduler {
 
         // initialize stack with the empty schedule
         Stack<Schedule> scheduleStack =  new Stack<Schedule>();
-        Stack<Integer> beenChecked = new Stack<>();
         scheduleStack.push(new Schedule());
 
         // start the search, and continue until all possible schedules have been processed
         while (!scheduleStack.isEmpty()) {
             Schedule currentSchedule = scheduleStack.pop();
-            beenChecked.push(currentSchedule.hashCode());
             if (currentSchedule.isComplete()) {
                 // check if the complete schedule is better than our best schedule so far
                 if (currentSchedule.getLength() < bestScheduleLength) {
@@ -56,7 +54,7 @@ public class DFSScheduler extends BranchAndBoundScheduler {
 
                 List<Schedule> pruned = p.prune(super.getChildrenOfSchedule(currentSchedule), bestScheduleLength, getNumProcessors());
                 for (Schedule s: pruned){
-                    if (costFunctionIsPromising(s, bestScheduleLength) && !beenChecked.contains(s.hashCode())) {
+                    if (costFunctionIsPromising(s, bestScheduleLength)) {
                         scheduleStack.push(s);
                     }
                 }
