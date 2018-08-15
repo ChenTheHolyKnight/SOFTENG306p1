@@ -86,13 +86,13 @@ public class Arguments {
      * @param outputFilename
      * @param algorithm the specified algorithm to run
      * @param costFunctions the specified cost functions to use
-     * @param prunerManager the prunerManager to use
+     * @param pruners the pruners to use
      */
     public Arguments(String inputFilename, int numProcessors, int numCores,
                      boolean toVisualize, String outputFilename,
                      Scheduler.Implementation algorithm, 
                      List<CostFunction.Implementation> costFunctions, 
-                     List<PrunerManager.Pruners> prunerManager) {
+                     List<PrunerManager.Pruners> pruners) {
         this.inputGraphFilename = inputFilename;
         this.numProcessors = numProcessors;
         this.numCores = numCores;
@@ -100,5 +100,6 @@ public class Arguments {
         this.outputGraphFilename = outputFilename;
         this.algorithm = algorithm;
         this.costFunctions = costFunctions;
+        this.pruners = pruners;
     }
 }

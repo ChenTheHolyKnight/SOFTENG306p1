@@ -2,6 +2,7 @@ package op;
 
 import op.algorithm.*;
 import op.algorithm.bound.CostFunction;
+import op.algorithm.prune.PrunerManager;
 import op.io.InvalidUserInputException;
 import op.model.Schedule;
 import op.visualization.GUIApplication;
@@ -86,6 +87,10 @@ public class Application {
         System.out.println("Using cost functions: ");
         for (CostFunction.Implementation cf : arguments.getCostFunctions()) {
             System.out.println(cf);
+        }
+        System.out.println("Using pruners: ");
+        for (PrunerManager.Pruners p : arguments.getPruners()) {
+            System.out.println(p);
         }
 
         long startTime = System.currentTimeMillis();
