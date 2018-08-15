@@ -41,7 +41,7 @@ public class Application {
 
         // Start visualization if -v is found in the arguments
         if(arg.getToVisualize())
-            application.startVisualization(args);
+            application.startVisualization(args,application);
         else {
             // Produce a schedule - create a new thread to do this.
             Schedule schedule = application.produceSchedule();
@@ -101,12 +101,13 @@ public class Application {
      * Visualizes the search for a solution schedule
      * To be run concurrently with produceSchedule()
      */
-    private void startVisualization(String[] args) {
+    private void startVisualization(String[] args,Application application) {
         //if (arguments.getToVisualize()) {
             //new Thread(() -> {
                 visualizer = new Visualizer();
                 //scheduler.addListener(visualizer);
                 visualizer.setCore(arguments.getNumCores());
+                visualizer.setApplication(application);
                 visualizer.startVisualization(args);
             //}).start();
         //}

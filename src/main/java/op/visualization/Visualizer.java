@@ -23,6 +23,7 @@ public class Visualizer extends Application{
     private static final int SCENE_HEIGHT = 620;
     private int coreNum;
     private Timer timer;
+    private op.Application application;
 
     /**
      * Starts the visualization GUI
@@ -48,6 +49,7 @@ public class Visualizer extends Application{
 
         controller = loader.getController();
         controller.setCoreNum(coreNum);
+        controller.setApplication(application);
 
         stage.setHeight(SCENE_HEIGHT);
         stage.setResizable(false);
@@ -86,6 +88,14 @@ public class Visualizer extends Application{
      */
     public void setCore(int coreNum){
         this.coreNum=coreNum;
+    }
+
+
+    /**
+     * Set the application object for scheduling
+     */
+    public void setApplication(op.Application application){
+        this.application=application;
     }
 
     @Override

@@ -52,6 +52,7 @@ public class GUIController {
     private Tile memoryTile;
 
 
+
     //axis of the Gantt chart
     final NumberAxis xAxis = new NumberAxis();
     final CategoryAxis yAxis = new CategoryAxis();
@@ -59,18 +60,32 @@ public class GUIController {
     //the customized Gantt chart
     final GanttChart<Number,String> chart = new GanttChart<Number,String>(xAxis,yAxis);
 
-
-
     private HashMap<Integer,XYChart.Series> seriesHashMap=new HashMap<>();
-
-
-    private boolean selected=false;
 
     private int coreNum=5;
 
+    private Application application;
 
+    private Thread uiThread;
 
+    /**
+     * Method to control the start button
+     */
 
+    @FXML
+    public void onStartBtnClicked(){
+        uiThread.start();
+    }
+
+    @FXML
+    public void onStopBtnClicked(){
+
+    }
+
+    @FXML
+    public void onPauseBtnClicked(){
+
+    }
 
 
     /**
@@ -106,6 +121,9 @@ public class GUIController {
      */
     @FXML
     public void initialize(){
+        uiThread=new Thread(()->{
+            //uiThread for multithreading
+        });
         schedulePane.setOpacity(0.0);
         embedGraph();
         //System.out.println(this.getClass().getResource("../view/Styles/ganttchart.css"));
@@ -213,4 +231,7 @@ public class GUIController {
     }
 
 
+    public void setApplication(Application application) {
+        this.application = application;
+    }
 }

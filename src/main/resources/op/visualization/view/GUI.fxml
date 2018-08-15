@@ -68,9 +68,9 @@
          <children>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="680.0" spacing="100.0">
                <children>
-                  <Button mnemonicParsing="false" prefWidth="80.0" stylesheets="@Styles/Button.css" text="Start" />
-                  <Button mnemonicParsing="false" prefWidth="80.0" stylesheets="@Styles/Button.css" text="Pause" />
-                  <Button mnemonicParsing="false" prefWidth="80.0" stylesheets="@Styles/Button.css" text="Stop" />
+                  <Button mnemonicParsing="false" onMouseClicked="#onStartBtnClicked" prefWidth="80.0" stylesheets="@Styles/Button.css" text="Start" />
+                  <Button mnemonicParsing="false" onMouseClicked="#onPauseBtnClicked" prefWidth="80.0" stylesheets="@Styles/Button.css" text="Pause" />
+                  <Button mnemonicParsing="false" onMouseClicked="#onStopBtnClicked" prefWidth="80.0" stylesheets="@Styles/Button.css" text="Stop" />
                </children>
             </HBox>
          </children>
