@@ -1,6 +1,8 @@
 package op.algorithm;
 
 import op.algorithm.bound.CostFunction;
+import op.algorithm.prune.Pruner;
+import op.algorithm.prune.PrunerManager;
 import op.model.Schedule;
 
 import java.util.List;
@@ -21,7 +23,7 @@ public class DFSParaRunnable extends DFSScheduler implements Runnable {
      * @param p             The Pruner implementation to be used in the scheduling algorithm
      * @param f             the cost function implementation to use for this scheduler
      */
-    public DFSParaRunnable(int numProcessors, Pruner p, List<CostFunction> cf, Stack<Schedule> s) {
+    public DFSParaRunnable(int numProcessors, PrunerManager p, List<CostFunction> cf, Stack<Schedule> s) {
         super(numProcessors, p , cf);
         this.scheduleStack = s;
     }
@@ -33,6 +35,7 @@ public class DFSParaRunnable extends DFSScheduler implements Runnable {
     public Schedule produceSchedule(){
         // variables to keep track of the best schedule so far in the search
         int bestScheduleLength = Integer.MAX_VALUE;
+        PrunerManager pm = getPrunerManager();
 
         // start the search, and continue until all possible schedules have been processed
         while (!scheduleStack.isEmpty()) {
@@ -46,7 +49,7 @@ public class DFSParaRunnable extends DFSScheduler implements Runnable {
             } else {
                 // not a complete schedule so add children to the stack to be processed later
 
-                List<Schedule> pruned = getPruner().prune(getChildrenOfSchedule(currentSchedule), bestScheduleLength, getNumProcessors());
+                List<Schedule> pruned = pm.execute(getChildrenOfSchedule(currentSchedule), bestScheduleLength, getNumProcessors());
                 for (Schedule s: pruned){
                     if (costFunctionIsPromising(s, bestScheduleLength)) {
                         scheduleStack.push(s);

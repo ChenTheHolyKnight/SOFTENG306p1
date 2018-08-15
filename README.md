@@ -28,19 +28,16 @@ library, the build can take a couple minutes to package dependencies into the ja
 
 ## CLI Usage
 ```
-Usage:  java -jar Scheduler.jar [path-to-DOT-file] [Number-of-processors] [-options]
-
-where options include:
-    -p <numCores>       Choose the number of computer cores to run the algorithm on,
-                        where <numCores> is the number of cores. 
-                        (default is 1)
-  
-    -v                  Shows a visualization of the algorithm while it is running.
-                        (may slow down performance)
-  
-    -o <name>           Sets output name of the output DOT file, where <name> is the 
-                        name of the output file.
-                        (default is "[path-to-DOT-file]-output.dot")
+Usage: java -jar scheduler.jar <INPUT GRAPH FILENAME> <NUMBER OF PROCESSORS> [OPTIONS]
+ -a <arg>   the algorithm implementation to use for scheduling:
+            parallel | dfs | astar | greedy | simple
+ -f <arg>   comma-separated list of cost functions to be used.
+            Acceptable values: bl | it
+ -o <arg>   name of output file (default is INPUT-output.dot)
+ -p <arg>   number of cores to execute program on (default is 1 core)
+ -P <arg>   comma-separated list of pruners to be used.
+            Acceptable values: es | it | ne
+ -v         visualise the search
 ```
 
 
