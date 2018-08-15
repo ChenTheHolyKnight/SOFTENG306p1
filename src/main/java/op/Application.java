@@ -103,12 +103,12 @@ public class Application {
      */
     private void startVisualization(String[] args) {
         //if (arguments.getToVisualize()) {
-            new Thread(() -> {
+            //new Thread(() -> {
                 visualizer = new Visualizer();
                 //scheduler.addListener(visualizer);
                 visualizer.setCore(arguments.getNumCores());
                 visualizer.startVisualization(args);
-            }).start();
+            //}).start();
         //}
 
     }

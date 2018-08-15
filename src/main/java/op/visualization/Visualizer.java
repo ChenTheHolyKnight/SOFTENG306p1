@@ -47,9 +47,7 @@ public class Visualizer extends Application{
        // System.out.println(Visualizer.class.getResource("view/Styles/ganttchart.css"));
 
         controller = loader.getController();
-        controller.setScene(scene);
         controller.setCoreNum(coreNum);
-        controller.setPath(Visualizer.class.getResource("view/Styles/ganttchart.css"));
 
         stage.setHeight(SCENE_HEIGHT);
         stage.setResizable(false);

@@ -64,13 +64,10 @@ public class GUIController {
     private HashMap<Integer,XYChart.Series> seriesHashMap=new HashMap<>();
 
 
-    private Scene scene;
-
     private boolean selected=false;
 
     private int coreNum=5;
 
-    private URL path;
 
 
 
@@ -102,9 +99,7 @@ public class GUIController {
 
     }
 
-    public void setScene(Scene scene) {
-        this.scene = scene;
-    }
+
 
     /**
      * initialize the controller
@@ -217,10 +212,5 @@ public class GUIController {
         //chart.getData().add(series);
     }
 
-    /**
-     * set the css path
-     */
-    public void setPath(URL path){
-        this.path=path;
-    }
+
 }
