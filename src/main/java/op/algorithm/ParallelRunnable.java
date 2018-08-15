@@ -31,12 +31,13 @@ public class ParallelRunnable extends DFSScheduler implements Runnable {
 
     @Override
     public void run() {
-        produceSchedule();
+        bestSchedule = produceSchedule();
     }
     public Schedule produceSchedule(){
         // variables to keep track of the best schedule so far in the search
         int bestScheduleLength = Integer.MAX_VALUE;
         PrunerManager pm = getPrunerManager();
+        CostFunctionManager cfm = getCostFunctionManager();
 
         // start the search, and continue until all possible schedules have been processed
         while (!scheduleStack.isEmpty()) {
@@ -52,7 +53,7 @@ public class ParallelRunnable extends DFSScheduler implements Runnable {
 
                 List<Schedule> pruned = pm.execute(getChildrenOfSchedule(currentSchedule));
                 for (Schedule s: pruned){
-                    boolean costFunctionIsPromising = super.getCostFunctionManager().calculate(s) < bestScheduleLength;
+                    boolean costFunctionIsPromising = cfm.calculate(s) < bestScheduleLength;
                     if (costFunctionIsPromising) {
                         scheduleStack.push(s);
                     }
