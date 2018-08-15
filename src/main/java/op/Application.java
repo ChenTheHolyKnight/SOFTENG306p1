@@ -95,7 +95,6 @@ public class Application {
         System.out.println("Schedule calculated in:\t" + (System.currentTimeMillis()-startTime) + "ms");
 
         return schedule;
-
     }
 
     /**

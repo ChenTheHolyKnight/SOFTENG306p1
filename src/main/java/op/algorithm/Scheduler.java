@@ -18,6 +18,7 @@ public abstract class Scheduler {
      * Enum specifying all available scheduling algorithm implementations
      */
     public enum Implementation {
+        PARA("parallel"),
         DFS("dfs"),
         ASTAR("astar"),
         SIMPLE("simple"),

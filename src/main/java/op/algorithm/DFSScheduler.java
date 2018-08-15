@@ -47,7 +47,6 @@ public class DFSScheduler extends BranchAndBoundScheduler {
                 if (currentSchedule.getLength() < bestScheduleLength) {
                     bestSchedule = currentSchedule;
                     bestScheduleLength = currentSchedule.getLength();
-                    System.out.println("New best: " + bestScheduleLength);
                 }
             } else {
                 // not a complete schedule so add children to the stack to be processed later
@@ -69,7 +68,7 @@ public class DFSScheduler extends BranchAndBoundScheduler {
     // returns true if the cost function is less than the known best length
     // returns false if the cost function is greater than or equal to the known best, because all schedules based on
     // this schedule are guaranteed to be worse than, or no better than our known best.
-    private boolean costFunctionIsPromising(Schedule s, int bestSoFar) {
+    protected boolean costFunctionIsPromising(Schedule s, int bestSoFar) {
 
         List<CostFunction> costFunctions = super.getCostFunctions();
 
