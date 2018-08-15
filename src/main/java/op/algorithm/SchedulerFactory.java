@@ -6,7 +6,6 @@ import op.algorithm.bound.CostFunctionManager;
 import op.algorithm.bound.EmptyCostFunction;
 import op.algorithm.bound.IdleTimeFunction;
 import op.algorithm.prune.PrunerManager;
-import op.model.Schedule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +35,10 @@ public class SchedulerFactory {
                 switch (pruner) {
                     case EQUIVALENT_SCHEDULE:
                         prunerManager.addEquivalentSchedulePruner();
-                    	break;
+                        break;
                     case NODE_EQUIVALENCE:
                     	prunerManager.addNodeEquivalencePruner();
+                    	break;
                 }
             }
         }
@@ -60,6 +60,9 @@ public class SchedulerFactory {
         // construct the scheduler
         Scheduler scheduler = null;
         switch (a) {
+            case PARA:
+                scheduler = new ParallelManager(numProcessors, prunerManager, costFuncConcrete, numCores);
+                break;
             case DFS:
                 scheduler = new DFSScheduler(numProcessors, prunerManager, costFunctionManager);
                 break;

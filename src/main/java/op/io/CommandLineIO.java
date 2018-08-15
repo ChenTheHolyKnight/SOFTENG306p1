@@ -44,7 +44,7 @@ public class CommandLineIO {
     private static final String OUTPUT_FILENAME_DESCRIPTION = "name of output file (default is INPUT-output.dot)";
     private static final String ALGORITHM_DESCRIPTION =
             "the algorithm implementation to use for scheduling:" +
-                    System.lineSeparator() + "dfs | astar | greedy | simple";
+                    System.lineSeparator() + "parallel | dfs | astar | greedy | simple";
     private static final String COST_FUNC_DESCRIPTION = "comma-separated list of cost functions to be used."
             + System.lineSeparator() + "Acceptable values: bl | it ";
     private static final String PRUNER_DESCRIPTION = "Pruner to be used."
@@ -253,7 +253,7 @@ public class CommandLineIO {
     
     private List<PrunerManager.Pruners> getPruners(CommandLine cmd) throws InvalidUserInputException {
     	String[] values = cmd.getOptionValues(PRUNER_FLAG);
-        List<PrunerManager.Pruners> funcs = new ArrayList<>();    	
+        List<PrunerManager.Pruners> funcs = new ArrayList<>();
     	if (values == null) {
     		return funcs;
     	} else { 
