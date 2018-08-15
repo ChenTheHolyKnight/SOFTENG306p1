@@ -47,7 +47,7 @@ public class CommandLineIO {
                     System.lineSeparator() + "dfs | astar | greedy | simple";
     private static final String COST_FUNC_DESCRIPTION = "comma-separated list of cost functions to be used."
             + System.lineSeparator() + "Acceptable values: bl | it ";
-    private static final String PRUNER_DESCRIPTION = "comma-separated list of pruners to be used."
+    private static final String PRUNER_DESCRIPTION = "Pruner to be used."
     		+ System.lineSeparator() + "Acceptable values: es | ne";
 
     private static final String HELP_MESSAGE =
@@ -110,7 +110,7 @@ public class CommandLineIO {
         
         // build and set the pruner option
         Option prunerOption = Option.builder(PRUNER_FLAG)
-        		.hasArgs()
+        		.hasArg()
                 .valueSeparator(',')
         		.required(false)
         		.desc(PRUNER_DESCRIPTION)
