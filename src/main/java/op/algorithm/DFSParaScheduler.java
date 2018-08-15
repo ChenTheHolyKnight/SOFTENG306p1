@@ -9,7 +9,7 @@ import java.util.Stack;
 import java.util.concurrent.*;
 
 public class DFSParaScheduler extends DFSScheduler {
-    private final int numThreads;
+    private int numThreads;
     /**
      * Instantiates a DFSScheduler with the specified params
      *
@@ -26,21 +26,15 @@ public class DFSParaScheduler extends DFSScheduler {
      * @return a schedule with the optimal length
      */
     @Override
-    public Schedule produceSchedule() {/*
-     *   Run sequentially on 1 thread
-     *   when stack in thread reaches size of number of processors
-     *   create new threads (n-1, continue using existing thread)
-     *   those threads run to completion
-     *   compare results of threads
-     */
+    public Schedule produceSchedule() {
         List<Integer> schedulesSeen = new ArrayList<>();
         Schedule bestSchedule = new Schedule();
         Stack<Schedule> scheduleStack = new Stack<Schedule>();
         scheduleStack.push(bestSchedule);
         int bestScheduleLength = Integer.MAX_VALUE;
-        int threadSize = 8;
+        numThreads = 30;
         // run sequentially until our stack is big enough to run in parallel
-        while(scheduleStack.size()< threadSize){
+        while(scheduleStack.size()< numThreads){
             //make one thread and run it
             Schedule currentSchedule = scheduleStack.pop();
             schedulesSeen.add(currentSchedule.hashCode());
@@ -60,18 +54,24 @@ public class DFSParaScheduler extends DFSScheduler {
                 }
             }
         }
+        Stack<Schedule>[] threadStacks = new Stack[numThreads]; // make stacks for the threads to work from
+        for (int i = 0; i < numThreads; i++){
+            threadStacks[i] = new Stack<>();
+        }
+        int scheduleSize = scheduleStack.size(); // for loop iteration safety
+        for (int i = 0; i < scheduleSize; i++){
+            threadStacks[i%numThreads].push(scheduleStack.pop());
+        }
         // initiate threads and run them in parallel
-        ExecutorService executor = Executors.newFixedThreadPool(threadSize);
-        DFSParaRunnable[] runnables = new DFSParaRunnable[threadSize];
-        for (int i = 0; i<threadSize; i++){
-            Schedule currentSchedule = scheduleStack.pop();
-            runnables[i] = new DFSParaRunnable(getNumProcessors(), getPruner(), getCostFunction(), currentSchedule);
+        ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+        DFSParaRunnable[] runnables = new DFSParaRunnable[numThreads];
+        for (int i = 0; i<numThreads; i++){
+            runnables[i] = new DFSParaRunnable(getNumProcessors(), getPruner(), getCostFunction(), threadStacks[i]);
             executor.execute(runnables[i]);
         }
-        System.out.println(scheduleStack.size());
         executor.shutdown();
-        while(!executor.isTerminated()){}
-        for (int i = 0; i<threadSize; i++) { // get the best schedule from each thread
+        while(!executor.isTerminated()){} // wait for runnables to finish
+        for (int i = 0; i<numThreads; i++) { // get the best schedule from each thread
             if(runnables[i].getSchedule() != null) { // there is a chance that thread did not reach a complete solution
                 System.out.println(runnables[i].getSchedule());
                 if (runnables[i].getSchedule().getLength() < bestScheduleLength) {

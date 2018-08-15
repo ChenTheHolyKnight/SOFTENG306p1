@@ -8,7 +8,7 @@ import java.util.Stack;
 
 public class DFSParaRunnable extends DFSScheduler implements Runnable {
 
-    private Schedule schedule;
+    private Stack<Schedule> scheduleStack;
     private Schedule bestSchedule;
     /**
      * Creates a BranchAndBoundScheduler instance with the specified Pruner implementation.
@@ -17,9 +17,9 @@ public class DFSParaRunnable extends DFSScheduler implements Runnable {
      * @param p             The Pruner implementation to be used in the scheduling algorithm
      * @param f             the cost function implementation to use for this scheduler
      */
-    public DFSParaRunnable(int numProcessors, Pruner p, CostFunction f, Schedule s) {
+    public DFSParaRunnable(int numProcessors, Pruner p, CostFunction f, Stack<Schedule> s) {
         super(numProcessors, p , f);
-        this.schedule = s;
+        this.scheduleStack = s;
     }
 
     @Override
@@ -31,8 +31,8 @@ public class DFSParaRunnable extends DFSScheduler implements Runnable {
         int bestScheduleLength = Integer.MAX_VALUE;
 
         // initialize stack with the empty schedule
-        Stack<Schedule> scheduleStack =  new Stack<>();
-        scheduleStack.push(schedule);
+        //Stack<Schedule> scheduleStack =  new Stack<>();
+        //scheduleStack.push(schedule);
         // start the search, and continue until all possible schedules have been processed
         while (!scheduleStack.isEmpty()) {
             Schedule currentSchedule = scheduleStack.pop();
