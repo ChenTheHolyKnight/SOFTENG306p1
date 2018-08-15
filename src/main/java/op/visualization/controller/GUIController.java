@@ -51,6 +51,15 @@ public class GUIController {
     @FXML
     private Tile memoryTile;
 
+    @FXML
+    private Button startBtn;
+
+    @FXML
+    private Button pauseBtn;
+
+    @FXML
+    private Button stopBtn;
+
 
 
     //axis of the Gantt chart
@@ -74,17 +83,34 @@ public class GUIController {
 
     @FXML
     public void onStartBtnClicked(){
-        uiThread.start();
+        /*uiThread.start();
+
+
+        if(!uiThread.isAlive()){
+
+        }*/
+        stopBtn.setDisable(false);
+        pauseBtn.setDisable(false);
+        startBtn.setDisable(true);
     }
 
     @FXML
     public void onStopBtnClicked(){
-
+        //uiThread.interrupt();
+        stopBtn.setDisable(true);
+        pauseBtn.setDisable(true);
+        startBtn.setDisable(false);
     }
 
     @FXML
     public void onPauseBtnClicked(){
-
+        pauseBtn.setDisable(true);
+        startBtn.setDisable(false);
+        /*try {
+            uiThread.wait();
+        } catch (InterruptedException e) {
+            System.out.println("Wait fails");
+        }*/
     }
 
 
@@ -128,6 +154,8 @@ public class GUIController {
         embedGraph();
         //System.out.println(this.getClass().getResource("../view/Styles/ganttchart.css"));
         initializeGanttChart();
+        stopBtn.setDisable(true);
+        pauseBtn.setDisable(true);
     }
 
     /**
