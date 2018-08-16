@@ -23,6 +23,7 @@ import op.model.Task;
 import op.model.TaskGraph;
 import op.visualization.GanttChart;
 import op.Application;
+import op.visualization.VisualizerData;
 import op.visualization.messages.UpdateMessage;
 import org.controlsfx.control.ToggleSwitch;
 import org.graphstream.ui.fx_viewer.FxDefaultView;
@@ -33,10 +34,7 @@ import scala.xml.Null;
 
 import java.net.URL;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * The controller class to control the GUI*/
@@ -81,21 +79,18 @@ public class GUIController implements SchedulerListener {
     private Label scheduledTasks;
 
 
-
     //axis of the Gantt chart
     final NumberAxis xAxis = new NumberAxis();
     final CategoryAxis yAxis = new CategoryAxis();
-
     //the customized Gantt chart
     final GanttChart<Number,String> chart = new GanttChart<Number,String>(xAxis,yAxis);
-
     private HashMap<Integer,XYChart.Series> seriesHashMap=new HashMap<>();
-
     private int coreNum=8;
 
     private Application application;
-
     private Thread uiThread;
+
+    private VisualizerData visualizerData;
 
     /**
      * Method to control the start button
@@ -187,6 +182,7 @@ public class GUIController implements SchedulerListener {
         /*uiThread=new Thread(()->{
             //uiThread for multithreading
         });*/
+        visualizerData = new VisualizerData();
 
 
         schedulePane.setOpacity(0.0);
@@ -199,19 +195,15 @@ public class GUIController implements SchedulerListener {
 
         Application app = Application.getInstance();
         Scheduler s = app.getScheduler();
-        s.addListener(this); // register this controller as a listener
+        s.addListener(visualizerData); // register the visualization data as a listener
 
+        // start running algorithm
         javafx.concurrent.Task<Void> task=new javafx.concurrent.Task<Void>() {
             private Schedule schedule;
             @Override
             protected Void call() {
                 System.out.println("start");
-                //System.out.println(application==null);
                 schedule = app.produceSchedule();
-//                Platform.runLater(()->{
-//                    mapScheduleToGanttChart(schedule);
-//                });
-                //mapScheduleToGanttChart(schedule);
                 return null;
             }
 
@@ -220,8 +212,36 @@ public class GUIController implements SchedulerListener {
                 Application.getInstance().writeDot(schedule);
             }
         };
-        Thread th = new Thread(task);
-        th.start();
+        new Thread(task).start();
+
+        // arrange for controller to query visualization data instance often and update the gui
+        // based on the data it reads
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                long numPrunedTrees = visualizerData.getNumPrunedTrees();
+                long numNodesVisited = visualizerData.getNumNodesVisited();
+
+                // schedule the updates to run on the GUI thread
+                Platform.runLater(() -> {
+                    prunedTrees.setText(Long.toString(numPrunedTrees));
+                    nodesVisisted.setText(Long.toString(numNodesVisited));
+                });
+            }
+        }, 0, 100);
+
+        // best schedules update far slower than the counters, so update every half second
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Schedule newSchedule = visualizerData.getNewestSchedule();
+                int bestScheduleLength = visualizerData.getBestScheduleLength();
+                Platform.runLater(() -> {
+                    bestLength.setText(Integer.toString(bestScheduleLength));
+                    mapScheduleToGanttChart(newSchedule);
+                });
+            }
+        }, 0, 500);
     }
 
     /**

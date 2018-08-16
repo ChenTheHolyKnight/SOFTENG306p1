@@ -21,6 +21,7 @@ public abstract class BranchAndBoundScheduler extends Scheduler {
     // a branch and bound scheduler may use any combination of cost functions.
     private CostFunctionManager costFunctionManager;
     private AtomicInteger nodesVisited;
+    private AtomicInteger prunedTrees;
 
     /**
      * Creates a BranchAndBoundScheduler instance with the specified Pruner implementation.
@@ -33,6 +34,7 @@ public abstract class BranchAndBoundScheduler extends Scheduler {
         this.prunerManager = p;
         this.costFunctionManager = cfm;
         this.nodesVisited = new AtomicInteger();
+        this.prunedTrees = new AtomicInteger();
     }
 
     /**
@@ -41,6 +43,14 @@ public abstract class BranchAndBoundScheduler extends Scheduler {
      */
     protected int addToNodesVisited(int toAdd) {
         return nodesVisited.addAndGet(toAdd);
+    }
+
+    /**
+     * Allows subclasses to update the number of pruned sub trees
+     * @return the updated value of pruned sub trees
+     */
+    protected int addToPrunedTrees(int toAdd) {
+        return prunedTrees.addAndGet(toAdd);
     }
 
     /**
@@ -83,6 +93,15 @@ public abstract class BranchAndBoundScheduler extends Scheduler {
     protected void fireNumPrunedTreesUpdate(int numPrunedTrees) {
         for (SchedulerListener listener : getListeners()) {
             listener.updateNumPrunedTrees(numPrunedTrees);
+        }
+    }
+
+    /**
+     * Informs registered listeners of a new best schedule length
+     */
+    protected void fireBestScheduleLengthUpdate(int bestLength) {
+        for (SchedulerListener listener : getListeners()) {
+            listener.updateBestScheduleLength(bestLength);
         }
     }
 
