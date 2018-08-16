@@ -1,5 +1,11 @@
 package op.model;
 
+import op.algorithm.Scheduler;
+import op.algorithm.bound.CostFunctionManager;
+import op.algorithm.prune.PrunerManager;
+
+import java.util.List;
+
 /**
  * Class to store the arguments that the user has input to run the program with.
  * @author Victoria Skeggs, Ravid Aharon
@@ -11,6 +17,9 @@ public class Arguments {
     private int numCores;
     private boolean toVisualize;
     private String outputGraphFilename;
+    private Scheduler.Implementation algorithm;
+    private List<CostFunctionManager.Functions> costFunctions;
+    private List<PrunerManager.Pruners> pruners;
 
     /**
      *
@@ -51,6 +60,22 @@ public class Arguments {
     public String getOutputGraphFilename() {
         return outputGraphFilename;
     }
+
+    /**
+     *
+     * @return the algorithm implementation to run
+     */
+    public Scheduler.Implementation getAlgorithm() { 
+    	return algorithm; 
+    }
+
+    public List<CostFunctionManager.Functions> getCostFunctions() { 
+    	return costFunctions; 
+    }
+    
+    public List<PrunerManager.Pruners> getPruners() {
+    	return pruners;
+    }
     
     /**
      * Creates a new Arguments object.
@@ -59,12 +84,22 @@ public class Arguments {
      * @param numCores
      * @param toVisualize
      * @param outputFilename
+     * @param algorithm the specified algorithm to run
+     * @param costFunctions the specified cost functions to use
+     * @param pruners the pruners to use
      */
-    public Arguments(String inputFilename, int numProcessors, int numCores, boolean toVisualize, String outputFilename) {
+    public Arguments(String inputFilename, int numProcessors, int numCores,
+                     boolean toVisualize, String outputFilename,
+                     Scheduler.Implementation algorithm, 
+                     List<CostFunctionManager.Functions> costFunctions, 
+                     List<PrunerManager.Pruners> pruners) {
         this.inputGraphFilename = inputFilename;
         this.numProcessors = numProcessors;
         this.numCores = numCores;
         this.toVisualize = toVisualize;
         this.outputGraphFilename = outputFilename;
+        this.algorithm = algorithm;
+        this.costFunctions = costFunctions;
+        this.pruners = pruners;
     }
 }

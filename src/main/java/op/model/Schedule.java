@@ -12,7 +12,8 @@ public class Schedule {
 
     private HashMap<Integer,List<ScheduledTask>> processorMap; // stores all scheduled tasks on a given processor
     private HashMap<Task,ScheduledTask> taskMap; // stores the scheduled representation of tasks
-
+    
+    private ScheduledTask mostRecentScheduledTask;
     /**
      * Constructs an empty schedule instance
      */
@@ -38,7 +39,8 @@ public class Schedule {
         for (int i : this.processorMap.keySet()) {
             this.processorMap.put(i, new ArrayList<ScheduledTask>(this.processorMap.get(i)));
         }
-
+        
+        this.mostRecentScheduledTask = stNew;
         this.addScheduledTask(stNew);
     }
   
@@ -83,6 +85,14 @@ public class Schedule {
      */
     public ScheduledTask getScheduledTask(Task t) {
         return taskMap.get(t);
+    }
+    
+    /**
+     * Gets the latest ScheduledTask added to this schedule
+     * @return the latest ShceduledTask added to the schedule
+     */
+    public ScheduledTask getMostRecentScheduledTask(){
+    	return mostRecentScheduledTask;
     }
 
     /**
@@ -170,6 +180,7 @@ public class Schedule {
 	/**
 	 * gets the hashcode for this schedule.
 	 * The hashcode is calculated based off all the scheduled tasks on all processors.
+	 * If two Schedules have the same hashcode, they are considered equal. 
 	 */
 	@Override 
 	public int hashCode() {

@@ -1,7 +1,15 @@
 package op.io;
 
+import op.algorithm.Scheduler;
+import op.algorithm.bound.CostFunction;
+import op.algorithm.bound.CostFunctionManager;
+import op.algorithm.prune.PrunerManager;
+
 import org.apache.commons.cli.*;
 import op.model.Arguments;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -15,10 +23,15 @@ public class CommandLineIO {
     private static final String NUM_CORES_FLAG = "p";
     private static final String TO_VISUALIZE_FLAG = "v";
     private static final String OUTPUT_FILENAME_FLAG = "o";
+    private static final String ALGORITHM_FLAG = "a";
+    private static final String COST_FUNCTION_FLAG = "f";
+    private static final String PRUNER_FLAG = "P";
 
     // Default values for user options
     private static final int NUM_CORES_DEFAULT = 1;
     private static final String OUTPUT_FILENAME_APPENDER_DEFAULT = "-output.dot";
+    private static final Scheduler.Implementation ALGORITHM_IMPLEMENTATION = Scheduler.Implementation.DFS;
+    private static final List<CostFunctionManager.Functions> COST_FUNCTIONS = new ArrayList<>(); // no cost funcs is default
 
     // Order of command line arguments with no flags
     private static final short INPUT_FILENAME_POSITION = 0;
@@ -29,6 +42,13 @@ public class CommandLineIO {
             "number of cores to execute program on (default is 1 core)";
     private static final String TO_VISUALIZE_DESCRIPTION = "visualise the search";
     private static final String OUTPUT_FILENAME_DESCRIPTION = "name of output file (default is INPUT-output.dot)";
+    private static final String ALGORITHM_DESCRIPTION =
+            "the algorithm implementation to use for scheduling:" +
+                    System.lineSeparator() + "parallel | dfs | astar | greedy | simple";
+    private static final String COST_FUNC_DESCRIPTION = "comma-separated list of cost functions to be used."
+            + System.lineSeparator() + "Acceptable values: bl | it ";
+    private static final String PRUNER_DESCRIPTION = "Pruner to be used."
+    		+ System.lineSeparator() + "Acceptable values: es | ne";
 
     private static final String HELP_MESSAGE =
             "<INPUT GRAPH FILENAME> <NUMBER OF PROCESSORS> [OPTIONS]";
@@ -76,6 +96,26 @@ public class CommandLineIO {
         addOption(NUM_CORES_FLAG, true, NUM_CORES_DESCRIPTION, false);
         addOption(TO_VISUALIZE_FLAG, false, TO_VISUALIZE_DESCRIPTION, false);
         addOption(OUTPUT_FILENAME_FLAG, true, OUTPUT_FILENAME_DESCRIPTION, false);
+        addOption(ALGORITHM_FLAG, true, ALGORITHM_DESCRIPTION, false);
+
+        // the next options are more complex and must use the OptionsBuilder.
+        // build and set cost functions option
+        Option costFuncOption = Option.builder(COST_FUNCTION_FLAG)
+                .hasArgs()
+                .valueSeparator(',')
+                .required(false)
+                .desc(COST_FUNC_DESCRIPTION)
+                .build();
+        options.addOption(costFuncOption);
+        
+        // build and set the pruner option
+        Option prunerOption = Option.builder(PRUNER_FLAG)
+        		.hasArg()
+                .valueSeparator(',')
+        		.required(false)
+        		.desc(PRUNER_DESCRIPTION)
+        		.build();
+        options.addOption(prunerOption);
     }
 
     /**
@@ -107,11 +147,15 @@ public class CommandLineIO {
         String inputFilename = getInputFilename(cmd);
         String outputFilename = getOutputFilename(inputFilename, cmd);
         int numProcessors = getNumProcessors(cmd);
+        Scheduler.Implementation algorithm = getAlgorithm(cmd);
+        List<CostFunctionManager.Functions> costFunctions = getCostFunctions(cmd);
+        List<PrunerManager.Pruners> pruners = getPruners(cmd);
 
-        return new Arguments(inputFilename, numProcessors, numCores, toVisualize, outputFilename);
+        return new Arguments(inputFilename, numProcessors, numCores,
+                toVisualize, outputFilename, algorithm, costFunctions, pruners);
     }
 
-    private int getNumCores(CommandLine cmd) throws InvalidUserInputException {
+	private int getNumCores(CommandLine cmd) throws InvalidUserInputException {
         String numCoresRaw = cmd.getOptionValue(NUM_CORES_FLAG);
         if (numCoresRaw == null) {
             return NUM_CORES_DEFAULT;
@@ -167,6 +211,71 @@ public class CommandLineIO {
         return numProcessors;
     }
 
+    private Scheduler.Implementation getAlgorithm(CommandLine cmd) throws InvalidUserInputException {
+        String alg = cmd.getOptionValue(ALGORITHM_FLAG);
+        if (alg == null) {
+            return ALGORITHM_IMPLEMENTATION; // return default value
+        } else {
+            for (Scheduler.Implementation a : Scheduler.Implementation.values()) {
+                if (alg.equals(a.getCmdRepresentation())) {
+                    return a;
+                }
+            }
+            printHelpAndThrowError("Specified algorithm is not available. See available values above.");
+            return null;
+        }
+    }
+
+    private List<CostFunctionManager.Functions> getCostFunctions(CommandLine cmd) throws InvalidUserInputException {
+        String[] values = cmd.getOptionValues(COST_FUNCTION_FLAG);
+        List<CostFunctionManager.Functions> funcs = new ArrayList<>();
+        if (values == null) {
+            return funcs; // empty list to represent no cost functions specified
+        } else {
+            for (String func : values) {
+                // add the appropriate cost function to the list, or throw an error if unacceptable value
+                boolean validSpecifier = false;
+                for (CostFunctionManager.Functions cf : CostFunctionManager.Functions.values()) {
+                    if (func.equals(cf.getCmdRepresentation())) {
+                        funcs.add(cf);
+                        validSpecifier = true;
+                        break;
+                    }
+                }
+                if (!validSpecifier) {
+                    printHelpAndThrowError("One or more of the cost function values is not supported."
+                            + " See correct usage above.");
+                }
+            }
+            return funcs;
+        }
+    }
+    
+    private List<PrunerManager.Pruners> getPruners(CommandLine cmd) throws InvalidUserInputException {
+    	String[] values = cmd.getOptionValues(PRUNER_FLAG);
+        List<PrunerManager.Pruners> funcs = new ArrayList<>();
+    	if (values == null) {
+    		return funcs;
+    	} else { 
+    		for (String func : values) {
+                // add the appropriate cost function to the list, or throw an error if unacceptable value
+                boolean validSpecifier = false;
+                for (PrunerManager.Pruners pruner : PrunerManager.Pruners.values()) {
+                    if (func.equals(pruner.getCmdRepresentation())) {
+                        funcs.add(pruner);
+                        validSpecifier = true;
+                        break;
+                    }
+                }
+                if (!validSpecifier) {
+                    printHelpAndThrowError("One or more of the pruner values is not supported."
+                            + " See correct usage above.");
+                }
+            }
+            return funcs;
+        }
+    }
+    
     /**
      * Checks the user has entered the correct number of arguments
      * @param cmd represents the command line

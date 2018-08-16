@@ -1,10 +1,9 @@
 package op;
 
 import op.algorithm.*;
-import op.algorithm.bound.BottomLevelFunction;
-import op.algorithm.bound.CombinedCostFunction;
-import op.algorithm.bound.EmptyCostFunction;
-import op.algorithm.bound.IdleTimeFunction;
+import op.algorithm.bound.CostFunction;
+import op.algorithm.bound.CostFunctionManager;
+import op.algorithm.prune.PrunerManager;
 import op.io.InvalidUserInputException;
 import op.model.Schedule;
 import op.io.CommandLineIO;
@@ -26,7 +25,7 @@ public class Application {
 	private Visualizer visualizer;
 	
     public static void main(String[] args) {
-
+    	
         Application application = new Application();
 
         // Read from command line
@@ -84,17 +83,35 @@ public class Application {
     /**
      * Produces a scheduler to schedule tasks on
      */
-    private void createScheduler() {
-        //scheduler = new DFSScheduler(arguments.getNumProcessors(), arguments.getToVisualize(), new EmptyPruner(),
-        //        new IdleTimeFunction(arguments.getNumProcessors()));
-        //scheduler = new DFSScheduler(arguments.getNumProcessors(), arguments.getToVisualize(), new EmptyPruner(),
-        //        new BottomLevelFunction());
-        //scheduler = new DFSScheduler(arguments.getNumProcessors(), arguments.getToVisualize(), new EmptyPruner(),
-        //        new EmptyCostFunction());
-        scheduler = new DFSScheduler(arguments.getNumProcessors(), arguments.getToVisualize(), new EmptyPruner(),
-                new CombinedCostFunction(arguments.getNumProcessors()));
+    private Schedule produceSchedule() {
+        SchedulerFactory sf = new SchedulerFactory();
+        Scheduler s = sf.createScheduler(
+                arguments.getAlgorithm(),
+                arguments.getNumProcessors(),
+                arguments.getNumCores(),
+                arguments.getCostFunctions(),
+                arguments.getPruners()
+        );
 
-        startTime = System.currentTimeMillis();
+        System.out.println("Starting " + arguments.getAlgorithm().getCmdRepresentation()
+                            + " scheduler implementation...");
+        System.out.println("Using cost functions: ");
+        for (CostFunctionManager.Functions cf : arguments.getCostFunctions()) {
+            System.out.println(cf);
+        }
+        System.out.println("Using pruners: ");
+        for (PrunerManager.Pruners p : arguments.getPruners()) {
+            System.out.println(p);
+        }
+
+        long startTime = System.currentTimeMillis();
+
+        Schedule schedule = s.produceSchedule();
+
+        System.out.println("Schedule length:\t" + schedule.getLength());
+        System.out.println("Schedule calculated in:\t" + (System.currentTimeMillis()-startTime) + "ms");
+
+        return schedule;
     }
 
     /**
