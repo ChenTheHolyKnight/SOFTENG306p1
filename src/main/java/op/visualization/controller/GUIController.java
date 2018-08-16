@@ -10,6 +10,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.StackedBarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
@@ -63,6 +64,18 @@ public class GUIController {
     @FXML
     private Button stopBtn;
 
+    @FXML
+    private Label bestLength;
+
+    @FXML
+    private Label prunedTrees;
+
+    @FXML
+    private Label nodesVisisted;
+
+    @FXML
+    private Label scheduledTasks;
+
 
 
     //axis of the Gantt chart
@@ -92,6 +105,8 @@ public class GUIController {
         if(!uiThread.isAlive()){
 
         }*/
+        this.setPercentageTile(3,1);
+        this.setStats(1,2,3,4);
         stopBtn.setDisable(false);
         pauseBtn.setDisable(false);
         startBtn.setDisable(true);
@@ -107,6 +122,8 @@ public class GUIController {
 
     @FXML
     public void onPauseBtnClicked(){
+        this.setPercentageTile(2,1);
+        this.setStats(5,6,7,8);
         pauseBtn.setDisable(true);
         startBtn.setDisable(false);
         /*try {
@@ -262,17 +279,26 @@ public class GUIController {
 
         //chart.getData().add(series);
     }
-    
+
     /**
      * The method needs to be called in the scheule
      */
-    public void setPercentageTile(Schedule schedule){
-        double totalNum=TaskGraph.getInstance().getAllTasks().size();
-        double scheduledTaskNum=schedule.getAllScheduledTasks().size();
-        double percentage=scheduledTaskNum/totalNum*100;
+    public void setPercentageTile(int totalTasks,int scheduledTasks){ ;
+        double percentage=(double) scheduledTasks/(double) totalTasks*100;
         percentageTile.setValue(percentage);
-
     }
+
+
+    /**
+     * The method to get the stats ps: feel free to change the params
+     */
+    public void setStats(int stNum,int nvNum,int blNum,int ptNum){
+        scheduledTasks.setText(Integer.toString(stNum));
+        nodesVisisted.setText(Integer.toString(nvNum));
+        bestLength.setText(Integer.toString(blNum));
+        prunedTrees.setText(Integer.toString(ptNum));
+    }
+
 
 
     public void setApplication(Application application) {
