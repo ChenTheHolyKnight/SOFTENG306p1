@@ -55,7 +55,10 @@ public class DotIO {
     public DotIO(){    }
 
     /**
-     * New revised dotIn method that will replace previous implementation. Major upgrades for robustness.
+     * Method that will replace previous implementation. Major upgrades for robustness.
+     *
+     * Takes a path containing the input DOT file, and initializes the TaskGraph singleton with
+     * information representing the task graph in the input file.
      * @param path The path of the dot file to read.
      * @throws IOException If there is a problem reading the file
      * @author Sam Broadhead
@@ -70,6 +73,9 @@ public class DotIO {
         Map<String, Integer> taskMap = new HashMap<>(); // keep a map of unbuilt tasks to allow updates
         Map<String[], Integer> depMap = new HashMap<>(); // keep a map of unbuilt deps to allow updates
 
+        Map<String,List<Dependency>> depOutMap = new HashMap<>(); // map of tasks and their outgoing dependencies
+        Map<String,List<Dependency>> depInMap = new HashMap<>(); // map of tasks and their outgoing dependencies
+
         BufferedReader br = new BufferedReader(new FileReader(path));
 
         while (((line = br.readLine()) != null) && (!line.contains(END_OF_GRAPH_MATCH))) {
@@ -82,7 +88,6 @@ public class DotIO {
                 taskMap.put(name, weight);
             }
             else if (line.matches(DEP_LINE_MATCH)) { // the line is a dependency line
-
                 String src = getStringMatch(DEP_SRC_TASK_MATCH, line);
                 String dst = getStringMatch(DEP_DST_TASK_MATCH, line);
 
@@ -103,25 +108,41 @@ public class DotIO {
 
         for (String[] keys: depMap.keySet()){ // build task and dependency objects.
             Task srcTask = new Task(keys[0],taskMap.get(keys[0]));
-
             if (!taskList.contains(srcTask)){ // if the task is not in the list, add it
                 taskList.add(srcTask);
             }
 
             Task dstTask = new Task(keys[1],taskMap.get(keys[1]));
-
             if (!taskList.contains(dstTask)){
                 taskList.add(dstTask);
             }
 
             depList.add(new Dependency(taskList.get(taskList.indexOf(srcTask)),taskList.get(taskList.indexOf(dstTask)),depMap.get(keys)));
         }
+        for (Dependency d : depList){
+            depOutMap.computeIfAbsent(d.getStartTask().getId(), k -> new ArrayList<>()); // build lists not yet built
+            depInMap.computeIfAbsent(d.getEndTask().getId(), k -> new ArrayList<>());
+
+            depOutMap.get(d.getStartTask().getId()).add(d); // add the dependency to the list for the respective tasks
+            depInMap.get(d.getEndTask().getId()).add(d);
+        }
         for (String key : taskMap.keySet()){ // build any tasks that have no ingoing or outgoing dependencies
             Task t = new Task(key,taskMap.get(key));
+
+            depInMap.computeIfAbsent(key, k -> new ArrayList<>()); // build any lists not yet build
+            depOutMap.computeIfAbsent(key, k -> new ArrayList<>());
+
             if (!taskList.contains(t)){ // if they aren't in the task list, add them
                 taskList.add(t);
             }
         }
+        for (Task t : taskList){ // add the dependencies to all tasks
+            t.addDependencies(depInMap.get(t.getId()),depOutMap.get(t.getId()));
+        }
+        for (Task t : taskList){ // generate bottom levels for all tasks
+            t.setBottomLevel();
+        }
+
         TaskGraph.initialize(taskList, title);
     }
 
