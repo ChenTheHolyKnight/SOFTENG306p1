@@ -23,7 +23,7 @@ public class Visualizer extends Application{
     private static final int SCENE_HEIGHT = 620;
     private int coreNum;
     private Timer timer;
-    private op.Application application;
+    //private op.Application application;
 
     /**
      * Starts the visualization GUI
@@ -48,8 +48,10 @@ public class Visualizer extends Application{
        // System.out.println(Visualizer.class.getResource("view/Styles/ganttchart.css"));
 
         controller = loader.getController();
+        //System.out.println(application.toString()+" core number "+coreNum);
         controller.setCoreNum(coreNum);
-        controller.setApplication(application);
+
+        //controller.setApplication(application);
 
         stage.setHeight(SCENE_HEIGHT);
         stage.setResizable(false);
@@ -94,9 +96,10 @@ public class Visualizer extends Application{
     /**
      * Set the application object for scheduling
      */
-    public void setApplication(op.Application application){
+    /*public void setApplication(op.Application application){
+        //System.out.println("setted");
         this.application=application;
-    }
+    }*/
 
     @Override
     public void stop(){

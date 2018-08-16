@@ -2,6 +2,7 @@ package op.visualization.controller;
 
 import eu.hansolo.tilesfx.Tile;
 import javafx.animation.FadeTransition;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -26,6 +27,7 @@ import org.graphstream.ui.fx_viewer.FxDefaultView;
 import org.graphstream.ui.fx_viewer.FxViewer;
 import org.graphstream.ui.graphicGraph.GraphicGraph;
 import org.graphstream.ui.view.GraphRenderer;
+import scala.xml.Null;
 
 import java.net.URL;
 import java.nio.file.Path;
@@ -180,9 +182,24 @@ public class GUIController {
     @FXML
     public void initialize(){
 
-        uiThread=new Thread(()->{
+        /*uiThread=new Thread(()->{
             //uiThread for multithreading
-        });
+        });*/
+
+        javafx.concurrent.Task<Void> task=new javafx.concurrent.Task(){
+            @Override protected Void call() throws Exception {
+                System.out.println("start");
+                //System.out.println(application==null);
+                Schedule schedule=op.Application.getInstance().produceSchedule();
+                Platform.runLater(()->{
+                    mapScheduleToGanttChart(schedule);
+                });
+                //mapScheduleToGanttChart(schedule);
+
+                return null;
+            }
+        };
+
         schedulePane.setOpacity(0.0);
         embedGraph();
         //System.out.println(this.getClass().getResource("../view/Styles/ganttchart.css"));
@@ -190,6 +207,9 @@ public class GUIController {
         stopBtn.setDisable(true);
         pauseBtn.setDisable(true);
         percentageTile.setSkinType(Tile.SkinType.BAR_GAUGE);
+
+        Thread th = new Thread(task);
+        th.start();
     }
 
     /**
@@ -334,9 +354,9 @@ public class GUIController {
 
 
 
-    public void setApplication(Application application) {
+    /*public void setApplication(Application application) {
         this.application = application;
-    }
+    }*/
 
 
 }

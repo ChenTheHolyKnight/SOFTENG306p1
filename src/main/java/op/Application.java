@@ -14,6 +14,8 @@ import op.visualization.controller.GUIController;
 import scala.App;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Entry point for the optimal scheduling program
@@ -23,12 +25,25 @@ public class Application {
 	private Scheduler scheduler;
 	private long startTime;
 	private Visualizer visualizer;
+	private static Application application;
+
+	private Application(){
+	    application=this;
+    }
+
+    public static Application getInstance(){
+	    if(application==null){
+	        application=new Application();
+        }
+        return application;
+    }
 	
     public static void main(String[] args) {
     	
-        Application application = new Application();
+        //application = new Application();
 
         // Read from command line
+        application=Application.getInstance();
         Arguments arg=application.initArguments(args);
 
         // Read dot file
@@ -37,10 +52,9 @@ public class Application {
 
         // Create scheduler
         //application.createScheduler();
-
         // Start visualization if -v is found in the arguments
         if(arg.getToVisualize())
-            application.startVisualization(args,application);
+            application.startVisualization(args);
         else {
             // Produce a schedule - create a new thread to do this.
             Schedule schedule = application.produceSchedule();
@@ -83,7 +97,7 @@ public class Application {
     /**
      * Produces a scheduler to schedule tasks on
      */
-    private Schedule produceSchedule() {
+    public Schedule produceSchedule() {
         SchedulerFactory sf = new SchedulerFactory();
         Scheduler s = sf.createScheduler(
                 arguments.getAlgorithm(),
@@ -92,6 +106,14 @@ public class Application {
                 arguments.getCostFunctions(),
                 arguments.getPruners()
         );
+        if(arguments.getToVisualize()){
+            List<CostFunctionManager.Functions> functions=new ArrayList<>();
+            functions.add(CostFunctionManager.Functions.BOTTOM_LEVEL);
+            List<PrunerManager.Pruners> pruners=new ArrayList<>();
+            pruners.add(PrunerManager.Pruners.EQUIVALENT_SCHEDULE);
+            s=sf.createScheduler(Scheduler.Implementation.DFS,arguments.getNumProcessors(),arguments.getNumCores(),
+                    functions, pruners);
+        }
 
         System.out.println("Starting " + arguments.getAlgorithm().getCmdRepresentation()
                             + " scheduler implementation...");
@@ -118,13 +140,14 @@ public class Application {
      * Visualizes the search for a solution schedule
      * To be run concurrently with produceSchedule()
      */
-    private void startVisualization(String[] args,Application application) {
+    private void startVisualization(String[] args) {
         //if (arguments.getToVisualize()) {
             //new Thread(() -> {
                 visualizer = new Visualizer();
                 //scheduler.addListener(visualizer);
                 visualizer.setCore(arguments.getNumCores());
-                visualizer.setApplication(application);
+                //System.out.println("setted application "+application);
+                //visualizer.setApplication(application);
                 visualizer.startVisualization(args);
             //}).start();
         //}
