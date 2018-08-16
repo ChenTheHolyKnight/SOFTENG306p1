@@ -74,6 +74,7 @@ public class DFSParallelScheduler extends BranchAndBoundScheduler {
         for (Schedule s : results) {
             if (s.getLength() < bestScheduleLength) {
                 bestSchedule = s;
+                bestScheduleLength = bestSchedule.getLength();
             }
             //System.out.println("Optimal length: " + bestSchedule.getLength());
         }
