@@ -52,8 +52,8 @@ public class DFSParallelScheduler extends BranchAndBoundScheduler {
 
         // initiate threads and run them in parallel
         ExecutorService executor = Executors.newFixedThreadPool(numThreads);
-        //ForkJoinPool executor = new ForkJoinPool(numThreads);
         List<Future<Schedule>> futures = new ArrayList<>();
+
         for (int i = 0; i < numThreads; i++) {
             futures.add(executor.submit(new DFSScheduler(getNumProcessors(), getPrunerManager(), getCostFunctionManager().clone(), scheduleStack)));
         }
@@ -72,11 +72,16 @@ public class DFSParallelScheduler extends BranchAndBoundScheduler {
         results.removeAll(Collections.singleton(null));
 
         for (Schedule s : results) {
+
+            // if the thread was unable to process any complete schedules, remove it
+            if(s.getLength() == 0){
+                results.remove(s);
+            }
+            // get the best schedule from each of the threads
             if (s.getLength() < bestScheduleLength) {
                 bestSchedule = s;
                 bestScheduleLength = bestSchedule.getLength();
             }
-            //System.out.println("Optimal length: " + bestSchedule.getLength());
         }
 
         return bestSchedule;

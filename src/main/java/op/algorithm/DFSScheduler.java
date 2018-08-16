@@ -74,7 +74,6 @@ public class DFSScheduler extends BranchAndBoundScheduler  implements Callable<S
             }
         }
 
-        System.out.println("Optimal length: " + bestSchedule.getLength());
         return bestSchedule;
     }
 
