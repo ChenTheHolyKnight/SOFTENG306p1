@@ -27,7 +27,7 @@
          </children></VBox>
       <TabPane fx:id="tabPane" layoutX="680.0" layoutY="60.0" prefHeight="541.0" prefWidth="306.0" side="RIGHT" styleClass="background" stylesheets="@Styles/TabPane.css" tabClosingPolicy="UNAVAILABLE">
         <tabs>
-          <Tab text="Statistics">
+          <Tab text="Performance">
             <content>
                   <VBox maxWidth="-Infinity" minWidth="-Infinity" prefHeight="514.0" prefWidth="270.0">
                      <children>
@@ -39,7 +39,7 @@
                   </VBox>
             </content>
           </Tab>
-          <Tab text="Performance">
+          <Tab text="Statistics">
             <content>
                   <VBox>
                      <children>
