@@ -100,6 +100,7 @@ public class GUIController implements SchedulerListener {
     /**
      * Method to control the start button
      */
+
     @FXML
     public void onStartBtnClicked(){
         /*uiThread.start();
@@ -188,7 +189,6 @@ public class GUIController implements SchedulerListener {
         });*/
 
 
-
         schedulePane.setOpacity(0.0);
         embedGraph();
         //System.out.println(this.getClass().getResource("../view/Styles/ganttchart.css"));
@@ -202,11 +202,12 @@ public class GUIController implements SchedulerListener {
         s.addListener(this); // register this controller as a listener
 
         javafx.concurrent.Task<Void> task=new javafx.concurrent.Task<Void>() {
+            private Schedule schedule;
             @Override
             protected Void call() {
                 System.out.println("start");
                 //System.out.println(application==null);
-                Schedule schedule= app.produceSchedule();
+                schedule = app.produceSchedule();
 //                Platform.runLater(()->{
 //                    mapScheduleToGanttChart(schedule);
 //                });
@@ -214,6 +215,10 @@ public class GUIController implements SchedulerListener {
                 return null;
             }
 
+            @Override protected void succeeded() {
+                super.succeeded();
+                Application.getInstance().writeDot(Application.getInstance().getDotParser(),schedule);
+            }
         };
         Thread th = new Thread(task);
         th.start();
@@ -322,7 +327,7 @@ public class GUIController implements SchedulerListener {
         int weight=task.getTask().getDuration();
         int processorNum=task.getProcessor();
         XYChart.Series series=seriesHashMap.get(processorNum-1);
-        series.getData().add(new XYChart.Data<Integer, String>(task.getStartTime(), yAxis.getCategories().get(processorNum-1),
+        series.getData().add(new XYChart.Data<Number, String>(task.getStartTime(), yAxis.getCategories().get(processorNum-1),
                 new GanttChart.ExtraData( weight, "status-blue")));
 
         //chart.getData().add(series);
