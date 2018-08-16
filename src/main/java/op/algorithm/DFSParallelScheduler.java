@@ -73,9 +73,9 @@ public class DFSParallelScheduler extends BranchAndBoundScheduler {
 
         for (Schedule s : results) {
 
-            // if the thread was unable to process any complete schedules, remove it
+            // if the thread was unable to process any complete schedules, ignore it
             if(s.getLength() == 0){
-                results.remove(s);
+                continue;
             }
             // get the best schedule from each of the threads
             if (s.getLength() < bestScheduleLength) {
