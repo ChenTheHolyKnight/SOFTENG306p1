@@ -55,7 +55,7 @@ public class DFSScheduler extends BranchAndBoundScheduler  implements Callable<S
 
         // start the search, and continue until all possible schedules have been processed
         while (!scheduleStack.isEmpty()) {
-
+            System.out.println(this);
             Schedule currentSchedule = scheduleStack.pop();
             if (currentSchedule.isComplete()) {
                 // check if the complete schedule is better than our best schedule so far

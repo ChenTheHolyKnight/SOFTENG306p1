@@ -50,7 +50,7 @@ public class CostFunctionManager {
     }
 
     /**
-     * clone the current CostFunctionManager so each Thread can have its own
+     * clone the current CostFunctionManager so each Thread can have its own, minimise blocking.
      * @return a new CostFunctionManager
      */
     @Override
@@ -60,7 +60,8 @@ public class CostFunctionManager {
         for(CostFunction cf : costFunctions){
             if(cf.toString().contains("BottomLevel")){
                 cloned.addBottomLevelFunction();
-            }else if(cf.toString().contains("IdleTime")){
+            }
+            if(cf.toString().contains("IdleTime")){
                 cloned.addIdleTimeFunction();
             }
         }
