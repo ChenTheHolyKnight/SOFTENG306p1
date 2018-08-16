@@ -60,8 +60,10 @@ public class DFSScheduler extends BranchAndBoundScheduler {
                 }
             } else {
                 // not a complete schedule so add children to the stack to be processed later
+                List<Schedule> children = super.getChildrenOfSchedule(currentSchedule);
+                super.fireNodesVisitedUpdate(super.addToNodesVisited(children.size()));
 
-                List<Schedule> pruned = pm.execute(super.getChildrenOfSchedule(currentSchedule));
+                List<Schedule> pruned = pm.execute(children);
                 for (Schedule s: pruned){
                     if (cfm.calculate(s)< bestScheduleLength) {
                         scheduleStack.push(s);

@@ -66,15 +66,6 @@ public abstract class Scheduler {
         this.listeners.add(sl);
     }
 
-    /**
-     * Informs registered listeners of a new schedule that has been created
-     * @param s the new schedule
-     */
-    protected void fireNewScheduleUpdate(Schedule s) {
-        for (SchedulerListener listener: listeners) {
-            listener.newSchedule(s);
-        }
-    }
 
     /**
      * Produces a valid schedule of the task graph by allocating each task to a given number of processors,
@@ -82,6 +73,13 @@ public abstract class Scheduler {
      * @return a valid schedule containing the specified number of processors and respecting task dependencies
      */
     public abstract Schedule produceSchedule();
+
+    /**
+     * @return the list of registered listeners of this schedule
+     */
+    protected List<SchedulerListener> getListeners() {
+        return this.listeners;
+    }
 
     /**
      *

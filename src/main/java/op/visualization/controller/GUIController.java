@@ -217,7 +217,7 @@ public class GUIController implements SchedulerListener {
 
             @Override protected void succeeded() {
                 super.succeeded();
-                Application.getInstance().writeDot(Application.getInstance().getDotParser(),schedule);
+                Application.getInstance().writeDot(schedule);
             }
         };
         Thread th = new Thread(task);
@@ -270,6 +270,26 @@ public class GUIController implements SchedulerListener {
 
     }
 
+    @Override
+    public void updateNumPrunedTrees(int numPrunedTrees) {
+        Platform.runLater(() -> {
+            prunedTrees.setText(Integer.toString(numPrunedTrees));
+        });
+    }
+
+    @Override
+    public void updateNodesVisited(int numNodesVisited) {
+        Platform.runLater(() -> {
+            nodesVisisted.setText(Integer.toString(numNodesVisited));
+        });
+    }
+
+    @Override
+    public void updateBestScheduleLength(int scheduleLength) {
+        Platform.runLater(() -> {
+            bestLength.setText(Integer.toString(scheduleLength));
+        });
+    }
 
     /**
      * Set number of cores in the controller
@@ -352,16 +372,6 @@ public class GUIController implements SchedulerListener {
             series.getData().clear();
         });
     }
-
-
-    /**
-     * The method needs to be called in the scheule
-     */
-    public void setPercentageTile(int totalTasks,int scheduledTasks){ ;
-        double percentage=(double) scheduledTasks/(double) totalTasks*100;
-        percentageTile.setValue(percentage);
-    }
-
 
     /**
      * The method to get the stats ps: feel free to change the params
