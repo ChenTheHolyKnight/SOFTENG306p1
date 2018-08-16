@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.ToggleSwitch?>
 
-<AnchorPane prefHeight="600.0" prefWidth="900.0" styleClass="background" stylesheets="@Styles/BackPanel.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="op.visualization.controller.GUIController">
+<AnchorPane prefHeight="600.0" prefWidth="900.0" styleClass="background" stylesheets="@Styles/BackPanel.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="op.visualization.controller.GUIController">
    <children>
       <AnchorPane fx:id="graphPane" prefHeight="502.0" prefWidth="681.0" styleClass="textBackground" />
       <AnchorPane fx:id="schedulePane" opacity="0.51" prefHeight="502.0" prefWidth="681.0" styleClass="background" />
@@ -44,7 +44,7 @@
                   <VBox>
                      <children>
                         <Label alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="270.0" styleClass="grayBackground" text="Schedule Percentage" textAlignment="CENTER" textFill="WHITE" />
-                        <Tile prefHeight="240.0" prefWidth="261.0" />
+                        <Tile fx:id="percentageTile" prefHeight="240.0" prefWidth="261.0" />
                         <Label alignment="CENTER" prefHeight="30.0" prefWidth="270.0" styleClass="grayBackground" text="Statistics" textAlignment="CENTER" textFill="WHITE" />
                         <AnchorPane prefHeight="240.0" prefWidth="261.0" styleClass="tileBackgroundColour">
                            <children>

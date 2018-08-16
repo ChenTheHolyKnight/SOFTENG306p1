@@ -50,6 +50,9 @@ public class GUIController {
 
     @FXML
     private Tile memoryTile;
+    
+    @FXML 
+    private Tile percentageTile;
 
     @FXML
     private Button startBtn;
@@ -147,6 +150,7 @@ public class GUIController {
      */
     @FXML
     public void initialize(){
+
         uiThread=new Thread(()->{
             //uiThread for multithreading
         });
@@ -156,6 +160,7 @@ public class GUIController {
         initializeGanttChart();
         stopBtn.setDisable(true);
         pauseBtn.setDisable(true);
+        percentageTile.setSkinType(Tile.SkinType.BAR_GAUGE);
     }
 
     /**
@@ -257,9 +262,22 @@ public class GUIController {
 
         //chart.getData().add(series);
     }
+    
+    /**
+     * The method needs to be called in the scheule
+     */
+    public void setPercentageTile(Schedule schedule){
+        double totalNum=TaskGraph.getInstance().getAllTasks().size();
+        double scheduledTaskNum=schedule.getAllScheduledTasks().size();
+        double percentage=scheduledTaskNum/totalNum*100;
+        percentageTile.setValue(percentage);
+
+    }
 
 
     public void setApplication(Application application) {
         this.application = application;
     }
+
+
 }
