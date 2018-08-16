@@ -79,8 +79,7 @@ public class GUIController implements SchedulerListener {
     @FXML
     private Label nodesVisisted;
 
-    @FXML
-    private Label scheduledTasks;
+
 
     // Gantt chart components
     final NumberAxis xAxis = new NumberAxis();
@@ -226,7 +225,7 @@ public class GUIController implements SchedulerListener {
         initializeGanttChart();
         stopBtn.setDisable(true);
         pauseBtn.setDisable(true);
-        percentageTile.setSkinType(Tile.SkinType.BAR_GAUGE);
+        percentageTile.setSkinType(Tile.SkinType.TIME);
 
         Application app = Application.getInstance();
         Scheduler s = app.getScheduler();
@@ -260,6 +259,7 @@ public class GUIController implements SchedulerListener {
      */
     public Tile getCPUTile(){
         this.cpuTile.setSkinType(Tile.SkinType.BAR_GAUGE);
+        this.cpuTile.setUnit("%");
         return cpuTile;
     }
 
@@ -268,6 +268,7 @@ public class GUIController implements SchedulerListener {
      */
     public Tile getMemoryTile(){
         this.memoryTile.setSkinType(Tile.SkinType.BAR_GAUGE);
+        this.memoryTile.setUnit("%");
         return memoryTile;
     }
 
@@ -431,8 +432,7 @@ public class GUIController implements SchedulerListener {
     /**
      * The method to get the stats ps: feel free to change the params
      */
-    public void setStats(int stNum,int nvNum,int blNum,int ptNum){
-        scheduledTasks.setText(Integer.toString(stNum));
+    public void setStats(int nvNum,int blNum,int ptNum){
         nodesVisisted.setText(Integer.toString(nvNum));
         bestLength.setText(Integer.toString(blNum));
         prunedTrees.setText(Integer.toString(ptNum));
