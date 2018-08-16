@@ -66,6 +66,8 @@ public class DFSParallelScheduler extends BranchAndBoundScheduler {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
+                // the stack was emptied when a thread was trying to get a new schedule
+                // can ignore this because this means algorithm has already finished
                 e.printStackTrace();
             }
         }
