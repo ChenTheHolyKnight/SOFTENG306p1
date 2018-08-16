@@ -105,8 +105,14 @@ public class GUIController {
         if(!uiThread.isAlive()){
 
         }*/
-        this.setPercentageTile(3,1);
-        this.setStats(1,2,3,4);
+        //testing
+        /*Schedule schedule=new Schedule();
+        schedule.addScheduledTask(new ScheduledTask(new Task("1",20),1,5));
+        schedule.addScheduledTask(new ScheduledTask(new Task("1",30),2,4));
+        schedule.addScheduledTask(new ScheduledTask(new Task("1",40),3,3));
+        mapScheduleToGanttChart(schedule);
+        this.setPercentageTile(3,1); //testing
+        this.setStats(1,2,3,4); // testing*/
         stopBtn.setDisable(false);
         pauseBtn.setDisable(false);
         startBtn.setDisable(true);
@@ -114,6 +120,12 @@ public class GUIController {
 
     @FXML
     public void onStopBtnClicked(){
+        /*Schedule schedule=new Schedule();
+        schedule.addScheduledTask(new ScheduledTask(new Task("1",50),1,5));
+        schedule.addScheduledTask(new ScheduledTask(new Task("1",30),2,4));
+        mapScheduleToGanttChart(schedule);*/
+
+
         //uiThread.interrupt();
         stopBtn.setDisable(true);
         pauseBtn.setDisable(true);
@@ -122,8 +134,8 @@ public class GUIController {
 
     @FXML
     public void onPauseBtnClicked(){
-        this.setPercentageTile(2,1);
-        this.setStats(5,6,7,8);
+        /*this.setPercentageTile(2,1);    // testing
+        this.setStats(5,6,7,8);   // testing*/
         pauseBtn.setDisable(true);
         startBtn.setDisable(false);
         /*try {
