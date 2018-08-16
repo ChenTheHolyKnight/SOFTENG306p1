@@ -15,6 +15,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
+import op.algorithm.Scheduler;
+import op.algorithm.SchedulerListener;
 import op.model.Schedule;
 import op.model.ScheduledTask;
 import op.model.Task;
@@ -38,7 +40,7 @@ import java.util.List;
 
 /**
  * The controller class to control the GUI*/
-public class GUIController {
+public class GUIController implements SchedulerListener {
     @FXML
     private ToggleSwitch graphSwitch;
 
@@ -89,7 +91,7 @@ public class GUIController {
 
     private HashMap<Integer,XYChart.Series> seriesHashMap=new HashMap<>();
 
-    private int coreNum=5;
+    private int coreNum=8;
 
     private Application application;
 
@@ -98,7 +100,6 @@ public class GUIController {
     /**
      * Method to control the start button
      */
-
     @FXML
     public void onStartBtnClicked(){
         /*uiThread.start();
@@ -186,19 +187,7 @@ public class GUIController {
             //uiThread for multithreading
         });*/
 
-        javafx.concurrent.Task<Void> task=new javafx.concurrent.Task(){
-            @Override protected Void call() throws Exception {
-                System.out.println("start");
-                //System.out.println(application==null);
-                Schedule schedule=op.Application.getInstance().produceSchedule();
-                Platform.runLater(()->{
-                    mapScheduleToGanttChart(schedule);
-                });
-                //mapScheduleToGanttChart(schedule);
 
-                return null;
-            }
-        };
 
         schedulePane.setOpacity(0.0);
         embedGraph();
@@ -208,6 +197,24 @@ public class GUIController {
         pauseBtn.setDisable(true);
         percentageTile.setSkinType(Tile.SkinType.BAR_GAUGE);
 
+        Application app = Application.getInstance();
+        Scheduler s = app.getScheduler();
+        s.addListener(this); // register this controller as a listener
+
+        javafx.concurrent.Task<Void> task=new javafx.concurrent.Task<Void>() {
+            @Override
+            protected Void call() {
+                System.out.println("start");
+                //System.out.println(application==null);
+                Schedule schedule= app.produceSchedule();
+//                Platform.runLater(()->{
+//                    mapScheduleToGanttChart(schedule);
+//                });
+                //mapScheduleToGanttChart(schedule);
+                return null;
+            }
+
+        };
         Thread th = new Thread(task);
         th.start();
     }
@@ -247,6 +254,15 @@ public class GUIController {
         GraphController.getInstance().updateGraph(u);
         graphPane.requestLayout();
         graphPane.layout();
+    }
+
+    @Override
+    public void newSchedule(Schedule s) {
+        System.out.println("new sched!");
+        Platform.runLater(() -> {
+            mapScheduleToGanttChart(s);
+        });
+
     }
 
 
@@ -306,7 +322,7 @@ public class GUIController {
         int weight=task.getTask().getDuration();
         int processorNum=task.getProcessor();
         XYChart.Series series=seriesHashMap.get(processorNum-1);
-        series.getData().add(new XYChart.Data(task.getStartTime(), yAxis.getCategories().get(processorNum-1),
+        series.getData().add(new XYChart.Data<Integer, String>(task.getStartTime(), yAxis.getCategories().get(processorNum-1),
                 new GanttChart.ExtraData( weight, "status-blue")));
 
         //chart.getData().add(series);

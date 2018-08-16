@@ -45,7 +45,7 @@ public class DFSScheduler extends BranchAndBoundScheduler {
         Stack<Schedule> scheduleStack =  new Stack<Schedule>();
         Schedule emptySchedule = new Schedule();
         scheduleStack.push(emptySchedule);
-        newSchedulesUpdate(emptySchedule, null);
+//        newSchedulesUpdate(emptySchedule, null);
 
         // start the search, and continue until all possible schedules have been processed
         while (!scheduleStack.isEmpty()) {
@@ -55,6 +55,8 @@ public class DFSScheduler extends BranchAndBoundScheduler {
                 if (currentSchedule.getLength() < bestScheduleLength) {
                     bestSchedule = currentSchedule;
                     bestScheduleLength = currentSchedule.getLength();
+                    System.out.println("firing update, best length so far is " + bestScheduleLength);
+                    super.fireNewScheduleUpdate(bestSchedule);
                 }
             } else {
                 // not a complete schedule so add children to the stack to be processed later
@@ -68,7 +70,7 @@ public class DFSScheduler extends BranchAndBoundScheduler {
             }
         }
 
-        optimalSolutionUpdate(bestSchedule);
+//        optimalSolutionUpdate(bestSchedule);
         System.out.println("Optimal length: " + bestSchedule.getLength());
         return bestSchedule;
     }

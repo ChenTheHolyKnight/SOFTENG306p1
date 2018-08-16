@@ -53,6 +53,7 @@ public class Application {
         // Create scheduler
         //application.createScheduler();
         // Start visualization if -v is found in the arguments
+        application.createScheduler();
         if(arg.getToVisualize())
             application.startVisualization(args);
         else {
@@ -80,6 +81,17 @@ public class Application {
         return null;
     }
 
+    private void createScheduler() {
+        SchedulerFactory sf = new SchedulerFactory();
+        scheduler = sf.createScheduler(
+                arguments.getAlgorithm(),
+                arguments.getNumProcessors(),
+                arguments.getNumCores(),
+                arguments.getCostFunctions(),
+                arguments.getPruners()
+        );
+    }
+
     /**
      * Reads in the DOT file the user has specified
      * To be run as an IO_Task with ParallelIT
@@ -95,25 +107,17 @@ public class Application {
     }
 
     /**
+     * Gives the caller access to the scheduler
+     * @return the scheduler that has been specified by the user based on the cmd arguments
+     */
+    public Scheduler getScheduler() {
+        return scheduler;
+    }
+
+    /**
      * Produces a scheduler to schedule tasks on
      */
     public Schedule produceSchedule() {
-        SchedulerFactory sf = new SchedulerFactory();
-        Scheduler s = sf.createScheduler(
-                arguments.getAlgorithm(),
-                arguments.getNumProcessors(),
-                arguments.getNumCores(),
-                arguments.getCostFunctions(),
-                arguments.getPruners()
-        );
-        if(arguments.getToVisualize()){
-            List<CostFunctionManager.Functions> functions=new ArrayList<>();
-            functions.add(CostFunctionManager.Functions.BOTTOM_LEVEL);
-            List<PrunerManager.Pruners> pruners=new ArrayList<>();
-            pruners.add(PrunerManager.Pruners.EQUIVALENT_SCHEDULE);
-            s=sf.createScheduler(Scheduler.Implementation.DFS,arguments.getNumProcessors(),arguments.getNumCores(),
-                    functions, pruners);
-        }
 
         System.out.println("Starting " + arguments.getAlgorithm().getCmdRepresentation()
                             + " scheduler implementation...");
@@ -128,7 +132,7 @@ public class Application {
 
         long startTime = System.currentTimeMillis();
 
-        Schedule schedule = s.produceSchedule();
+        Schedule schedule = scheduler.produceSchedule();
 
         System.out.println("Schedule length:\t" + schedule.getLength());
         System.out.println("Schedule calculated in:\t" + (System.currentTimeMillis()-startTime) + "ms");

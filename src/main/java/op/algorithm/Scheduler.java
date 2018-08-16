@@ -44,7 +44,7 @@ public abstract class Scheduler {
 
 
     // objects that are interested in being updated by the Scheduler
-    private List<Visualizer> listeners;
+    private List<SchedulerListener> listeners;
     private int numProcessors;
     private boolean toVisualize;
 
@@ -58,20 +58,21 @@ public abstract class Scheduler {
     }
 
     /**
-     * Registers a Visualizer instance to observe the Scheduler.
-     * @param v the Visualizer to register as a listener
+     * Registers a SchedulerListener instance to observe the Scheduler.
+     * @param sl the listener to register
      */
-    public void addListener(Visualizer v) {
-        this.listeners.add(v);
+    public void addListener(SchedulerListener sl) {
+        System.out.println("new listener: " + sl);
+        this.listeners.add(sl);
     }
 
     /**
-     * Informs registered listeners of an update to the schedule solution space
-     * @param u message representing the update
+     * Informs registered listeners of a new schedule that has been created
+     * @param s the new schedule
      */
-    protected void informListenersOfUpdate(UpdateMessage u) {
-        for (Visualizer listener: listeners) {
-            listener.update(u);
+    protected void fireNewScheduleUpdate(Schedule s) {
+        for (SchedulerListener listener: listeners) {
+            listener.newSchedule(s);
         }
     }
 
@@ -121,52 +122,52 @@ public abstract class Scheduler {
         return startTime;
     }
 
-    /**
-     * Informs listeners that new schedules have been created
-     * @param schedule
-     * @param children
-     */
-    protected void newSchedulesUpdate(Schedule schedule, List<Schedule> children) {
-        if (!toVisualize) {
-            return;
-        }
-        Set<String> childIds = new HashSet<>();
-        if (children != null) {
-            for (Schedule child: children) {
-                childIds.add(child.toString());
-            }
-        }
-        informListenersOfUpdate(new MessageAddNodes(schedule.toString(), childIds));
-    }
-
-    /**
-     * Informs listeners that schedules have been removed
-     * @param remaining
-     * @param all
-     */
-    protected void removedSchedulesUpdate(List<Schedule> remaining, List<Schedule> all) {
-        if (!toVisualize) {
-            return;
-        }
-        Set<String> removedIds = new HashSet<>();
-        all.removeAll(remaining);
-        if (all != null) {
-            for (Schedule schedule: all) {
-                removedIds.add(schedule.toString());
-            }
-        }
-        informListenersOfUpdate(new MessageEliminateNodes(removedIds));
-    }
-
-    /**
-     * Informs listeners that the optimal solution has been found
-     * @param optimal
-     */
-    protected void optimalSolutionUpdate(Schedule optimal) {
-        if (!toVisualize) {
-            return;
-        }
-        informListenersOfUpdate(new MessageSetOptimalSolution(optimal.toString()));
-    }
+//    /**
+//     * Informs listeners that new schedules have been created
+//     * @param schedule
+//     * @param children
+//     */
+//    protected void newSchedulesUpdate(Schedule schedule, List<Schedule> children) {
+//        if (!toVisualize) {
+//            return;
+//        }
+//        Set<String> childIds = new HashSet<>();
+//        if (children != null) {
+//            for (Schedule child: children) {
+//                childIds.add(child.toString());
+//            }
+//        }
+//        informListenersOfUpdate(new MessageAddNodes(schedule.toString(), childIds));
+//    }
+//
+//    /**
+//     * Informs listeners that schedules have been removed
+//     * @param remaining
+//     * @param all
+//     */
+//    protected void removedSchedulesUpdate(List<Schedule> remaining, List<Schedule> all) {
+//        if (!toVisualize) {
+//            return;
+//        }
+//        Set<String> removedIds = new HashSet<>();
+//        all.removeAll(remaining);
+//        if (all != null) {
+//            for (Schedule schedule: all) {
+//                removedIds.add(schedule.toString());
+//            }
+//        }
+//        informListenersOfUpdate(new MessageEliminateNodes(removedIds));
+//    }
+//
+//    /**
+//     * Informs listeners that the optimal solution has been found
+//     * @param optimal
+//     */
+//    protected void optimalSolutionUpdate(Schedule optimal) {
+//        if (!toVisualize) {
+//            return;
+//        }
+//        informListenersOfUpdate(new MessageSetOptimalSolution(optimal.toString()));
+//    }
 
 }
