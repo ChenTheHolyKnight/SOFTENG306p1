@@ -100,17 +100,6 @@ public class DFSParallelScheduler extends DFSScheduler {
                 e.printStackTrace();
             }
         }
-        /* runnables
-        executor.shutdown();
-        while(!executor.isTerminated()){} // wait for runnables to finish
-        for (int i = 0; i<numThreads; i++) { // get the best schedule from each thread
-            if(runnables[i].getSchedule() != null) { // there is a chance that thread did not reach a complete solution
-                if (runnables[i].getSchedule().getLength() < bestScheduleLength) {
-                    bestScheduleLength = runnables[i].getSchedule().getLength();
-                    bestSchedule = runnables[i].getSchedule();
-                }
-            }
-        }*/
         //System.out.println("Optimal length: " + bestSchedule.getLength());
         return bestSchedule;
     }
