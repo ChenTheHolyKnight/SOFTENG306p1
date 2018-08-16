@@ -31,30 +31,30 @@ public class CostFunctionManager {
             return this.cmdRepresentation;
         }
     }
-    
+
     private int numProcessors;
     private List<CostFunction> costFunctions = new ArrayList<CostFunction>();
-    
+
     public CostFunctionManager(int numProcessors) {
-    	this.numProcessors = numProcessors;
+        this.numProcessors = numProcessors;
     }
-    
+
     public void addIdleTimeFunction() {
-		IdleTimeFunction f =  new IdleTimeFunction(numProcessors);
-		if (!costFunctions.contains(f)) costFunctions.add(f);
-	}
-	
-	public void addBottomLevelFunction() {
-		BottomLevelFunction f =  new BottomLevelFunction();
-		if (!costFunctions.contains(f)) costFunctions.add(f);
-	}
+        IdleTimeFunction f =  new IdleTimeFunction(numProcessors);
+        if (!costFunctions.contains(f)) costFunctions.add(f);
+    }
+
+    public void addBottomLevelFunction() {
+        BottomLevelFunction f =  new BottomLevelFunction();
+        if (!costFunctions.contains(f)) costFunctions.add(f);
+    }
 
     /**
      * clone the current CostFunctionManager so each Thread can have its own
      * @return a new CostFunctionManager
      */
-	@Override
-	public CostFunctionManager clone (){
+    @Override
+    public CostFunctionManager clone (){
         CostFunctionManager cloned = new CostFunctionManager(this.numProcessors);
 
         for(CostFunction cf : costFunctions){
@@ -67,23 +67,23 @@ public class CostFunctionManager {
 
         return cloned;
     }
-	
-	/**
-	 * Calculates the cost function with the tightest lower bound
-	 * @return cost function with the tightest lower bound
-	 */
-    public int calculate(Schedule s) {
-		int tightestBound = 0;
 
-		// calculate the different cost functions then take the maximum of them
+    /**
+     * Calculates the cost function with the tightest lower bound
+     * @return cost function with the tightest lower bound
+     */
+    public int calculate(Schedule s) {
+        int tightestBound = 0;
+
+        // calculate the different cost functions then take the maximum of them
         // because it will be the tightest lower bound
-		for (CostFunction cf : costFunctions) {
+        for (CostFunction cf : costFunctions) {
             int currentFunc = cf.calculate(s);
             if (currentFunc > tightestBound) {
                 tightestBound = currentFunc;
             }
         }
-		
-		return tightestBound;
-	}
+
+        return tightestBound;
+    }
 }
