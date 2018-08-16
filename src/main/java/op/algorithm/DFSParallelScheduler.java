@@ -14,7 +14,7 @@ import java.util.concurrent.*;
  * Parallel DFS algorithm manager.
  * @author Sam Broadhead
  */
-public class ParallelManager extends DFSScheduler {
+public class DFSParallelScheduler extends DFSScheduler {
     private int numThreads;
     /**
      * Instantiates a DFSScheduler with the specified params
@@ -23,7 +23,7 @@ public class ParallelManager extends DFSScheduler {
      * @param pm             The pruner manager to use
      * @param cfm             The cost function manager to use
      */
-    public ParallelManager(int numProcessors, PrunerManager pm, CostFunctionManager cfm, int numThreads) {
+    public DFSParallelScheduler(int numProcessors, PrunerManager pm, CostFunctionManager cfm, int numThreads) {
         super(numProcessors, pm, cfm);
         this.numThreads = numThreads;
     }
@@ -71,11 +71,36 @@ public class ParallelManager extends DFSScheduler {
         }
         // initiate threads and run them in parallel
         ExecutorService executor = Executors.newFixedThreadPool(numThreads);
-        ParallelRunnable[] runnables = new ParallelRunnable[numThreads];
+        //ForkJoinPool executor = new ForkJoinPool(numThreads);
+        DFSScheduler[] callables = new DFSScheduler[numThreads];
+        List<Future<Schedule>> futures = new ArrayList<>();
         for (int i = 0; i<numThreads; i++){
-            runnables[i] = new ParallelRunnable(getNumProcessors(), getPrunerManager(), getCostFunctionManager(), threadStacks[i]);
-            executor.execute(runnables[i]);
+            //System.out.println(threadStacks[i].peek());
+            callables[i] = new DFSScheduler(getNumProcessors(), getPrunerManager(), getCostFunctionManager(), threadStacks[i]);
+            futures.add(executor.submit(callables[i]));
         }
+        executor.shutdown();
+        boolean ifFinished = false;
+        while(!ifFinished){
+            boolean finished = true;
+            for(Future<Schedule> f : futures){
+                finished &= f.isDone();
+            }
+            if(finished)ifFinished = true;
+        }
+        for (Future<Schedule> f : futures){
+            try {
+                if (f.get().getLength() < bestScheduleLength){
+                    bestSchedule = f.get();
+                    bestScheduleLength = f.get().getLength();
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+        /* runnables
         executor.shutdown();
         while(!executor.isTerminated()){} // wait for runnables to finish
         for (int i = 0; i<numThreads; i++) { // get the best schedule from each thread
@@ -85,8 +110,8 @@ public class ParallelManager extends DFSScheduler {
                     bestSchedule = runnables[i].getSchedule();
                 }
             }
-        }
-        System.out.println("Optimal length: " + bestSchedule.getLength());
+        }*/
+        //System.out.println("Optimal length: " + bestSchedule.getLength());
         return bestSchedule;
     }
 }
