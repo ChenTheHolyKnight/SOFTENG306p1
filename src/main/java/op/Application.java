@@ -26,6 +26,8 @@ public class Application {
 	private Visualizer visualizer;
 	private static DotIO dotParser;
 	private static Application application;
+	private static Arguments arg;
+
 
 	private Application(){
 	    application = this;
@@ -42,13 +44,21 @@ public class Application {
         return application;
     }
 
+    public DotIO getDotParser(){
+	    return dotParser;
+    }
+
+    public int getProcessNum(){
+	    return arg.getNumProcessors();
+    }
+
     public static void main(String[] args) {
 
         application = Application.getInstance();
 
         // Read from command line
-        Arguments arg = application.initArguments(args);
-
+        application=Application.getInstance();
+        arg=application.initArguments(args);
         // Read dot file
         dotParser = new DotIO();
         application.readDot();
@@ -174,7 +184,6 @@ public class Application {
      */
     private void startVisualization(String[] args) {
         visualizer = new Visualizer();
-        visualizer.setCore(arguments.getNumCores());
         visualizer.startVisualization(args);
     }
 
