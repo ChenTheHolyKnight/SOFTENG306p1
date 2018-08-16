@@ -70,8 +70,8 @@ public class DFSParallelScheduler extends DFSScheduler {
             threadStacks[i%numThreads].push(scheduleStack.pop());
         }
         // initiate threads and run them in parallel
-        ExecutorService executor = Executors.newFixedThreadPool(numThreads);
-        //ForkJoinPool executor = new ForkJoinPool(numThreads);
+        //ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+        ForkJoinPool executor = new ForkJoinPool(numThreads);
         DFSScheduler[] callables = new DFSScheduler[numThreads];
         List<Future<Schedule>> futures = new ArrayList<>();
         for (int i = 0; i<numThreads; i++){
