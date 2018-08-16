@@ -21,7 +21,6 @@ import java.util.regex.Pattern;
  */
 public class DotIO {
 
-    // regex + string constants commonly used in DOT files
     private static final String QUOTES = "\"";
     private static final String GRAPH_START = "{";
     private static final String GRAPH_END = "}";
@@ -35,15 +34,6 @@ public class DotIO {
     private static final String STATEMENT_END = ";";
     private static final String DEP_SPECIFIER = "->";
 
-    /*
-        things to look for are as follows:
-        - name of graph
-        - task (id(String) and weight(int))
-        - dependency (src task, dest task, weight(int))
-        - end of graph ( } )
-        use Strings for line matches and patterns where data needs to be extracted from the line.
-        based on my interpretation of what a valid .dot file is.
-     */
     private static final String GRAPH_NAME_LINE_MATCH = "[\\s]*digraph[\\s]*\".*\"[\\s]*\\{[\\s]*";
     private static final String TASK_LINE_MATCH = "[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=]*[\\p{Digit}]*[\\s]*][\\s]*;";
     private static final String DEP_LINE_MATCH = "[\\s]*[\\p{Alnum}]*[\\s]*.>[\\s]*[\\p{Alnum}]*[\\s]*\\[[\\s]*[Ww]eight[\\s]*[=][\\s]*[\\p{Digit}]*[\\s]*][\\s]*;";
@@ -66,9 +56,6 @@ public class DotIO {
 
     /**
      * New revised dotIn method that will replace previous implementation. Major upgrades for robustness.
-     * 
-     * Takes a path containing the input DOT file, and initializes the TaskGraph singleton with 
-     * information representing the task graph in the input file.
      * @param path The path of the dot file to read.
      * @throws IOException If there is a problem reading the file
      * @author Sam Broadhead
@@ -76,66 +63,65 @@ public class DotIO {
     public void dotIn(String path) throws IOException {
         String line;
         String title = "";
+
         List<Dependency> depList = new ArrayList<>(); // lists to initialize the task graph
         List<Task> taskList = new ArrayList<>();
+
         Map<String, Integer> taskMap = new HashMap<>(); // keep a map of unbuilt tasks to allow updates
         Map<String[], Integer> depMap = new HashMap<>(); // keep a map of unbuilt deps to allow updates
-        Map<String,List<Dependency>> depOutMap = new HashMap<>(); // map of tasks and their outgoing dependencies
-        Map<String,List<Dependency>> depInMap = new HashMap<>(); // map of tasks and their outgoing dependencies
+
         BufferedReader br = new BufferedReader(new FileReader(path));
+
         while (((line = br.readLine()) != null) && (!line.contains(END_OF_GRAPH_MATCH))) {
             if (line.matches(GRAPH_NAME_LINE_MATCH)) { // the line is the graph name line
                 title = getStringMatch(GRAPH_NAME_MATCH, line);
-            } else if (line.matches(TASK_LINE_MATCH)) { // the line is a task line
+            }
+            else if (line.matches(TASK_LINE_MATCH)) { // the line is a task line
                 String  name = getStringMatch(TASK_NAME_MATCH, line);
                 int weight = Integer.parseInt(getStringMatch(TASK_WEIGHT_MATCH, line));
                 taskMap.put(name, weight);
-            } else if (line.matches(DEP_LINE_MATCH)) { // the line is a dependency line
+            }
+            else if (line.matches(DEP_LINE_MATCH)) { // the line is a dependency line
+
                 String src = getStringMatch(DEP_SRC_TASK_MATCH, line);
                 String dst = getStringMatch(DEP_DST_TASK_MATCH, line);
+
                 if (!taskMap.containsKey(src)) { // if there are unknown tasks in the dependency, add them
                     taskMap.put(src, DEFAULT_WEIGHT);
                 }
+
                 if (!taskMap.containsKey(dst)) {
                     taskMap.put(dst, DEFAULT_WEIGHT);
                 }
+
                 String [] tasks = {src,dst}; // store the two task ids as the key
                 int weight = Integer.parseInt(getStringMatch(DEP_WEIGHT_MATCH, line));
                 depMap.put(tasks, weight);
             }
         }
+        br.close();
+
         for (String[] keys: depMap.keySet()){ // build task and dependency objects.
             Task srcTask = new Task(keys[0],taskMap.get(keys[0]));
+
             if (!taskList.contains(srcTask)){ // if the task is not in the list, add it
                 taskList.add(srcTask);
             }
+
             Task dstTask = new Task(keys[1],taskMap.get(keys[1]));
+
             if (!taskList.contains(dstTask)){
                 taskList.add(dstTask);
             }
+
             depList.add(new Dependency(taskList.get(taskList.indexOf(srcTask)),taskList.get(taskList.indexOf(dstTask)),depMap.get(keys)));
-        }
-        for (Dependency d : depList){
-            depOutMap.computeIfAbsent(d.getStartTask().getId(), k -> new ArrayList<>()); // build lists not yet built
-            depInMap.computeIfAbsent(d.getEndTask().getId(), k -> new ArrayList<>());
-            depOutMap.get(d.getStartTask().getId()).add(d); // add the dependency to the list for the respective tasks
-            depInMap.get(d.getEndTask().getId()).add(d);
         }
         for (String key : taskMap.keySet()){ // build any tasks that have no ingoing or outgoing dependencies
             Task t = new Task(key,taskMap.get(key));
-            depInMap.computeIfAbsent(key, k -> new ArrayList<>()); // build any lists not yet build
-            depOutMap.computeIfAbsent(key, k -> new ArrayList<>());
             if (!taskList.contains(t)){ // if they aren't in the task list, add them
                 taskList.add(t);
             }
         }
-        for (Task t : taskList){ // add the dependencies to all tasks
-            t.addDependencies(depInMap.get(t.getId()),depOutMap.get(t.getId()));
-        }
-        for (Task t : taskList){ // generate bottom levels for all tasks
-            t.setBottomLevel();
-        }
-        br.close();
         TaskGraph.initialize(taskList, title);
     }
 
@@ -147,7 +133,7 @@ public class DotIO {
      */
 
     public void dotOut(Schedule s, String outputGraphFilename) throws IOException {
-    	
+
         BufferedWriter bw = new BufferedWriter(new FileWriter(outputGraphFilename, false));
 
         TaskGraph tg = TaskGraph.getInstance();
@@ -177,7 +163,7 @@ public class DotIO {
         bw.write(GRAPH_END);
         bw.close();
     }
-    
+
     /**
      * Helper method to find matches
      * @param toMatch A Pattern for the Matcher to match to.
