@@ -48,7 +48,25 @@ public class CostFunctionManager {
 		BottomLevelFunction f =  new BottomLevelFunction();
 		if (!costFunctions.contains(f)) costFunctions.add(f);
 	}
-	
+
+    /**
+     * clone the current CostFunctionManager so each Thread can have its own
+     * @return a new CostFunctionManager
+     */
+	@Override
+	public CostFunctionManager clone (){
+        CostFunctionManager cloned = new CostFunctionManager(this.numProcessors);
+
+        for(CostFunction cf : costFunctions){
+            if(cf.toString().contains("BottomLevel")){
+                cloned.addBottomLevelFunction();
+            }else if(cf.toString().contains("IdleTime")){
+                cloned.addIdleTimeFunction();
+            }
+        }
+
+        return cloned;
+    }
 	
 	/**
 	 * Calculates the cost function with the tightest lower bound

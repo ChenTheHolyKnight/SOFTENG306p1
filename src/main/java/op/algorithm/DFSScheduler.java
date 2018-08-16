@@ -15,7 +15,7 @@ import java.util.concurrent.Callable;
  */
 public class DFSScheduler extends BranchAndBoundScheduler  implements Callable<Schedule> {
     private Stack<Schedule> scheduleStack;
-    private Schedule bestSchedule;
+
     /**
      * Instantiates a DFSScheduler with the specified params
      * @param numProcessors The number of processors to schedule tasks on
@@ -25,6 +25,7 @@ public class DFSScheduler extends BranchAndBoundScheduler  implements Callable<S
     public DFSScheduler(int numProcessors, PrunerManager pm, CostFunctionManager cfm) {
         super(numProcessors, pm, cfm);
         this.scheduleStack = new Stack<>();
+        scheduleStack.push(new Schedule());
     }
 
     /**
@@ -47,14 +48,10 @@ public class DFSScheduler extends BranchAndBoundScheduler  implements Callable<S
     public Schedule produceSchedule() {
 
         // variables to keep track of the best schedule so far in the search
-        bestSchedule = null;
+        Schedule bestSchedule = new Schedule();
         int bestScheduleLength = Integer.MAX_VALUE;
         PrunerManager pm = getPrunerManager();
         CostFunctionManager cfm = getCostFunctionManager();
-
-        if(scheduleStack.empty()){
-            scheduleStack.push(new Schedule());
-        }
 
         // start the search, and continue until all possible schedules have been processed
         while (!scheduleStack.isEmpty()) {
