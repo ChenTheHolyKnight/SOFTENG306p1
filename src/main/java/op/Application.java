@@ -25,6 +25,7 @@ public class Application {
 	private Scheduler scheduler;
 	private long startTime;
 	private Visualizer visualizer;
+	private static DotIO dotParser;
 	private static Application application;
 
 	private Application(){
@@ -37,6 +38,10 @@ public class Application {
         }
         return application;
     }
+
+    public DotIO getDotParser(){
+	    return dotParser;
+    }
 	
     public static void main(String[] args) {
     	
@@ -47,14 +52,18 @@ public class Application {
         Arguments arg=application.initArguments(args);
 
         // Read dot file
-        DotIO dotParser = new DotIO();
+        dotParser = new DotIO();
         application.readDot(dotParser);
 
         // Create scheduler
         //application.createScheduler();
         // Start visualization if -v is found in the arguments
-        if(arg.getToVisualize())
+        if(arg.getToVisualize()) {
             application.startVisualization(args);
+
+
+
+        }
         else {
             // Produce a schedule - create a new thread to do this.
             Schedule schedule = application.produceSchedule();
@@ -159,7 +168,7 @@ public class Application {
      * @param dotParser writes the schedule
      * @param schedule to be written
      */
-    private void writeDot(DotIO dotParser, Schedule schedule){
+    public void writeDot(DotIO dotParser, Schedule schedule){
         try {
             dotParser.dotOut(schedule, arguments.getOutputGraphFilename());
         } catch (IOException e) {

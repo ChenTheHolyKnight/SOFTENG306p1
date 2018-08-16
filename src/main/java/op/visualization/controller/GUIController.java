@@ -187,16 +187,22 @@ public class GUIController {
         });*/
 
         javafx.concurrent.Task<Void> task=new javafx.concurrent.Task(){
+            private Schedule schedule;
             @Override protected Void call() throws Exception {
                 System.out.println("start");
                 //System.out.println(application==null);
-                Schedule schedule=op.Application.getInstance().produceSchedule();
+                schedule=op.Application.getInstance().produceSchedule();
                 Platform.runLater(()->{
                     mapScheduleToGanttChart(schedule);
                 });
                 //mapScheduleToGanttChart(schedule);
 
                 return null;
+            }
+
+            @Override protected void succeeded() {
+                super.succeeded();
+                Application.getInstance().writeDot(Application.getInstance().getDotParser(),schedule);
             }
         };
 
