@@ -165,7 +165,7 @@ public class TestScheduler {
 	    try {
 
             setup(PATH_TO_TEST);
-            s = (new SimpleScheduler(false)).produceSchedule();
+            s = (new SimpleScheduler().produceSchedule());
             checkScheduleIsValid();
         } catch (IOException e) {
 	        e.printStackTrace();
@@ -235,7 +235,7 @@ public class TestScheduler {
     private void checkGreedyScheduler(String path) {
         try {
             setup(path);
-            s = (new GreedyScheduler(arguments.getNumProcessors(), false)).produceSchedule();
+            s = (new GreedyScheduler(arguments.getNumProcessors())).produceSchedule();
             checkScheduleIsValid();
 
         } catch (IOException e) {

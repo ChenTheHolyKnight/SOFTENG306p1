@@ -132,27 +132,6 @@ public class Application {
     }
 
     /**
-     * Schedules tasks on processors
-     * To be run concurrently with startVisualization()
-     * @return a schedule
-     */
-    private Schedule produceSchedule() {
-
-        Schedule schedule = scheduler.produceSchedule();
-
-        System.out.println("Time without cost function: " + (System.currentTimeMillis() - startTime) +
-                " ms       Schedule Length: " + schedule.getLength());
-        //System.out.println("Time with bottom level cost function: " + (System.currentTimeMillis() - startTime) +
-        //        " ms       Schedule Length: " + schedule.getLength());
-        //System.out.println("Time with both cost functions: " + (System.currentTimeMillis() - startTime) +
-        //        " ms       Schedule Length: " + schedule.getLength());
-        //System.out.println("Time with idle time cost function: " + (System.currentTimeMillis() - startTime) +
-        //        " ms       Schedule Length: " + schedule.getLength());
-
-        return schedule;
-    }
-
-    /**
      * Writes out a schedule to DOT format
      * @param dotParser writes the schedule
      * @param schedule to be written
