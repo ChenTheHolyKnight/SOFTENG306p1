@@ -268,9 +268,9 @@ public class GUIController {
     }
 
     /**
-     * The method to add the scheduled task to the Gantt chart
+     * The helper method to add the scheduled task to the Gantt chart
      */
-    public void addScheduledTaskToChart(ScheduledTask task){
+    private void addScheduledTaskToChart(ScheduledTask task){
         int weight=task.getTask().getDuration();
         int processorNum=task.getProcessor();
         XYChart.Series series=seriesHashMap.get(processorNum-1);
@@ -279,6 +279,27 @@ public class GUIController {
 
         //chart.getData().add(series);
     }
+
+    /**
+     * The method to map the entire schedule to the Gantt chart
+     */
+    public void mapScheduleToGanttChart(Schedule schedule){
+        clearGanttChart();
+        List<ScheduledTask> scheduledTasks=schedule.getAllScheduledTasks();
+        scheduledTasks.forEach(scheduledTask -> {
+            addScheduledTaskToChart(scheduledTask);
+        });
+    }
+
+    /**
+     * The helper method to clear the gantt chart after each new shedule is passed
+     */
+    private void clearGanttChart(){
+        chart.getData().forEach(series->{
+            series.getData().clear();
+        });
+    }
+
 
     /**
      * The method needs to be called in the scheule
