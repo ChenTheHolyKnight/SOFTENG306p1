@@ -19,15 +19,24 @@ public class DFSScheduler extends BranchAndBoundScheduler  implements Callable<S
     /**
      * Instantiates a DFSScheduler with the specified params
      * @param numProcessors The number of processors to schedule tasks on
-     * @param p The pruner manager to use
+     * @param pm The pruner manager to use
      * @param cfm The cost function manager to use
      */
-    public DFSScheduler(int numProcessors, PrunerManager p, CostFunctionManager cfm) {
-        super(numProcessors, p, cfm);
+    public DFSScheduler(int numProcessors, PrunerManager pm, CostFunctionManager cfm) {
+        super(numProcessors, pm, cfm);
         this.scheduleStack = new Stack<>();
     }
-    public DFSScheduler(int numProcessors, PrunerManager p, CostFunctionManager cfm, Stack<Schedule> s) {
-        super(numProcessors, p, cfm);
+
+    /**
+     * Constructs a DFS scheduler that will start searching from a specified point in the
+     * search space (as specified by the schedules in the stack).
+     * @param numProcessors The number of processors to schedule tasks on
+     * @param pm The pruner manager to use
+     * @param cfm The cost function manager to use
+     * @param s A stack containing (partial) schedules to expand upon
+     */
+    public DFSScheduler(int numProcessors, PrunerManager pm, CostFunctionManager cfm, Stack<Schedule> s) {
+        super(numProcessors, pm, cfm);
         this.scheduleStack = s;
     }
 
@@ -43,12 +52,13 @@ public class DFSScheduler extends BranchAndBoundScheduler  implements Callable<S
         PrunerManager pm = getPrunerManager();
         CostFunctionManager cfm = getCostFunctionManager();
 
-        // initialize stack with the empty schedule
         if(scheduleStack.empty()){
             scheduleStack.push(new Schedule());
         }
+
         // start the search, and continue until all possible schedules have been processed
         while (!scheduleStack.isEmpty()) {
+
             Schedule currentSchedule = scheduleStack.pop();
             if (currentSchedule.isComplete()) {
                 // check if the complete schedule is better than our best schedule so far
@@ -58,7 +68,6 @@ public class DFSScheduler extends BranchAndBoundScheduler  implements Callable<S
                 }
             } else {
                 // not a complete schedule so add children to the stack to be processed later
-
                 List<Schedule> pruned = pm.execute(super.getChildrenOfSchedule(currentSchedule));
                 for (Schedule s: pruned){
                     if (cfm.calculate(s)< bestScheduleLength) {
@@ -72,13 +81,6 @@ public class DFSScheduler extends BranchAndBoundScheduler  implements Callable<S
         return bestSchedule;
     }
 
-    //@Override
-    public void run() {
-        produceSchedule();
-    }
-    public Schedule getSchedule(){
-        return bestSchedule;
-    }
 
     @Override
     public Schedule call(){

@@ -14,7 +14,7 @@ import java.util.concurrent.*;
  * Parallel DFS algorithm manager.
  * @author Sam Broadhead
  */
-public class DFSParallelScheduler extends DFSScheduler {
+public class DFSParallelScheduler extends BranchAndBoundScheduler {
     private int numThreads;
     /**
      * Instantiates a DFSScheduler with the specified params
