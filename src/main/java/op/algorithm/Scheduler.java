@@ -52,9 +52,8 @@ public abstract class Scheduler {
      * Constructor for a Scheduler instance
      * @param numProcessors the number of processors to schedule tasks on
      */
-    public Scheduler(int numProcessors, boolean toVisualize) {
+    public Scheduler(int numProcessors) {
         this.numProcessors = numProcessors;
-        this.toVisualize = toVisualize;
         this.listeners = new ArrayList<>();
     }
 

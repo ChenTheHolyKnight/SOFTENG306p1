@@ -36,7 +36,7 @@ public class Application {
         application.readDot(dotParser);
 
         // Create scheduler
-        application.createScheduler();
+        //application.createScheduler();
 
         // Start visualization if -v is found in the arguments
         if(arg.getToVisualize())

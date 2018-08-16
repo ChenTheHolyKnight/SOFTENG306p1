@@ -17,8 +17,8 @@ public class GreedyScheduler extends Scheduler {
     private GUIController controller;
     
 
-    public GreedyScheduler(int numProcessors, boolean toVisualize) {
-    	super(numProcessors, toVisualize);
+    public GreedyScheduler(int numProcessors) {
+    	super(numProcessors);
     }
 
     /**

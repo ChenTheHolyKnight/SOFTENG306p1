@@ -19,8 +19,8 @@ public class SimpleScheduler extends Scheduler {
     private static final int DEFAULT_PROCESSOR = 1;
     private int startTime;
 
-    public SimpleScheduler(boolean toVisualize) {
-        super(1, toVisualize); // this implementation only schedules tasks on one processor
+    public SimpleScheduler() {
+        super(1); // this implementation only schedules tasks on one processor
         startTime = 0;
     }
 
