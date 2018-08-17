@@ -41,11 +41,14 @@ public class SystemInfo extends TimerTask{
 
     @Override
     public void run() {
-        //if(cpuTile.getUnit()!=null)
+        try{
         cpuTile.setUnit("%");
         cpuTile.setValue(this.getCPU());
         if(memoryTile.getUnit()!=null)
             memoryTile.setUnit("%");
         memoryTile.setValue(this.getMemory());
+        }catch (Exception e){
+            //try catch here to ignore concurrency problem. ie: prevent system crashes even though it's not a problem.
+        }
     }
 }

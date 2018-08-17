@@ -129,7 +129,6 @@ public class GUIController implements SchedulerListener {
         timer = new Timer();
         memoryTile.setSkinType(Tile.SkinType.BAR_GAUGE);
         cpuTile.setSkinType(Tile.SkinType.BAR_GAUGE);
-        cpuTile.setUnit("%");
         timer.schedule(new SystemInfo(cpuTile, memoryTile), 0, 100);
     }
 
