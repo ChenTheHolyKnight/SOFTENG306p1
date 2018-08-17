@@ -95,6 +95,8 @@ public class GUIController implements SchedulerListener {
     private Thread uiThread;
 
     private VisualizerData visualizerData;
+    // GUI should know the current best so it knows when to update (if the value is changed)
+    private int bestScheduleLength;
 
     /**
      * Method to control the start button
@@ -187,6 +189,7 @@ public class GUIController implements SchedulerListener {
             //uiThread for multithreading
         });*/
         visualizerData = new VisualizerData();
+        bestScheduleLength = Integer.MAX_VALUE;
 
 
         schedulePane.setOpacity(0.0);
@@ -237,10 +240,15 @@ public class GUIController implements SchedulerListener {
         // best schedules update far slower than the counters, so update every half second
         Timeline updateBestSchedule = new Timeline(
                 new KeyFrame(Duration.millis(500), (ActionEvent e) -> {
-                    Schedule newSchedule = visualizerData.getNewestSchedule();
-                    int bestScheduleLength = visualizerData.getBestScheduleLength();
-                    bestLength.setText(Integer.toString(bestScheduleLength));
-                    mapScheduleToGanttChart(newSchedule);
+                    int newBestScheduleLength = visualizerData.getBestScheduleLength();
+
+                    if (newBestScheduleLength != bestScheduleLength) {
+                        // only update if the best schedule is different
+                        bestScheduleLength = newBestScheduleLength;
+                        Schedule newSchedule = visualizerData.getNewestSchedule();
+                        bestLength.setText(Integer.toString(newBestScheduleLength));
+                        mapScheduleToGanttChart(newSchedule);
+                    }
                 }
         ));
         updateBestSchedule.setCycleCount(Timeline.INDEFINITE);
