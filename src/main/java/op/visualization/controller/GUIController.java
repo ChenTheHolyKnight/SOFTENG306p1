@@ -86,7 +86,7 @@ public class GUIController implements SchedulerListener {
     final CategoryAxis yAxis = new CategoryAxis();
     final GanttChart<Number,String> chart = new GanttChart<>(xAxis,yAxis);
     private HashMap<Integer,XYChart.Series> seriesHashMap = new HashMap<>();
-    private int coreNum = 8;
+    private int coreNum = 1;
 
     private Timer timer;
 
@@ -106,6 +106,7 @@ public class GUIController implements SchedulerListener {
 
         visualizerData = new VisualizerData();
         bestScheduleLength = Integer.MAX_VALUE;
+        coreNum=Application.getInstance().getProcessNum();
 
         embedGraph();
         initializeGanttChart();
