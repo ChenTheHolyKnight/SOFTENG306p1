@@ -4,11 +4,9 @@ import op.algorithm.bound.CostFunctionManager;
 import op.algorithm.prune.PrunerManager;
 import op.model.Schedule;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Parallel DFS algorithm manager.
@@ -16,8 +14,9 @@ import java.util.concurrent.*;
  */
 public class DFSParallelScheduler extends BranchAndBoundScheduler {
     private int numThreads;
-    Stack<Schedule> scheduleStack = new Stack<Schedule>();
-    Stack<Schedule>[] stacks;
+    Deque<Schedule> scheduleStack = new ConcurrentLinkedDeque<>();
+    Deque<Schedule>[] stacks;
+    private AtomicInteger globalBestScheduleLength = new AtomicInteger(Integer.MAX_VALUE);
 
     /**
      * Instantiates a DFSScheduler with the specified params
@@ -53,16 +52,16 @@ public class DFSParallelScheduler extends BranchAndBoundScheduler {
         // initiate threads and run them in parallel
         ExecutorService executor = Executors.newFixedThreadPool(numThreads);
         List<Future<Schedule>> futures = new ArrayList<>();
-        stacks = new Stack[numThreads];
+        stacks = new ConcurrentLinkedDeque[numThreads];
         for (int i = 0; i < numThreads; i++){
-            stacks[i] = new Stack<>();
+            stacks[i] = new ConcurrentLinkedDeque<>();
         }
         int scheduleSize = scheduleStack.size(); // for loop iteration safety
         for (int i = 0; i < scheduleSize; i++){
             stacks[i%numThreads].push(scheduleStack.pop());
         }
         for (int i = 0; i < numThreads; i++) {
-            futures.add(executor.submit(new DFSScheduler(getNumProcessors(), getPrunerManager(), getCostFunctionManager().clone(), stacks, i)));
+            futures.add(executor.submit(new DFSScheduler(getNumProcessors(), getPrunerManager(), getCostFunctionManager(), stacks, i, globalBestScheduleLength)));
         }
         executor.shutdown();
         while(!executor.isTerminated()){

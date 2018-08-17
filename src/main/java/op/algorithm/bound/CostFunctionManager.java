@@ -50,26 +50,6 @@ public class CostFunctionManager {
     }
 
     /**
-     * clone the current CostFunctionManager so each Thread can have its own, minimise blocking.
-     * @return a new CostFunctionManager
-     */
-    @Override
-    public CostFunctionManager clone (){
-        CostFunctionManager cloned = new CostFunctionManager(this.numProcessors);
-
-        for(CostFunction cf : costFunctions){
-            if(cf.toString().contains("BottomLevel")){
-                cloned.addBottomLevelFunction();
-            }
-            if(cf.toString().contains("IdleTime")){
-                cloned.addIdleTimeFunction();
-            }
-        }
-
-        return cloned;
-    }
-
-    /**
      * Calculates the cost function with the tightest lower bound
      * @return cost function with the tightest lower bound
      */
