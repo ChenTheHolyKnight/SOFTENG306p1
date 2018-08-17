@@ -7,6 +7,14 @@
     -fx-font-size: 14px;
 }
 
+.heading {
+    -fx-font-size: 26px;
+}
+
+.graphTaskToggle {
+    -fx-font-size: 18px;
+}
+
 .background {
     -fx-background-color: linear-gradient(#00003E, black);
     /*686858*/

@@ -20,7 +20,8 @@ import java.util.Timer;
 public class Visualizer extends Application{
 
     private GUIController controller;
-    private static final int SCENE_HEIGHT = 620;
+    private static final int SCENE_HEIGHT = 645;
+    private static final int SCENE_WIDTH = 995;
     private int coreNum;
 
     /**
@@ -48,6 +49,7 @@ public class Visualizer extends Application{
         //controller.setCoreNum(coreNum);
 
         stage.setHeight(SCENE_HEIGHT);
+        stage.setWidth(SCENE_WIDTH);
         stage.setResizable(false);
         stage.centerOnScreen();
 
