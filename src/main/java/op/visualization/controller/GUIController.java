@@ -49,7 +49,7 @@ public class GUIController implements SchedulerListener {
     private final String GRAPH_IDENTIFIER = "graph";
     private final int GANTT_CHART_X_AXIS_MINOR_TICK_COUNT = 4;
     private final int GANTT_CHART_Y_AXIS_TICK_LABEL_GAP = 10;
-    private final int GANTT_CHART_BLOCK_HEIGHT = 50;
+    private final int GANTT_CHART_GAP = 200;
 
     // XML elements
     @FXML
@@ -391,7 +391,7 @@ public class GUIController implements SchedulerListener {
     private void initializeGanttChartSettings() {
         chart.setTitle("Scheduling Visualization");
         chart.setLegendVisible(false);
-        chart.setBlockHeight(GANTT_CHART_BLOCK_HEIGHT);
+        chart.setBlockHeight((schedulePane.getPrefHeight()-GANTT_CHART_GAP)/coreNum);
         chart.setPrefHeight(schedulePane.getPrefHeight());
         chart.setPrefWidth(schedulePane.getPrefWidth());
         chart.getStylesheets().add("op/visualization/view/Styles/ganttchart.css");
