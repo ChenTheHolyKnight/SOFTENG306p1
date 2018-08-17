@@ -76,5 +76,6 @@ public class Visualizer extends Application{
     @Override
     public void stop(){
         controller.cancelTimer();
+        System.exit(1);
     }
 }
