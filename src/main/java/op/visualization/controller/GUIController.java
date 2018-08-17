@@ -2,8 +2,11 @@ package op.visualization.controller;
 
 import eu.hansolo.tilesfx.Tile;
 import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
@@ -26,6 +29,7 @@ import op.Application;
 import op.visualization.VisualizerData;
 import op.visualization.messages.UpdateMessage;
 import org.controlsfx.control.ToggleSwitch;
+import org.controlsfx.control.action.Action;
 import org.graphstream.ui.fx_viewer.FxDefaultView;
 import org.graphstream.ui.fx_viewer.FxViewer;
 import org.graphstream.ui.graphicGraph.GraphicGraph;
@@ -177,7 +181,7 @@ public class GUIController implements SchedulerListener {
      * initialize the controller
      */
     @FXML
-    public void initialize(){
+    public void initialize() {
 
         /*uiThread=new Thread(()->{
             //uiThread for multithreading
@@ -198,8 +202,9 @@ public class GUIController implements SchedulerListener {
         s.addListener(visualizerData); // register the visualization data as a listener
 
         // start running algorithm
-        javafx.concurrent.Task<Void> task=new javafx.concurrent.Task<Void>() {
+        javafx.concurrent.Task<Void> task = new javafx.concurrent.Task<Void>() {
             private Schedule schedule;
+
             @Override
             protected Void call() {
                 System.out.println("start");
@@ -207,7 +212,8 @@ public class GUIController implements SchedulerListener {
                 return null;
             }
 
-            @Override protected void succeeded() {
+            @Override
+            protected void succeeded() {
                 super.succeeded();
                 Application.getInstance().writeDot(schedule);
             }
@@ -216,32 +222,29 @@ public class GUIController implements SchedulerListener {
 
         // arrange for controller to query visualization data instance often and update the gui
         // based on the data it reads
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                long numPrunedTrees = visualizerData.getNumPrunedTrees();
-                long numNodesVisited = visualizerData.getNumNodesVisited();
-
-                // schedule the updates to run on the GUI thread
-                Platform.runLater(() -> {
+        Timeline updateCounters = new Timeline(
+                new KeyFrame(Duration.millis(100), (ActionEvent ae) -> {
+                    long numPrunedTrees = visualizerData.getNumPrunedTrees();
+                    long numNodesVisited = visualizerData.getNumNodesVisited();
                     prunedTrees.setText(Long.toString(numPrunedTrees));
                     nodesVisisted.setText(Long.toString(numNodesVisited));
-                });
-            }
-        }, 0, 100);
+                }
+         ));
+        updateCounters.setCycleCount(Timeline.INDEFINITE);
+        updateCounters.play();
+
 
         // best schedules update far slower than the counters, so update every half second
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                Schedule newSchedule = visualizerData.getNewestSchedule();
-                int bestScheduleLength = visualizerData.getBestScheduleLength();
-                Platform.runLater(() -> {
+        Timeline updateBestSchedule = new Timeline(
+                new KeyFrame(Duration.millis(500), (ActionEvent e) -> {
+                    Schedule newSchedule = visualizerData.getNewestSchedule();
+                    int bestScheduleLength = visualizerData.getBestScheduleLength();
                     bestLength.setText(Integer.toString(bestScheduleLength));
                     mapScheduleToGanttChart(newSchedule);
-                });
-            }
-        }, 0, 500);
+                }
+        ));
+        updateBestSchedule.setCycleCount(Timeline.INDEFINITE);
+        updateBestSchedule.play();
     }
 
     /**
