@@ -6,10 +6,12 @@ import op.algorithm.bound.CostFunctionManager;
 import op.algorithm.prune.PrunerManager;
 import op.io.InvalidUserInputException;
 import op.model.Schedule;
-import op.visualization.GUIApplication;
 import op.io.CommandLineIO;
 import op.io.DotIO;
 import op.model.Arguments;
+import op.visualization.GUIApplication;
+import op.visualization.Visualiser;
+import op.visualization.controller.GUIController;
 
 import java.io.IOException;
 
