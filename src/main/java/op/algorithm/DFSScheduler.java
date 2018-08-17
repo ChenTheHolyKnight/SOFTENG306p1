@@ -15,6 +15,8 @@ import java.util.concurrent.Callable;
  */
 public class DFSScheduler extends BranchAndBoundScheduler  implements Callable<Schedule> {
     private Stack<Schedule> scheduleStack;
+    private Stack<Schedule>[] scheduleStacks;
+    private int position;
 
     /**
      * Instantiates a DFSScheduler with the specified params
@@ -36,9 +38,11 @@ public class DFSScheduler extends BranchAndBoundScheduler  implements Callable<S
      * @param cfm The cost function manager to use
      * @param s A stack containing (partial) schedules to expand upon
      */
-    public DFSScheduler(int numProcessors, PrunerManager pm, CostFunctionManager cfm, Stack<Schedule> s) {
+    public DFSScheduler(int numProcessors, PrunerManager pm, CostFunctionManager cfm, Stack<Schedule>[] s, int position) {
         super(numProcessors, pm, cfm);
-        this.scheduleStack = s;
+        this.scheduleStacks = s;
+        this.scheduleStack = s[position];
+        this.position = position;
     }
 
     /**
@@ -52,10 +56,13 @@ public class DFSScheduler extends BranchAndBoundScheduler  implements Callable<S
         int bestScheduleLength = Integer.MAX_VALUE;
         PrunerManager pm = getPrunerManager();
         CostFunctionManager cfm = getCostFunctionManager();
-
+        boolean keep = false;
         // start the search, and continue until all possible schedules have been processed
         while (!scheduleStack.isEmpty()) {
-
+            if(keep) {
+                System.out.println("picked up a new stack");
+                keep = false;
+            }
             Schedule currentSchedule = scheduleStack.pop();
             if (currentSchedule.isComplete()) {
                 // check if the complete schedule is better than our best schedule so far
@@ -72,6 +79,11 @@ public class DFSScheduler extends BranchAndBoundScheduler  implements Callable<S
                     }
                 }
             }
+            if(scheduleStack.isEmpty() && (scheduleStacks!=null)){
+                keep = true;
+                System.out.println("finished my stack");
+                getNewStack();
+            }
         }
 
         return bestSchedule;
@@ -81,5 +93,10 @@ public class DFSScheduler extends BranchAndBoundScheduler  implements Callable<S
     @Override
     public Schedule call(){
         return produceSchedule();
+    }
+    private void getNewStack(){
+        int neighbor = (position+1)%scheduleStacks.length;
+        scheduleStacks[position] = scheduleStacks[neighbor];
+        scheduleStack = scheduleStacks[neighbor];
     }
 }

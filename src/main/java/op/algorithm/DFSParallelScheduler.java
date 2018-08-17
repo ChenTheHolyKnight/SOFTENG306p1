@@ -54,32 +54,26 @@ public class DFSParallelScheduler extends BranchAndBoundScheduler {
         // initiate threads and run them in parallel
         ExecutorService executor = Executors.newFixedThreadPool(numThreads);
         List<Future<Schedule>> futures = new ArrayList<>();
-        /*stacks = new Stack[numThreads];
+        stacks = new Stack[numThreads];
         for (int i = 0; i < numThreads; i++){
             stacks[i] = new Stack<>();
         }
         int scheduleSize = scheduleStack.size(); // for loop iteration safety
         for (int i = 0; i < scheduleSize; i++){
             stacks[i%numThreads].push(scheduleStack.pop());
-        }*/
+        }
         for (int i = 0; i < numThreads; i++) {
-            futures.add(executor.submit(new DFSScheduler(getNumProcessors(), getPrunerManager(), getCostFunctionManager().clone(), scheduleStack)));
+            futures.add(executor.submit(new DFSScheduler(getNumProcessors(), getPrunerManager(), getCostFunctionManager().clone(), stacks, i)));
         }
         executor.shutdown();
-        /*while(!executor.isTerminated()){
-            for (int i = 0; i < numThreads; i++){
+        while(!executor.isTerminated()){
+            /*for (int i = 0; i < numThreads; i++){
                 int neighbor = (i+1)%numThreads;
-                /*if((stacks[i].size()+10 < stacks[neighbor].size()) && (stacks[neighbor].size() > 4)){
+                if((stacks[i].size() < 10) && (stacks[neighbor].size() > 10)){
                     stacks[i].push(stacks[neighbor].pop());
                 }
-                if(stacks[i].isEmpty() && !(stacks[neighbor].size() < 2)){
-                    int splitSize = stacks[neighbor].size()/2;
-                    for (int j = 0; j < splitSize; j++){
-                        stacks[i].push(stacks[neighbor].pop());
-                    }
-                }
-            }
-        }*/
+            }*/
+        }
 
         List<Schedule> results = new ArrayList<>();
         for (Future<Schedule> f : futures) {
@@ -90,7 +84,6 @@ public class DFSParallelScheduler extends BranchAndBoundScheduler {
             } catch (ExecutionException e) {
                 // the stack was emptied when a thread was trying to get a new schedule
                 // can ignore this because this means algorithm has already finished
-                e.printStackTrace();
             }
         }
         results.removeAll(Collections.singleton(null));
