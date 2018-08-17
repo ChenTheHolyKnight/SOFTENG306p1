@@ -45,7 +45,7 @@ public class Visualizer extends Application{
 
         controller = loader.getController();
         //System.out.println(application.toString()+" core number "+coreNum);
-        controller.setCoreNum(coreNum);
+        //controller.setCoreNum(coreNum);
 
         stage.setHeight(SCENE_HEIGHT);
         stage.setResizable(false);

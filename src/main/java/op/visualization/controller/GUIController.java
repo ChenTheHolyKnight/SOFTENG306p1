@@ -92,7 +92,7 @@ public class GUIController implements SchedulerListener {
 
     private VisualizerData visualizerData;
 
-    private int coreNum;
+
     /**
      * GUI should know the current best so it knows when to update (if the value is changed)
       */
@@ -211,12 +211,12 @@ public class GUIController implements SchedulerListener {
     /**
      * initialize the controller
      */
-    @FXML
+    /*@FXML
     public void initialize(){
 
         /*uiThread=new Thread(()->{
             //uiThread for multithreading
-        });*/
+        });
 
         coreNum=Application.getInstance().getProcessNum();
         schedulePane.setOpacity(0.0);
@@ -252,7 +252,7 @@ public class GUIController implements SchedulerListener {
         };
         Thread th = new Thread(task);
         th.start();
-    }
+    }*/
 
     /**
      * Get the CPU Tile with certain skin
