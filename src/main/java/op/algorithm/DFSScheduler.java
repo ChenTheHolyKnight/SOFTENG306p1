@@ -55,18 +55,25 @@ public class DFSScheduler extends BranchAndBoundScheduler {
                 if (currentSchedule.getLength() < bestScheduleLength) {
                     bestSchedule = currentSchedule;
                     bestScheduleLength = currentSchedule.getLength();
-                    System.out.println("firing update, best length so far is " + bestScheduleLength);
                     super.fireNewScheduleUpdate(bestSchedule);
+                    super.fireBestScheduleLengthUpdate(bestScheduleLength);
                 }
             } else {
                 // not a complete schedule so add children to the stack to be processed later
+                List<Schedule> children = super.getChildrenOfSchedule(currentSchedule);
+                super.fireNodesVisitedUpdate(super.addToNodesVisited(children.size()));
 
-                List<Schedule> pruned = pm.execute(super.getChildrenOfSchedule(currentSchedule));
+                List<Schedule> pruned = pm.execute(children);
+                int numRemovedByCostFunc = pruned.size();
                 for (Schedule s: pruned){
                     if (cfm.calculate(s)< bestScheduleLength) {
                         scheduleStack.push(s);
+                        numRemovedByCostFunc--;
                     }
                 }
+
+                int treesPruned = children.size() - pruned.size() + numRemovedByCostFunc;
+                super.fireNumPrunedTreesUpdate(super.addToPrunedTrees(treesPruned));
             }
         }
 

@@ -13,4 +13,23 @@ public interface SchedulerListener {
      * @param s The new schedule
      */
     void newSchedule(Schedule s);
+
+    /**
+     * Tells the listener how many trees have been pruned
+     * @param prunedTrees
+     */
+    void updateNumPrunedTrees(int prunedTrees);
+
+    /**
+     * Tells the listener how many nodes in the search space have been visited
+     * @param nodesVisited
+     */
+    void updateNodesVisited(int nodesVisited);
+
+    /**
+     * Tells the listener what the new best schedule length is
+     * @param scheduleLength
+     */
+    void updateBestScheduleLength(int scheduleLength);
+
 }

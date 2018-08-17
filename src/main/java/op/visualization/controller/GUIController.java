@@ -2,8 +2,11 @@ package op.visualization.controller;
 
 import eu.hansolo.tilesfx.Tile;
 import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
@@ -23,8 +26,10 @@ import op.model.Task;
 import op.model.TaskGraph;
 import op.visualization.GanttChart;
 import op.Application;
+import op.visualization.VisualizerData;
 import op.visualization.messages.UpdateMessage;
 import org.controlsfx.control.ToggleSwitch;
+import org.controlsfx.control.action.Action;
 import org.graphstream.ui.fx_viewer.FxDefaultView;
 import org.graphstream.ui.fx_viewer.FxViewer;
 import org.graphstream.ui.graphicGraph.GraphicGraph;
@@ -33,10 +38,7 @@ import scala.xml.Null;
 
 import java.net.URL;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * The controller class to control the GUI*/
@@ -81,21 +83,20 @@ public class GUIController implements SchedulerListener {
     private Label scheduledTasks;
 
 
-
     //axis of the Gantt chart
     final NumberAxis xAxis = new NumberAxis();
     final CategoryAxis yAxis = new CategoryAxis();
-
     //the customized Gantt chart
     final GanttChart<Number,String> chart = new GanttChart<Number,String>(xAxis,yAxis);
-
     private HashMap<Integer,XYChart.Series> seriesHashMap=new HashMap<>();
-
     private int coreNum=8;
 
     private Application application;
-
     private Thread uiThread;
+
+    private VisualizerData visualizerData;
+    // GUI should know the current best so it knows when to update (if the value is changed)
+    private int bestScheduleLength;
 
     /**
      * Method to control the start button
@@ -182,11 +183,13 @@ public class GUIController implements SchedulerListener {
      * initialize the controller
      */
     @FXML
-    public void initialize(){
+    public void initialize() {
 
         /*uiThread=new Thread(()->{
             //uiThread for multithreading
         });*/
+        visualizerData = new VisualizerData();
+        bestScheduleLength = Integer.MAX_VALUE;
 
 
         schedulePane.setOpacity(0.0);
@@ -199,29 +202,57 @@ public class GUIController implements SchedulerListener {
 
         Application app = Application.getInstance();
         Scheduler s = app.getScheduler();
-        s.addListener(this); // register this controller as a listener
+        s.addListener(visualizerData); // register the visualization data as a listener
 
-        javafx.concurrent.Task<Void> task=new javafx.concurrent.Task<Void>() {
+        // start running algorithm
+        javafx.concurrent.Task<Void> task = new javafx.concurrent.Task<Void>() {
             private Schedule schedule;
+
             @Override
             protected Void call() {
                 System.out.println("start");
-                //System.out.println(application==null);
                 schedule = app.produceSchedule();
-//                Platform.runLater(()->{
-//                    mapScheduleToGanttChart(schedule);
-//                });
-                //mapScheduleToGanttChart(schedule);
                 return null;
             }
 
-            @Override protected void succeeded() {
+            @Override
+            protected void succeeded() {
                 super.succeeded();
-                Application.getInstance().writeDot(Application.getInstance().getDotParser(),schedule);
+                Application.getInstance().writeDot(schedule);
             }
         };
-        Thread th = new Thread(task);
-        th.start();
+        new Thread(task).start();
+
+        // arrange for controller to query visualization data instance often and update the gui
+        // based on the data it reads
+        Timeline updateCounters = new Timeline(
+                new KeyFrame(Duration.millis(100), (ActionEvent ae) -> {
+                    long numPrunedTrees = visualizerData.getNumPrunedTrees();
+                    long numNodesVisited = visualizerData.getNumNodesVisited();
+                    prunedTrees.setText(Long.toString(numPrunedTrees));
+                    nodesVisisted.setText(Long.toString(numNodesVisited));
+                }
+         ));
+        updateCounters.setCycleCount(Timeline.INDEFINITE);
+        updateCounters.play();
+
+
+        // best schedules update far slower than the counters, so update every half second
+        Timeline updateBestSchedule = new Timeline(
+                new KeyFrame(Duration.millis(500), (ActionEvent e) -> {
+                    int newBestScheduleLength = visualizerData.getBestScheduleLength();
+
+                    if (newBestScheduleLength != bestScheduleLength) {
+                        // only update if the best schedule is different
+                        bestScheduleLength = newBestScheduleLength;
+                        Schedule newSchedule = visualizerData.getNewestSchedule();
+                        bestLength.setText(Integer.toString(newBestScheduleLength));
+                        mapScheduleToGanttChart(newSchedule);
+                    }
+                }
+        ));
+        updateBestSchedule.setCycleCount(Timeline.INDEFINITE);
+        updateBestSchedule.play();
     }
 
     /**
@@ -270,6 +301,26 @@ public class GUIController implements SchedulerListener {
 
     }
 
+    @Override
+    public void updateNumPrunedTrees(int numPrunedTrees) {
+        Platform.runLater(() -> {
+            prunedTrees.setText(Integer.toString(numPrunedTrees));
+        });
+    }
+
+    @Override
+    public void updateNodesVisited(int numNodesVisited) {
+        Platform.runLater(() -> {
+            nodesVisisted.setText(Integer.toString(numNodesVisited));
+        });
+    }
+
+    @Override
+    public void updateBestScheduleLength(int scheduleLength) {
+        Platform.runLater(() -> {
+            bestLength.setText(Integer.toString(scheduleLength));
+        });
+    }
 
     /**
      * Set number of cores in the controller
@@ -352,16 +403,6 @@ public class GUIController implements SchedulerListener {
             series.getData().clear();
         });
     }
-
-
-    /**
-     * The method needs to be called in the scheule
-     */
-    public void setPercentageTile(int totalTasks,int scheduledTasks){ ;
-        double percentage=(double) scheduledTasks/(double) totalTasks*100;
-        percentageTile.setValue(percentage);
-    }
-
 
     /**
      * The method to get the stats ps: feel free to change the params

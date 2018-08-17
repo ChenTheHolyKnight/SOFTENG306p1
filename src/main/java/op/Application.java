@@ -53,7 +53,7 @@ public class Application {
 
         // Read dot file
         dotParser = new DotIO();
-        application.readDot(dotParser);
+        application.readDot();
 
         // Create scheduler
         //application.createScheduler();
@@ -66,7 +66,7 @@ public class Application {
             Schedule schedule = application.produceSchedule();
 
             // Write out the schedule
-            application.writeDot(dotParser, schedule);
+            application.writeDot(schedule);
         }
     }
 
@@ -99,10 +99,8 @@ public class Application {
 
     /**
      * Reads in the DOT file the user has specified
-     * To be run as an IO_Task with ParallelIT
-     * @param dotParser
      */
-    private void readDot(DotIO dotParser) {
+    private void readDot() {
 
         try {
             dotParser.dotIn(arguments.getInputGraphFilename());
@@ -165,10 +163,9 @@ public class Application {
 
     /**
      * Writes out a schedule to DOT format
-     * @param dotParser writes the schedule
      * @param schedule to be written
      */
-    public void writeDot(DotIO dotParser, Schedule schedule){
+    public void writeDot(Schedule schedule){
         try {
             dotParser.dotOut(schedule, arguments.getOutputGraphFilename());
         } catch (IOException e) {
