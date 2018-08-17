@@ -23,46 +23,47 @@ import java.util.List;
 public class Application {
 	private Arguments arguments;
 	private Scheduler scheduler;
-	private long startTime;
 	private Visualizer visualizer;
 	private static DotIO dotParser;
 	private static Application application;
 
 	private Application(){
-	    application=this;
+	    application = this;
     }
 
+    /**
+     * @return the application singleton
+     */
     public static Application getInstance(){
-	    if(application==null){
-	        application=new Application();
+
+	    if (application == null) {
+	        application = new Application();
         }
         return application;
     }
 
-    public DotIO getDotParser(){
-	    return dotParser;
-    }
-
     public static void main(String[] args) {
-    	
-        //application = new Application();
+
+        application = Application.getInstance();
 
         // Read from command line
-        application=Application.getInstance();
-        Arguments arg=application.initArguments(args);
+        Arguments arg = application.initArguments(args);
 
         // Read dot file
         dotParser = new DotIO();
         application.readDot();
 
-        // Create scheduler
-        //application.createScheduler();
-        // Start visualization if -v is found in the arguments
+        // Create a scheduler
         application.createScheduler();
-        if(arg.getToVisualize())
+
+        if (arg.getToVisualize())
+
+            // Start visualization if user has specified this
             application.startVisualization(args);
+
         else {
-            // Produce a schedule - create a new thread to do this.
+
+            // Otherwise produce a new schedule
             Schedule schedule = application.produceSchedule();
 
             // Write out the schedule
@@ -86,6 +87,9 @@ public class Application {
         return null;
     }
 
+    /**
+     * Produces a scheduler based on user-specified command line arguments
+     */
     private void createScheduler() {
         SchedulerFactory sf = new SchedulerFactory();
         scheduler = sf.createScheduler(
@@ -110,17 +114,32 @@ public class Application {
     }
 
     /**
-     * Gives the caller access to the scheduler
-     * @return the scheduler that has been specified by the user based on the cmd arguments
+     * Starts the algorithm running concurrently with the calling thread
      */
-    public Scheduler getScheduler() {
-        return scheduler;
+    public void startConcurrentAlgorithm() {
+        javafx.concurrent.Task<Void> task = new javafx.concurrent.Task<Void>() {
+            private Schedule schedule;
+
+            @Override
+            protected Void call() {
+                System.out.println("start");
+                schedule = Application.getInstance().produceSchedule();
+                return null;
+            }
+
+            @Override
+            protected void succeeded() {
+                super.succeeded();
+                Application.getInstance().writeDot(schedule);
+            }
+        };
+        new Thread(task).start();
     }
 
     /**
      * Produces a scheduler to schedule tasks on
      */
-    public Schedule produceSchedule() {
+    private Schedule produceSchedule() {
 
         System.out.println("Starting " + arguments.getAlgorithm().getCmdRepresentation()
                             + " scheduler implementation...");
@@ -144,28 +163,26 @@ public class Application {
     }
 
     /**
-     * Visualizes the search for a solution schedule
-     * To be run concurrently with produceSchedule()
+     * Lets scheduler listeners listen to events fired by a scheduler
+     */
+    public void addSchedulerListener(SchedulerListener listener) {
+        scheduler.addListener(listener); //
+    }
+
+    /**
+     * Starts the visualization
      */
     private void startVisualization(String[] args) {
-        //if (arguments.getToVisualize()) {
-            //new Thread(() -> {
-                visualizer = new Visualizer();
-                //scheduler.addListener(visualizer);
-                visualizer.setCore(arguments.getNumCores());
-                //System.out.println("setted application "+application);
-                //visualizer.setApplication(application);
-                visualizer.startVisualization(args);
-            //}).start();
-        //}
-
+        visualizer = new Visualizer();
+        visualizer.setCore(arguments.getNumCores());
+        visualizer.startVisualization(args);
     }
 
     /**
      * Writes out a schedule to DOT format
      * @param schedule to be written
      */
-    public void writeDot(Schedule schedule){
+    private void writeDot(Schedule schedule){
         try {
             dotParser.dotOut(schedule, arguments.getOutputGraphFilename());
         } catch (IOException e) {
@@ -173,6 +190,10 @@ public class Application {
         }
     }
 
+    /**
+     * Informs the user of a fatal error and stops the program
+     * @param message
+     */
     private void fatalError(String message) {
         System.out.println(message);
         System.exit(1);

@@ -35,43 +35,6 @@ public class GraphController {
 		//addMoreNodes();
 	}
 
-    /**
-     * Test method. To be moved to test class.
-     */
-	/*private void addNodes() {
-
-        for (int i = 0; i < 20; i++) {
-            placeNode("" + i);
-        }
-        Set<String> children = new HashSet<>();
-        children.add("2");
-        children.add("3");
-        children.add("4");
-        children.add("5");
-        children.add("6");
-        addNodes("1", children);
-
-    }
-
-    private void addMoreNodes() {
-        Set<String> children2 = new HashSet<>();
-        children2.add("7");
-        children2.add("8");
-        children2.add("9");
-        children2.add("10");
-        children2.add("11");
-        addNodes("6", children2);
-
-        Set<String> children3 = new HashSet<>();
-        children3.add("12");
-        children3.add("13");
-        children3.add("14");
-        children3.add("15");
-        children3.add("16");
-        addNodes("11", children3);
-
-    }*/
-	
 	/**
 	 * Gets the singleton instance of GraphController
 	 * 

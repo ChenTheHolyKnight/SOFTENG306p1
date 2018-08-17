@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.ToggleSwitch?>
 
-<AnchorPane prefHeight="600.0" prefWidth="900.0" styleClass="background" stylesheets="@Styles/BackPanel.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="op.visualization.controller.GUIController">
+<AnchorPane prefHeight="600.0" prefWidth="900.0" styleClass="background" stylesheets="@Styles/BackPanel.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="op.visualization.controller.GUIController">
    <children>
       <AnchorPane fx:id="graphPane" prefHeight="502.0" prefWidth="681.0" styleClass="textBackground" />
       <AnchorPane fx:id="schedulePane" opacity="0.51" prefHeight="502.0" prefWidth="681.0" styleClass="background" />
@@ -68,9 +68,9 @@
          <children>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="680.0" spacing="100.0">
                <children>
-                  <Button fx:id="startBtn" mnemonicParsing="false" onMouseClicked="#onStartBtnClicked" prefWidth="80.0" stylesheets="@Styles/Button.css" text="Start" />
-                  <Button fx:id="pauseBtn" mnemonicParsing="false" onMouseClicked="#onPauseBtnClicked" prefWidth="80.0" stylesheets="@Styles/Button.css" text="Pause" />
-                  <Button fx:id="stopBtn" mnemonicParsing="false" onMouseClicked="#onStopBtnClicked" prefWidth="80.0" stylesheets="@Styles/Button.css" text="Stop" />
+                  <Button mnemonicParsing="false" prefWidth="80.0" stylesheets="@Styles/Button.css" text="Start" />
+                  <Button mnemonicParsing="false" prefWidth="80.0" stylesheets="@Styles/Button.css" text="Pause" />
+                  <Button mnemonicParsing="false" prefWidth="80.0" stylesheets="@Styles/Button.css" text="Stop" />
                </children>
             </HBox>
          </children>

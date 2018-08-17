@@ -26,6 +26,7 @@ import op.model.Task;
 import op.model.TaskGraph;
 import op.visualization.GanttChart;
 import op.Application;
+import op.visualization.SystemInfo;
 import op.visualization.VisualizerData;
 import op.visualization.messages.UpdateMessage;
 import org.controlsfx.control.ToggleSwitch;
@@ -43,6 +44,14 @@ import java.util.*;
 /**
  * The controller class to control the GUI*/
 public class GUIController implements SchedulerListener {
+
+    // Constants
+    private final String GRAPH_IDENTIFIER = "graph";
+    private final int GANTT_CHART_X_AXIS_MINOR_TICK_COUNT = 4;
+    private final int GANTT_CHART_Y_AXIS_TICK_LABEL_GAP = 10;
+    private final int GANTT_CHART_BLOCK_HEIGHT = 50;
+
+    // XML elements
     @FXML
     private ToggleSwitch graphSwitch;
 
@@ -62,15 +71,6 @@ public class GUIController implements SchedulerListener {
     private Tile percentageTile;
 
     @FXML
-    private Button startBtn;
-
-    @FXML
-    private Button pauseBtn;
-
-    @FXML
-    private Button stopBtn;
-
-    @FXML
     private Label bestLength;
 
     @FXML
@@ -82,149 +82,73 @@ public class GUIController implements SchedulerListener {
     @FXML
     private Label scheduledTasks;
 
-
-    //axis of the Gantt chart
+    // Gantt chart components
     final NumberAxis xAxis = new NumberAxis();
     final CategoryAxis yAxis = new CategoryAxis();
-    //the customized Gantt chart
-    final GanttChart<Number,String> chart = new GanttChart<Number,String>(xAxis,yAxis);
-    private HashMap<Integer,XYChart.Series> seriesHashMap=new HashMap<>();
-    private int coreNum=8;
+    final GanttChart<Number,String> chart = new GanttChart<>(xAxis,yAxis);
+    private HashMap<Integer,XYChart.Series> seriesHashMap = new HashMap<>();
+    private int coreNum = 8;
 
-    private Application application;
-    private Thread uiThread;
+    private Timer timer;
 
     private VisualizerData visualizerData;
-    // GUI should know the current best so it knows when to update (if the value is changed)
+
+    /**
+     * GUI should know the current best so it knows when to update (if the value is changed)
+      */
     private int bestScheduleLength;
 
     /**
-     * Method to control the start button
-     */
-
-    @FXML
-    public void onStartBtnClicked(){
-        /*uiThread.start();
-
-
-        if(!uiThread.isAlive()){
-
-        }*/
-        //testing
-        /*Schedule schedule=new Schedule();
-        schedule.addScheduledTask(new ScheduledTask(new Task("1",20),1,5));
-        schedule.addScheduledTask(new ScheduledTask(new Task("1",30),2,4));
-        schedule.addScheduledTask(new ScheduledTask(new Task("1",40),3,3));
-        mapScheduleToGanttChart(schedule);
-        this.setPercentageTile(3,1); //testing
-        this.setStats(1,2,3,4); // testing*/
-        stopBtn.setDisable(false);
-        pauseBtn.setDisable(false);
-        startBtn.setDisable(true);
-    }
-
-    @FXML
-    public void onStopBtnClicked(){
-        /*Schedule schedule=new Schedule();
-        schedule.addScheduledTask(new ScheduledTask(new Task("1",50),1,5));
-        schedule.addScheduledTask(new ScheduledTask(new Task("1",30),2,4));
-        mapScheduleToGanttChart(schedule);*/
-
-
-        //uiThread.interrupt();
-        stopBtn.setDisable(true);
-        pauseBtn.setDisable(true);
-        startBtn.setDisable(false);
-    }
-
-    @FXML
-    public void onPauseBtnClicked(){
-        /*this.setPercentageTile(2,1);    // testing
-        this.setStats(5,6,7,8);   // testing*/
-        pauseBtn.setDisable(true);
-        startBtn.setDisable(false);
-        /*try {
-            uiThread.wait();
-        } catch (InterruptedException e) {
-            System.out.println("Wait fails");
-        }*/
-    }
-
-
-    /**
-     * method to control the switch when the toggle switch is triggered
-     */
-    @FXML
-    public void onSwitchTriggered(){
-        boolean selected=this.graphSwitch.isSelected();
-        if(!selected){
-            FadeTransition fadeout = new FadeTransition(Duration.millis(500), schedulePane); //fade out schedulePane
-            fadeout.setFromValue(1.0);
-            fadeout.setToValue(0.0);
-            fadeout.setOnFinished(event -> {
-                fadeout.stop();
-            });
-            fadeout.playFromStart();
-        }else {
-            FadeTransition fadeout = new FadeTransition(Duration.millis(500), schedulePane); //fade in schedulePane
-            fadeout.setFromValue(0.0);
-            fadeout.setToValue(1.0);
-            fadeout.setOnFinished(event -> {
-                fadeout.stop();
-            });
-            fadeout.playFromStart();
-        }
-
-    }
-
-
-
-    /**
-     * initialize the controller
+     * Initialize the GUI components
      */
     @FXML
     public void initialize() {
 
-        /*uiThread=new Thread(()->{
-            //uiThread for multithreading
-        });*/
         visualizerData = new VisualizerData();
         bestScheduleLength = Integer.MAX_VALUE;
 
+        embedGraph();
+        initializeGanttChart();
+        initializeMemoryAndCPUPolling();
 
         schedulePane.setOpacity(0.0);
-        embedGraph();
-        //System.out.println(this.getClass().getResource("../view/Styles/ganttchart.css"));
-        initializeGanttChart();
-        stopBtn.setDisable(true);
-        pauseBtn.setDisable(true);
         percentageTile.setSkinType(Tile.SkinType.BAR_GAUGE);
 
-        Application app = Application.getInstance();
-        Scheduler s = app.getScheduler();
-        s.addListener(visualizerData); // register the visualization data as a listener
+        registerVisualizationDataAsListener();
+        startAlgorithm();
+        initializeVisualizationDataUpdate();
+        initializeBestScheduleUpdate();
 
-        // start running algorithm
-        javafx.concurrent.Task<Void> task = new javafx.concurrent.Task<Void>() {
-            private Schedule schedule;
+    }
 
-            @Override
-            protected Void call() {
-                System.out.println("start");
-                schedule = app.produceSchedule();
-                return null;
-            }
+    /**
+     * Allow the CPU and memory tiles to poll the system to find CPU and memory usage
+     */
+    private void initializeMemoryAndCPUPolling() {
+        timer = new Timer();
+        memoryTile.setSkinType(Tile.SkinType.BAR_GAUGE);
+        cpuTile.setSkinType(Tile.SkinType.BAR_GAUGE);
+        timer.schedule(new SystemInfo(cpuTile, memoryTile), 0, 100);
+    }
 
-            @Override
-            protected void succeeded() {
-                super.succeeded();
-                Application.getInstance().writeDot(schedule);
-            }
-        };
-        new Thread(task).start();
+    /**
+     * Register the visualization data as a listener to the scheduler's events
+     */
+    private void registerVisualizationDataAsListener() {
+        Application.getInstance().addSchedulerListener(visualizerData);
+    }
 
-        // arrange for controller to query visualization data instance often and update the gui
-        // based on the data it reads
+    /**
+     * Starts running the algorithm concurrently with the visualization
+     */
+    private void startAlgorithm() {
+        Application.getInstance().startConcurrentAlgorithm();
+    }
+
+    /**
+     * Arrange for controller to query visualization data instance often and update the gui based on the data it reads.
+      */
+    private void initializeVisualizationDataUpdate() {
         Timeline updateCounters = new Timeline(
                 new KeyFrame(Duration.millis(100), (ActionEvent ae) -> {
                     long numPrunedTrees = visualizerData.getNumPrunedTrees();
@@ -232,12 +156,15 @@ public class GUIController implements SchedulerListener {
                     prunedTrees.setText(Long.toString(numPrunedTrees));
                     nodesVisisted.setText(Long.toString(numNodesVisited));
                 }
-         ));
+                ));
         updateCounters.setCycleCount(Timeline.INDEFINITE);
         updateCounters.play();
+    }
 
-
-        // best schedules update far slower than the counters, so update every half second
+    /**
+     * Best schedules update far slower than the counters, so update every half second.
+     */
+    private void initializeBestScheduleUpdate() {
         Timeline updateBestSchedule = new Timeline(
                 new KeyFrame(Duration.millis(500), (ActionEvent e) -> {
                     int newBestScheduleLength = visualizerData.getBestScheduleLength();
@@ -250,25 +177,35 @@ public class GUIController implements SchedulerListener {
                         mapScheduleToGanttChart(newSchedule);
                     }
                 }
-        ));
+                ));
         updateBestSchedule.setCycleCount(Timeline.INDEFINITE);
         updateBestSchedule.play();
     }
 
     /**
-     * Get the CPU Tile with certain skin
+     * When the toggle switch is triggered, switch display from the graph to the Gantt chart
      */
-    public Tile getCPUTile(){
-        this.cpuTile.setSkinType(Tile.SkinType.BAR_GAUGE);
-        return cpuTile;
-    }
+    @FXML
+    public void onSwitchTriggered(){
+        boolean selected=this.graphSwitch.isSelected();
+        if(!selected){
+            FadeTransition fadeout = new FadeTransition(Duration.millis(500), schedulePane); //fade out schedulePane
+            fadeout.setFromValue(1.0);
+            fadeout.setToValue(0.0);
+            fadeout.setOnFinished(event -> {
+                fadeout.stop();
+            });
+            fadeout.playFromStart();
+        } else {
+            FadeTransition fadeout = new FadeTransition(Duration.millis(500), schedulePane); //fade in schedulePane
+            fadeout.setFromValue(0.0);
+            fadeout.setToValue(1.0);
+            fadeout.setOnFinished(event -> {
+                fadeout.stop();
+            });
+            fadeout.playFromStart();
+        }
 
-    /**
-     * Get the Memory Tile with certain skin
-     */
-    public Tile getMemoryTile(){
-        this.memoryTile.setSkinType(Tile.SkinType.BAR_GAUGE);
-        return memoryTile;
     }
 
     /**
@@ -276,9 +213,10 @@ public class GUIController implements SchedulerListener {
      */
     private void embedGraph() {
         GraphicGraph graph = GraphController.getInstance().getGraph();
+        // TODO: Add the stuff to the graph
         FxViewer viewer = new FxViewer(graph);
         GraphRenderer renderer = viewer.newDefaultGraphRenderer();
-        FxDefaultView view = new FxDefaultView(viewer, "graph", renderer);
+        FxDefaultView view = new FxDefaultView(viewer, GRAPH_IDENTIFIER, renderer);
         graphPane.getChildren().add(view);
     }
 
@@ -292,15 +230,23 @@ public class GUIController implements SchedulerListener {
         graphPane.layout();
     }
 
+    /**
+     * When there's a new schedule, map it to the Gantt chart
+     * @param s the new schedule
+     */
     @Override
     public void newSchedule(Schedule s) {
-        System.out.println("new sched!");
         Platform.runLater(() -> {
             mapScheduleToGanttChart(s);
         });
 
     }
 
+    /**
+     * Display the new number of possible schedules that spawn from a partial schedule that the algorithm is no longer
+     * considering
+     * @param numPrunedTrees number of partial schedules whose children will no longer be considered
+     */
     @Override
     public void updateNumPrunedTrees(int numPrunedTrees) {
         Platform.runLater(() -> {
@@ -308,6 +254,10 @@ public class GUIController implements SchedulerListener {
         });
     }
 
+    /**
+     * Display the new number of schedules considered
+     * @param numNodesVisited number of schedules visited so far
+     */
     @Override
     public void updateNodesVisited(int numNodesVisited) {
         Platform.runLater(() -> {
@@ -315,6 +265,10 @@ public class GUIController implements SchedulerListener {
         });
     }
 
+    /**
+     * Update the best schedule length found so far
+     * @param scheduleLength best schedule length so far
+     */
     @Override
     public void updateBestScheduleLength(int scheduleLength) {
         Platform.runLater(() -> {
@@ -331,44 +285,51 @@ public class GUIController implements SchedulerListener {
     }
 
     /**
-     * This is the method to initialize the Ganchart
+     * Set up the Gantt chart display
      */
     private void initializeGanttChart(){
-        List<String> processors=new ArrayList<>();
-        for(int i=0;i<coreNum;i++){
-            processors.add("Processor"+(i+1));
-            seriesHashMap.put(i,new XYChart.Series());
-        }
 
-        //set up Axis and Chart
-        xAxis.setLabel("");
-        xAxis.setTickLabelFill(Color.CHOCOLATE); //need to change later on
-        xAxis.setMinorTickCount(4);
+        // Set up Axis and Chart
+        initializeGanttChartXAxis();
+        initializeGanttChartYAxis();
+        initializeGanttChartSettings();
 
-        yAxis.setLabel("");
-        yAxis.setTickLabelFill(Color.CHOCOLATE); //need to change later on
-        yAxis.setTickLabelGap(10);
-        yAxis.setCategories(FXCollections.<String>observableArrayList(processors));
-
-
-        chart.setTitle("Scheduling Visualization");
-        chart.setLegendVisible(false);
-        chart.setBlockHeight( 50);
-        chart.setPrefHeight(schedulePane.getPrefHeight());
-        chart.setPrefWidth(schedulePane.getPrefWidth());
-        chart.getStylesheets().add("op/visualization/view/Styles/ganttchart.css");
+        // Map data to the chart
         seriesHashMap.keySet().forEach(key->{
             chart.getData().add(seriesHashMap.get(key));
         });
 
-        //add chart to the pane
+        // Add chart to the pane
         schedulePane.getChildren().add(chart);
+    }
 
-        /*Task task=new Task("1",2);
-        ScheduledTask task1=new ScheduledTask(task,1,2);
-        addScheduledTaskToChart(task1);*/
+    private void initializeGanttChartXAxis() {
+        xAxis.setLabel("");
+        xAxis.setTickLabelFill(Color.CHOCOLATE); //need to change later on
+        xAxis.setMinorTickCount(GANTT_CHART_X_AXIS_MINOR_TICK_COUNT);
+    }
 
+    private void initializeGanttChartYAxis() {
+        yAxis.setLabel("");
+        yAxis.setTickLabelFill(Color.CHOCOLATE); //need to change later on
+        yAxis.setTickLabelGap(GANTT_CHART_Y_AXIS_TICK_LABEL_GAP);
 
+        // Set the y-axis categories
+        List<String> processors = new ArrayList<>();
+        for(int i = 0; i < coreNum; i++){
+            processors.add("Processor" + (i+1));
+            seriesHashMap.put(i, new XYChart.Series());
+        }
+        yAxis.setCategories(FXCollections.<String>observableArrayList(processors));
+    }
+
+    private void initializeGanttChartSettings() {
+        chart.setTitle("Scheduling Visualization");
+        chart.setLegendVisible(false);
+        chart.setBlockHeight(GANTT_CHART_BLOCK_HEIGHT);
+        chart.setPrefHeight(schedulePane.getPrefHeight());
+        chart.setPrefWidth(schedulePane.getPrefWidth());
+        chart.getStylesheets().add("op/visualization/view/Styles/ganttchart.css");
     }
 
     /**
@@ -414,11 +375,12 @@ public class GUIController implements SchedulerListener {
         prunedTrees.setText(Integer.toString(ptNum));
     }
 
-
-
-    /*public void setApplication(Application application) {
-        this.application = application;
-    }*/
+    /**
+     * Stops the timer
+     */
+    public void cancelTimer() {
+        timer.cancel();
+    }
 
 
 }

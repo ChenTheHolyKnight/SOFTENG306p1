@@ -22,8 +22,6 @@ public class Visualizer extends Application{
     private GUIController controller;
     private static final int SCENE_HEIGHT = 620;
     private int coreNum;
-    private Timer timer;
-    //private op.Application application;
 
     /**
      * Starts the visualization GUI
@@ -45,64 +43,30 @@ public class Visualizer extends Application{
         Parent root=loader.load();
         Scene scene = new Scene(root);
 
-       // System.out.println(Visualizer.class.getResource("view/Styles/ganttchart.css"));
-
         controller = loader.getController();
-        //System.out.println(application.toString()+" core number "+coreNum);
         controller.setCoreNum(coreNum);
-
-        //controller.setApplication(application);
 
         stage.setHeight(SCENE_HEIGHT);
         stage.setResizable(false);
         stage.centerOnScreen();
 
-        timer = new Timer();
-        Tile cpuTile=controller.getCPUTile();
-        Tile memTile=controller.getMemoryTile();
-        timer.schedule(new SystemInfo(cpuTile,memTile), 0, 100);
-
-
-        //start Scheduling
-        //GreedyScheduler scheduler=new GreedyScheduler(coreNum);
-        //scheduler.setController(controller);
-        //scheduler.produceSchedule();
-
         stage.setScene(scene);
         stage.show();
-
     }
-
-    /**
-     * Updates the visualisation state.
-     * Can only be called after startVisualization() has been called.
-     * @param u the update message containing the necessary information about which state should be changed
-     */
-    public void update(UpdateMessage u) {
-        // run on JavaFX thread
-        controller.updateGraph(u);
-    }
-
 
     /**
      * Set the number of cores
      * @param coreNum the number of cores.
      */
     public void setCore(int coreNum){
-        this.coreNum=coreNum;
+        this.coreNum = coreNum;
     }
 
-
     /**
-     * Set the application object for scheduling
+     * Stops the timer
      */
-    /*public void setApplication(op.Application application){
-        //System.out.println("setted");
-        this.application=application;
-    }*/
-
     @Override
     public void stop(){
-        timer.cancel();
+        controller.cancelTimer();
     }
 }
