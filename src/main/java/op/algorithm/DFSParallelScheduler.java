@@ -1,6 +1,5 @@
 package op.algorithm;
 
-import op.algorithm.bound.CostFunction;
 import op.algorithm.bound.CostFunctionManager;
 import op.algorithm.prune.PrunerManager;
 import op.model.Schedule;
@@ -17,7 +16,7 @@ import java.util.concurrent.*;
  */
 public class DFSParallelScheduler extends BranchAndBoundScheduler {
     private int numThreads;
-    static Stack<Schedule> scheduleStack = new Stack<Schedule>();
+    Stack<Schedule> scheduleStack = new Stack<Schedule>();
     Stack<Schedule>[] stacks;
 
     /**
@@ -67,12 +66,7 @@ public class DFSParallelScheduler extends BranchAndBoundScheduler {
         }
         executor.shutdown();
         while(!executor.isTerminated()){
-            /*for (int i = 0; i < numThreads; i++){
-                int neighbor = (i+1)%numThreads;
-                if((stacks[i].size() < 10) && (stacks[neighbor].size() > 10)){
-                    stacks[i].push(stacks[neighbor].pop());
-                }
-            }*/
+           // System.out.println(((ThreadPoolExecutor) executor).getActiveCount());
         }
 
         List<Schedule> results = new ArrayList<>();

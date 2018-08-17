@@ -19,7 +19,7 @@ public class EquivalentSchedulePruner implements Pruner{
 	private Set<Schedule> seenSchedules = new HashSet<Schedule>();
 
 	@Override
-	public synchronized List<Schedule> prune(List<Schedule> toPrune) {
+	public List<Schedule> prune(List<Schedule> toPrune) {
 		Set<Schedule> set = new LinkedHashSet<Schedule>(toPrune);
 
 		toPrune.clear();

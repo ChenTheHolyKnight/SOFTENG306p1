@@ -43,6 +43,26 @@ public class PrunerManager {
 	}
 
 	/**
+	 * clone the current PrunerManager so each Thread can have its own, minimise blocking.
+	 * @return a new PrunerManager
+	 */
+	@Override
+	public PrunerManager clone (){
+		PrunerManager cloned = new PrunerManager();
+
+		for(Pruner p : pruners){
+			if(p.toString().contains("EquivalentSchedule")){
+				cloned.addEquivalentSchedulePruner();
+			}
+			if(p.toString().contains("NodeEquivalence")){
+				cloned.addNodeEquivalencePruner();
+			}
+		}
+
+		return cloned;
+	}
+	
+	/**
 	 * Executes the prune method of every added pruner to the pruner manager on the list of Schedules passed in.
 	 * @param toPrune The list of schedules to prune
 	 * @return The newly pruned List of schedules

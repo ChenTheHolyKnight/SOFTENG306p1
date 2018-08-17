@@ -59,10 +59,10 @@ public class DFSScheduler extends BranchAndBoundScheduler  implements Callable<S
         boolean keep = false;
         // start the search, and continue until all possible schedules have been processed
         while (!scheduleStack.isEmpty()) {
-            /*if(keep) {
+            if(keep) {
                 System.out.println("picked up a new stack");
                 keep = false;
-            }*/
+            }
             Schedule currentSchedule = scheduleStack.pop();
             if (currentSchedule.isComplete()) {
                 // check if the complete schedule is better than our best schedule so far
@@ -80,8 +80,8 @@ public class DFSScheduler extends BranchAndBoundScheduler  implements Callable<S
                 }
             }
             if(scheduleStack.isEmpty() && (scheduleStacks!=null)){
-                /*keep = true;
-                System.out.println("finished my stack");*/
+                keep = true;
+                System.out.println("finished my stack");
                 getNewStack();
             }
         }
