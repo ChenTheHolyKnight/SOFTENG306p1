@@ -71,4 +71,5 @@ public class SchedulerUtil {
 
         return costFunctionManager.calculate(s);
     }
+
 }

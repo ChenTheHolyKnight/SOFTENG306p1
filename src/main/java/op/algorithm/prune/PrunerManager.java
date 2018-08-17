@@ -34,12 +34,14 @@ public class PrunerManager {
 	
 	public void addEquivalentSchedulePruner() {
 		EquivalentSchedulePruner p = new EquivalentSchedulePruner();
-		if (!pruners.contains(p)) pruners.add(p);
+		if (!pruners.contains(p))
+			pruners.add(p);
 	}
 	
 	public void addNodeEquivalencePruner() {
 		NodeEquivalencePruner p =  new NodeEquivalencePruner();
-		if (!pruners.contains(p)) pruners.add(p);
+		if (!pruners.contains(p))
+			pruners.add(p);
 	}
 	
 	/**
