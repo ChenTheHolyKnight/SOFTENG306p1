@@ -41,7 +41,9 @@ public class SystemInfo extends TimerTask{
 
     @Override
     public void run() {
+        //cpuTile.setUnit("%");
         cpuTile.setValue(this.getCPU());
+        //memoryTile.setUnit("%");
         memoryTile.setValue(this.getMemory());
     }
 }

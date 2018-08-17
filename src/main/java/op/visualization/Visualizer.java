@@ -45,7 +45,8 @@ public class Visualizer extends Application{
         Scene scene = new Scene(root);
 
         controller = loader.getController();
-        controller.setCoreNum(coreNum);
+        //System.out.println(application.toString()+" core number "+coreNum);
+        //controller.setCoreNum(coreNum);
 
         stage.setHeight(SCENE_HEIGHT);
         stage.setWidth(SCENE_WIDTH);
@@ -57,12 +58,17 @@ public class Visualizer extends Application{
     }
 
     /**
-     * Set the number of cores
-     * @param coreNum the number of cores.
+     * Updates the visualisation state.
+     * Can only be called after startVisualization() has been called.
+     * @param u the update message containing the necessary information about which state should be changed
      */
-    public void setCore(int coreNum){
-        this.coreNum = coreNum;
+    public void update(UpdateMessage u) {
+        // run on JavaFX thread
+        controller.updateGraph(u);
     }
+
+
+
 
     /**
      * Stops the timer

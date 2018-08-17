@@ -79,8 +79,7 @@ public class GUIController implements SchedulerListener {
     @FXML
     private Label nodesVisisted;
 
-    @FXML
-    private Label scheduledTasks;
+
 
     // Gantt chart components
     final NumberAxis xAxis = new NumberAxis();
@@ -92,6 +91,7 @@ public class GUIController implements SchedulerListener {
     private Timer timer;
 
     private VisualizerData visualizerData;
+
 
     /**
      * GUI should know the current best so it knows when to update (if the value is changed)
@@ -209,6 +209,70 @@ public class GUIController implements SchedulerListener {
     }
 
     /**
+     * initialize the controller
+     */
+    /*@FXML
+    public void initialize(){
+
+        /*uiThread=new Thread(()->{
+            //uiThread for multithreading
+        });
+
+        coreNum=Application.getInstance().getProcessNum();
+        schedulePane.setOpacity(0.0);
+        embedGraph();
+        //System.out.println(this.getClass().getResource("../view/Styles/ganttchart.css"));
+        initializeGanttChart();
+        stopBtn.setDisable(true);
+        pauseBtn.setDisable(true);
+        percentageTile.setSkinType(Tile.SkinType.TIME);
+
+        Application app = Application.getInstance();
+        Scheduler s = app.getScheduler();
+        s.addListener(this); // register this controller as a listener
+
+        javafx.concurrent.Task<Void> task=new javafx.concurrent.Task<Void>() {
+            private Schedule schedule;
+            @Override
+            protected Void call() {
+                System.out.println("start");
+                //System.out.println(application==null);
+                schedule = app.produceSchedule();
+//                Platform.runLater(()->{
+//                    mapScheduleToGanttChart(schedule);
+//                });
+                //mapScheduleToGanttChart(schedule);
+                return null;
+            }
+
+            @Override protected void succeeded() {
+                super.succeeded();
+                Application.getInstance().writeDot(Application.getInstance().getDotParser(),schedule);
+            }
+        };
+        Thread th = new Thread(task);
+        th.start();
+    }*/
+
+    /**
+     * Get the CPU Tile with certain skin
+     */
+    public Tile getCPUTile(){
+        this.cpuTile.setSkinType(Tile.SkinType.BAR_GAUGE);
+        this.cpuTile.setUnit("%");
+        return cpuTile;
+    }
+
+    /**
+     * Get the Memory Tile with certain skin
+     */
+    public Tile getMemoryTile(){
+        this.memoryTile.setSkinType(Tile.SkinType.BAR_GAUGE);
+        this.memoryTile.setUnit("%");
+        return memoryTile;
+    }
+
+    /**
      * Embeds the visualization graph in the graph anchor pane
      */
     private void embedGraph() {
@@ -280,9 +344,9 @@ public class GUIController implements SchedulerListener {
      * Set number of cores in the controller
      * @param coreNum the number of cores.
      */
-    public void setCoreNum(int coreNum){
+    /*public void setCoreNum(int coreNum){
         this.coreNum=coreNum;
-    }
+    }*/
 
     /**
      * Set up the Gantt chart display
@@ -368,8 +432,7 @@ public class GUIController implements SchedulerListener {
     /**
      * The method to get the stats ps: feel free to change the params
      */
-    public void setStats(int stNum,int nvNum,int blNum,int ptNum){
-        scheduledTasks.setText(Integer.toString(stNum));
+    public void setStats(int nvNum,int blNum,int ptNum){
         nodesVisisted.setText(Integer.toString(nvNum));
         bestLength.setText(Integer.toString(blNum));
         prunedTrees.setText(Integer.toString(ptNum));
