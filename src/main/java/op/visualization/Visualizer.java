@@ -45,8 +45,6 @@ public class Visualizer extends Application{
         Scene scene = new Scene(root);
 
         controller = loader.getController();
-        //System.out.println(application.toString()+" core number "+coreNum);
-        //controller.setCoreNum(coreNum);
 
         stage.setHeight(SCENE_HEIGHT);
         stage.setWidth(SCENE_WIDTH);
@@ -56,19 +54,6 @@ public class Visualizer extends Application{
         stage.setScene(scene);
         stage.show();
     }
-
-    /**
-     * Updates the visualisation state.
-     * Can only be called after startVisualization() has been called.
-     * @param u the update message containing the necessary information about which state should be changed
-     */
-    public void update(UpdateMessage u) {
-        // run on JavaFX thread
-        controller.updateGraph(u);
-    }
-
-
-
 
     /**
      * Stops the timer

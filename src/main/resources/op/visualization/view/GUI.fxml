@@ -58,8 +58,8 @@
          </styleClass></Label>
       <AnchorPane layoutX="9.0" layoutY="537.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="70.0" prefWidth="661.0" styleClass="tileBackgroundColour">
          <children>
-            <Label alignment="CENTER" layoutX="387.0" layoutY="26.0" prefHeight="26.0" prefWidth="260.0" styleClass="graphTaskToggle" text="Schedule" textFill="WHITE" />
-            <Label alignment="CENTER" contentDisplay="CENTER" layoutY="26.0" prefHeight="27.0" prefWidth="306.0" styleClass="graphTaskToggle" text="Tree" textAlignment="RIGHT" textFill="WHITE" />
+            <Label alignment="CENTER" layoutX="387.0" layoutY="26.0" prefHeight="26.0" prefWidth="260.0" styleClass="graphTaskToggle" text="Output Schedule" textFill="WHITE" />
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutY="26.0" prefHeight="27.0" prefWidth="306.0" styleClass="graphTaskToggle" text="Task Dependency Graph" textAlignment="RIGHT" textFill="WHITE" />
             <ToggleSwitch fx:id="graphSwitch" layoutX="321.0" layoutY="25.0" onMouseClicked="#onSwitchTriggered" prefHeight="18.0" prefWidth="40.0" styleClass="graphTaskToggle" />
          </children>
       </AnchorPane>

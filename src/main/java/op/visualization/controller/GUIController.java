@@ -16,6 +16,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import op.algorithm.Scheduler;
@@ -129,7 +130,9 @@ public class GUIController implements SchedulerListener {
         timer = new Timer();
         memoryTile.setSkinType(Tile.SkinType.BAR_GAUGE);
         cpuTile.setSkinType(Tile.SkinType.BAR_GAUGE);
-        timer.schedule(new SystemInfo(cpuTile, memoryTile), 0, 100);
+        Platform.runLater(() -> {
+            timer.schedule(new SystemInfo(cpuTile, memoryTile), 0, 100);
+        });
     }
 
     /**
@@ -190,109 +193,43 @@ public class GUIController implements SchedulerListener {
     public void onSwitchTriggered(){
         boolean selected=this.graphSwitch.isSelected();
         if(!selected){
-            FadeTransition fadeout = new FadeTransition(Duration.millis(500), schedulePane); //fade out schedulePane
-            fadeout.setFromValue(1.0);
-            fadeout.setToValue(0.0);
-            fadeout.setOnFinished(event -> {
-                fadeout.stop();
-            });
-            fadeout.playFromStart();
+            // Fade out schedule pane and fade in graph pane
+            fadeTransition(false, schedulePane);
+            fadeTransition(true, graphPane);
         } else {
-            FadeTransition fadeout = new FadeTransition(Duration.millis(500), schedulePane); //fade in schedulePane
-            fadeout.setFromValue(0.0);
-            fadeout.setToValue(1.0);
-            fadeout.setOnFinished(event -> {
-                fadeout.stop();
-            });
-            fadeout.playFromStart();
+            // Fade in schedule pane and fade out graph pane
+            fadeTransition(true, schedulePane);
+            fadeTransition(false, graphPane);
         }
 
     }
 
     /**
-     * initialize the controller
+     * Fades a pane in or out
+     * @param toFadeIn true to fade the pane in, false otherwise
+     * @param pane the pane to fade
      */
-    /*@FXML
-    public void initialize(){
-
-        /*uiThread=new Thread(()->{
-            //uiThread for multithreading
+    private void fadeTransition(boolean toFadeIn, Pane pane) {
+        FadeTransition fade = new FadeTransition(Duration.millis(500), pane); //fade in schedulePane
+        fade.setFromValue(toFadeIn? 0.0: 1.0);
+        fade.setToValue(toFadeIn? 1.0: 0.0);
+        fade.setOnFinished(event -> {
+            fade.stop();
         });
-
-        coreNum=Application.getInstance().getProcessNum();
-        schedulePane.setOpacity(0.0);
-        embedGraph();
-        //System.out.println(this.getClass().getResource("../view/Styles/ganttchart.css"));
-        initializeGanttChart();
-        stopBtn.setDisable(true);
-        pauseBtn.setDisable(true);
-        percentageTile.setSkinType(Tile.SkinType.TIME);
-
-        Application app = Application.getInstance();
-        Scheduler s = app.getScheduler();
-        s.addListener(this); // register this controller as a listener
-
-        javafx.concurrent.Task<Void> task=new javafx.concurrent.Task<Void>() {
-            private Schedule schedule;
-            @Override
-            protected Void call() {
-                System.out.println("start");
-                //System.out.println(application==null);
-                schedule = app.produceSchedule();
-//                Platform.runLater(()->{
-//                    mapScheduleToGanttChart(schedule);
-//                });
-                //mapScheduleToGanttChart(schedule);
-                return null;
-            }
-
-            @Override protected void succeeded() {
-                super.succeeded();
-                Application.getInstance().writeDot(Application.getInstance().getDotParser(),schedule);
-            }
-        };
-        Thread th = new Thread(task);
-        th.start();
-    }*/
-
-    /**
-     * Get the CPU Tile with certain skin
-     */
-    public Tile getCPUTile(){
-        this.cpuTile.setSkinType(Tile.SkinType.BAR_GAUGE);
-        this.cpuTile.setUnit("%");
-        return cpuTile;
-    }
-
-    /**
-     * Get the Memory Tile with certain skin
-     */
-    public Tile getMemoryTile(){
-        this.memoryTile.setSkinType(Tile.SkinType.BAR_GAUGE);
-        this.memoryTile.setUnit("%");
-        return memoryTile;
+        fade.playFromStart();
     }
 
     /**
      * Embeds the visualization graph in the graph anchor pane
      */
     private void embedGraph() {
+        GraphController.getInstance().initializeGraph();
         GraphicGraph graph = GraphController.getInstance().getGraph();
-        // TODO: Add the stuff to the graph
         FxViewer viewer = new FxViewer(graph);
         GraphRenderer renderer = viewer.newDefaultGraphRenderer();
         FxDefaultView view = new FxDefaultView(viewer, GRAPH_IDENTIFIER, renderer);
+        view.getCamera().setViewPercent(1.5);
         graphPane.getChildren().add(view);
-    }
-
-    /**
-     * Tells the graph component of the GUI to update
-     * @param u
-     */
-    public void updateGraph(UpdateMessage u) {
-        GraphController.getInstance().updateGraph(u);
-        graphPane.requestLayout();
-        graphPane.layout();
     }
 
     /**
@@ -340,14 +277,6 @@ public class GUIController implements SchedulerListener {
             bestLength.setText(Integer.toString(scheduleLength));
         });
     }
-
-    /**
-     * Set number of cores in the controller
-     * @param coreNum the number of cores.
-     */
-    /*public void setCoreNum(int coreNum){
-        this.coreNum=coreNum;
-    }*/
 
     /**
      * Set up the Gantt chart display
@@ -407,7 +336,6 @@ public class GUIController implements SchedulerListener {
         series.getData().add(new XYChart.Data<Number, String>(task.getStartTime(), yAxis.getCategories().get(processorNum-1),
                 new GanttChart.ExtraData( weight, "status-blue")));
 
-        //chart.getData().add(series);
     }
 
     /**
