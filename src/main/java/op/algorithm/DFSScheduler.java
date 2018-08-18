@@ -61,7 +61,6 @@ public class DFSScheduler extends BranchAndBoundScheduler  implements Callable<S
         Schedule bestSchedule = new Schedule();
         PrunerManager pm = getPrunerManager();
         CostFunctionManager cfm = getCostFunctionManager();
-        boolean keep = false;
         // start the search, and continue until all possible schedules have been processed
         while (!scheduleStack.isEmpty()) {
 //            if(keep) {
