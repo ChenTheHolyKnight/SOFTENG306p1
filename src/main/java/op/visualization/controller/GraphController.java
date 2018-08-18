@@ -1,15 +1,10 @@
 package op.visualization.controller;
 
-import op.visualization.messages.MessageAddNodes;
-import op.visualization.messages.MessageEliminateNodes;
-import op.visualization.messages.MessageSetOptimalSolution;
-import op.visualization.messages.UpdateMessage;
-import org.graphstream.graph.Edge;
-import org.graphstream.graph.Node;
+import op.model.TaskGraphToStringConverter;
+import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.ui.graphicGraph.GraphicGraph;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * A singleton class representing the display for the Graphstream graph.
@@ -19,9 +14,12 @@ import java.util.stream.Collectors;
  */
 public class GraphController {
 	
-	private static final String STYLE_CLASS = "ui.class";
-	private static int Y_BOUND = 80;
-	private static int X_BOUND = 80;
+	private static final String LABEL = "ui.label";
+	private static final int X_MIN = -100;
+	private static final int X_MAX = 100;
+    private static final int Y_START = -50;
+    private static final int Y_INCREMENT = 15;
+    private int y_count = 0;
 
 	private static GraphController instance = new GraphController();
 	private GraphicGraph graph;
@@ -31,8 +29,6 @@ public class GraphController {
 		graph =  new GraphicGraph("graph");
 		graph.setAttribute("ui.stylesheet", GRAPH_DISPLAY_STYLESHEET);
 		random = new Random();
-		//addNodes();
-		//addMoreNodes();
 	}
 
 	/**
@@ -45,72 +41,39 @@ public class GraphController {
 	}
 
     /**
-     * Reads an update message to determine how to update the graph
-     * @param u
+     * Sets up the graph to display the input task graph
      */
-    public void updateGraph(UpdateMessage u) {
-        if (u instanceof MessageAddNodes) {
-            addNodes(((MessageAddNodes) u).getParentNodeId(), ((MessageAddNodes) u).getChildNodeIds());
-        }
-        if (u instanceof MessageEliminateNodes) {
-            eliminateNodes(((MessageEliminateNodes) u).getNodeIds());
-        }
-        if (u instanceof MessageSetOptimalSolution) {
-            setOptimalSolution(((MessageSetOptimalSolution) u).getOptimalSolution());
-        }
+	public void initializeGraph() {
+        TaskGraphToStringConverter converter = new TaskGraphToStringConverter();
+        addNodes(converter.createNodes());
+        addEdges(converter.createEdges());
     }
-	
-	/**
-	 * Adds new nodes to the graph visualisation
-	 *
-     * @param parentNodeId the ID of the parent node to add
-	 * @param childNodeIds the Id of the children nodes to add; can be null if the node has no children
-	 */
-	private void addNodes(String parentNodeId, Set<String> childNodeIds) {
-		if (graph.getNode(parentNodeId) == null) {
-		    // Add the parent node if it does not exist
-            placeNode(parentNodeId);
-		}
-		if (childNodeIds != null) {
-            for (String childNodeId: childNodeIds) {
-                // Add the child node if it does not exist
-                if (graph.getNode(childNodeId) == null) {
-                    placeNode(childNodeId);
-                }
-                // Add the edge if it does not exist
-                if (graph.getEdge(createEdgeId(parentNodeId, childNodeId)) == null) {
-                    graph.addEdge(createEdgeId(parentNodeId, childNodeId), parentNodeId, childNodeId, true);
-                }
-            }
-        }
-	}
 
     /**
-     * Removes the given nodes from the solution tree
-     * @param nodeIds nodes to remove
+     * Adds nodes to the graph
+     * @param nodeIds IDs of nodes to add
      */
-    private void eliminateNodes (Set<String> nodeIds) {
+    private void addNodes(Set<String> nodeIds) {
         for (String nodeId: nodeIds) {
-            Node n = graph.getNode(nodeId);
-            n.setAttribute(STYLE_CLASS, "eliminated");
-            for (Edge e : n.leavingEdges().collect(Collectors.toList())){
-                if (nodeIds.contains(e.getTargetNode().getId())) {
-                    e.setAttribute(STYLE_CLASS, "eliminated");
-                }
+            // Add the child node if it does not exist
+            if (graph.getNode(nodeId) == null) {
+                placeNode(nodeId);
             }
         }
     }
 
     /**
-     * Marks the given node and all its subschedules as the optimal solution
-     * @param nodeId the nodes that represents the optimal solution
+     * Adds edges to the graph
+     * @param edges a map of nodes to a list of their child nodes
      */
-	private void setOptimalSolution(String nodeId) {
-        Node n = graph.getNode(nodeId);
-        n.setAttribute(STYLE_CLASS, "optimal");
-        for (Edge e : n.enteringEdges().collect(Collectors.toList())){
-            e.setAttribute(STYLE_CLASS, "optimal");
-            setOptimalSolution(e.getTargetNode().getId());
+    private void addEdges(Map<String, List<String>> edges) {
+        for (Map.Entry<String, List<String>> edge: edges.entrySet()) {
+            for (String child: edge.getValue()) {
+                // Add the edge if it does not exist
+                if (graph.getEdge(createEdgeId(edge.getKey(), child)) == null) {
+                    graph.addEdge(createEdgeId(edge.getKey(), child), edge.getKey(), child, true);
+                }
+            }
         }
     }
 
@@ -130,6 +93,7 @@ public class GraphController {
      */
     private void placeNode(String nodeId) {
         graph.addNode(nodeId);
+        graph.getNode(nodeId).setAttribute(LABEL, nodeId);
         graph.getNode(nodeId).setAttribute("x", newNodeXPosition());
         graph.getNode(nodeId).setAttribute("y", newNodeYPosition());
     }
@@ -138,16 +102,19 @@ public class GraphController {
      * Finds an x co-ordinate to place a new node on the graph
      * @return x co-ordinate
      */
-    private int newNodeXPosition() {
-        return random.nextInt(X_BOUND);
+    private double newNodeXPosition() {
+
+        return random.nextDouble()*(X_MAX - X_MIN) + X_MIN;
     }
 
     /**
      * Finds a y co-ordinate to place a new node on the graph
      * @return y co-ordinate
      */
-    private int newNodeYPosition() {
-        return random.nextInt(Y_BOUND);
+    private double newNodeYPosition() {
+
+        y_count++;
+        return Y_START + Y_INCREMENT*y_count;
     }
 
     /**
@@ -164,16 +131,24 @@ public class GraphController {
             + "}"
 
             + "node {"
-                + "fill-color: #CCCCCC, #404070;"
+                + "fill-color: #EEEEEE, #404070;"
                     + "fill-mode: gradient-radial;"
                     + "shadow-color: #5F5F87, rgba(0, 0, 0, 0);"
                     + "shadow-mode: gradient-radial;"
                     + "shadow-width: 8;"
                     + "shadow-offset: 0;"
+                    + "text-alignment: left; "
+                    + "text-color: white;"
+                    + "text-style: bold;"
+                    + "text-background-mode: rounded-box; "
+                    + "text-background-color: rgba(80, 80, 80, 255);"
+                    + "text-padding: 5px, 4px; "
+                    + "text-offset: -12px, 0px;"
+                    + "text-size: 16;"
             + "}"
 
                     + "edge {"
-                        + "fill-color: rgba(64, 64, 112, 128);"
+                        + "fill-color: rgb(64, 64, 112);"
                         + "fill-mode: plain;"
                         + "shadow-color: rgba(64, 64, 112, 128), rgba(0, 0, 0, 0);"
                         + "shadow-mode: gradient-horizontal;"
