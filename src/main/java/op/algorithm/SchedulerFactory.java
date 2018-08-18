@@ -1,13 +1,8 @@
 package op.algorithm;
 
-import op.algorithm.bound.BottomLevelFunction;
-import op.algorithm.bound.CostFunction;
 import op.algorithm.bound.CostFunctionManager;
-import op.algorithm.bound.EmptyCostFunction;
-import op.algorithm.bound.IdleTimeFunction;
 import op.algorithm.prune.PrunerManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -61,7 +56,7 @@ public class SchedulerFactory {
         Scheduler scheduler = null;
         switch (a) {
             case PARA:
-                scheduler = new ParallelManager(numProcessors, prunerManager, costFunctionManager, numCores);
+                scheduler = new DFSParallelScheduler(numProcessors, prunerManager, costFunctionManager, numCores);
                 break;
             case DFS:
                 scheduler = new DFSScheduler(numProcessors, prunerManager, costFunctionManager);

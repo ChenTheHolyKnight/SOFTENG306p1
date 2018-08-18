@@ -43,7 +43,7 @@ public class PrunerManager {
 		if (!pruners.contains(p))
 			pruners.add(p);
 	}
-	
+
 	/**
 	 * Executes the prune method of every added pruner to the pruner manager on the list of Schedules passed in.
 	 * @param toPrune The list of schedules to prune
