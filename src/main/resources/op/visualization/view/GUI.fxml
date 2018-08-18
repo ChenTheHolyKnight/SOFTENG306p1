@@ -2,6 +2,7 @@
 
 <?import eu.hansolo.tilesfx.Tile?>
 <?import java.lang.String?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -9,59 +10,60 @@
 <?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.control.ToggleSwitch?>
 
-<AnchorPane prefHeight="616.0" prefWidth="1005.0" styleClass="background" stylesheets="@Styles/BackPanel.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="op.visualization.controller.GUIController">
-   <children>
-      <AnchorPane fx:id="schedulePane" layoutX="7.0" layoutY="76.0" opacity="0.51" prefHeight="455.0" prefWidth="667.0" styleClass="background" />
-      <AnchorPane fx:id="graphPane" layoutX="13.0" layoutY="75.0" opacity="0.51" prefHeight="455.0" prefWidth="653.0" styleClass="background" />
-      <VBox layoutX="10.0" layoutY="9.0" prefHeight="591.0" prefWidth="260.0" />
-      <TabPane fx:id="tabPane" layoutX="680.0" layoutY="10.0" prefHeight="598.0" prefWidth="306.0" side="RIGHT" styleClass="background" stylesheets="@Styles/TabPane.css" tabClosingPolicy="UNAVAILABLE">
-        <tabs>
-          <Tab text="Performance">
-            <content>
-                  <VBox maxWidth="-Infinity" minWidth="-Infinity" prefHeight="585.0" prefWidth="270.0">
-                     <children>
-                        <Label alignment="CENTER" prefHeight="60.0" prefWidth="270.0" styleClass="grayBackground" text="CPU Usage" textAlignment="CENTER" textFill="WHITE" />
-                        <Tile fx:id="cpuTile" prefHeight="240.0" prefWidth="270.0" />
-                        <Label alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="61.0" prefWidth="270.0" styleClass="grayBackground" text="Memory Usage" textAlignment="CENTER" textFill="WHITE" />
-                        <Tile fx:id="memoryTile" layoutX="10.0" layoutY="40.0" prefHeight="240.0" prefWidth="270.0" />
-                     </children>
-                  </VBox>
-            </content>
-          </Tab>
-          <Tab text="Statistics">
-            <content>
-                  <VBox>
-                     <children>
-                        <Label alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="270.0" styleClass="grayBackground" text="Schedule Percentage" textAlignment="CENTER" textFill="WHITE" />
-                        <Tile fx:id="percentageTile" prefHeight="240.0" prefWidth="261.0" />
-                        <Label alignment="CENTER" prefHeight="60.0" prefWidth="270.0" styleClass="grayBackground" text="Statistics" textAlignment="CENTER" textFill="WHITE" />
-                        <AnchorPane prefHeight="240.0" prefWidth="261.0" styleClass="tileBackgroundColour">
-                           <children>
-                              <Label alignment="CENTER" contentDisplay="CENTER" layoutX="50.0" layoutY="58.0" prefHeight="21.0" prefWidth="123.0" text="Pruned Trees :" textAlignment="JUSTIFY" textFill="WHITE" />
-                              <Label alignment="CENTER" layoutX="53.0" layoutY="20.0" prefHeight="21.0" prefWidth="125.0" text="Best Length :" textFill="WHITE" />
-                              <Label alignment="CENTER" layoutX="35.0" layoutY="86.0" prefHeight="44.0" prefWidth="150.0" text="Nodes Visited :" textFill="WHITE" />
-                              <Label fx:id="bestLength" alignment="CENTER" layoutX="170.0" layoutY="22.0" prefHeight="21.0" prefWidth="73.0" text="0" textFill="WHITE" />
-                              <Label fx:id="prunedTrees" alignment="CENTER" layoutX="169.0" layoutY="59.0" prefHeight="21.0" prefWidth="75.0" text="0" textFill="WHITE" />
-                              <Label fx:id="nodesVisisted" alignment="CENTER" layoutX="170.0" layoutY="98.0" prefHeight="21.0" prefWidth="75.0" text="0" textFill="WHITE" />
-                           </children>
-                        </AnchorPane>
-                     </children>
-                  </VBox>
-            </content>
-          </Tab>
-        </tabs>
-      </TabPane>
-      <Label alignment="CENTER" layoutX="10.0" layoutY="10.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="661.0" text="Optimal Scheduling" textAlignment="CENTER" textFill="WHITE">
-         <styleClass>
-            <String fx:value="grayBackground" />
-            <String fx:value="heading" />
-         </styleClass></Label>
-      <AnchorPane layoutX="9.0" layoutY="537.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="70.0" prefWidth="661.0" styleClass="tileBackgroundColour">
-         <children>
-            <Label alignment="CENTER" layoutX="387.0" layoutY="26.0" prefHeight="26.0" prefWidth="260.0" styleClass="graphTaskToggle" text="Schedule" textFill="WHITE" />
-            <Label alignment="CENTER" contentDisplay="CENTER" layoutY="26.0" prefHeight="27.0" prefWidth="306.0" styleClass="graphTaskToggle" text="Tree" textAlignment="RIGHT" textFill="WHITE" />
-            <ToggleSwitch fx:id="graphSwitch" layoutX="321.0" layoutY="25.0" onMouseClicked="#onSwitchTriggered" prefHeight="18.0" prefWidth="40.0" styleClass="graphTaskToggle" />
-         </children>
-      </AnchorPane>
-   </children>
+<AnchorPane prefHeight="616.0" prefWidth="1005.0" styleClass="background" stylesheets="@Styles/BackPanel.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="op.visualization.controller.GUIController">
+    <children>
+        <AnchorPane fx:id="schedulePane" layoutX="7.0" layoutY="76.0" opacity="0.51" prefHeight="455.0" prefWidth="667.0" styleClass="background" />
+        <AnchorPane fx:id="graphPane" layoutX="13.0" layoutY="75.0" opacity="0.51" prefHeight="455.0" prefWidth="653.0" styleClass="background" />
+        <VBox layoutX="10.0" layoutY="9.0" prefHeight="591.0" prefWidth="260.0" />
+        <TabPane fx:id="tabPane" layoutX="680.0" layoutY="10.0" prefHeight="598.0" prefWidth="306.0" side="RIGHT" styleClass="background" stylesheets="@Styles/TabPane.css" tabClosingPolicy="UNAVAILABLE">
+            <tabs>
+                <Tab text="Performance">
+                    <content>
+                        <VBox maxWidth="-Infinity" minWidth="-Infinity" prefHeight="585.0" prefWidth="270.0">
+                            <children>
+                                <Label alignment="CENTER" prefHeight="60.0" prefWidth="270.0" styleClass="grayBackground" text="CPU Usage" textAlignment="CENTER" textFill="WHITE" />
+                                <Tile fx:id="cpuTile" prefHeight="240.0" prefWidth="270.0" />
+                                <Label alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="61.0" prefWidth="270.0" styleClass="grayBackground" text="Memory Usage" textAlignment="CENTER" textFill="WHITE" />
+                                <Tile fx:id="memoryTile" layoutX="10.0" layoutY="40.0" prefHeight="240.0" prefWidth="270.0" />
+                            </children>
+                        </VBox>
+                    </content>
+                </Tab>
+                <Tab text="Statistics">
+                    <content>
+                        <VBox>
+                            <children>
+                                <Label alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="270.0" styleClass="grayBackground" text="Schedule Percentage" textAlignment="CENTER" textFill="WHITE" />
+                                <Tile fx:id="percentageTile" prefHeight="240.0" prefWidth="261.0" />
+                                <Label alignment="CENTER" prefHeight="60.0" prefWidth="270.0" styleClass="grayBackground" text="Statistics" textAlignment="CENTER" textFill="WHITE" />
+                                <AnchorPane prefHeight="240.0" prefWidth="261.0" styleClass="tileBackgroundColour">
+                                    <children>
+                                        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="50.0" layoutY="58.0" prefHeight="21.0" prefWidth="123.0" text="Pruned Trees :" textAlignment="JUSTIFY" textFill="WHITE" />
+                                        <Label alignment="CENTER" layoutX="53.0" layoutY="20.0" prefHeight="21.0" prefWidth="125.0" text="Best Length :" textFill="WHITE" />
+                                        <Label alignment="CENTER" layoutX="35.0" layoutY="86.0" prefHeight="44.0" prefWidth="150.0" text="Nodes Visited :" textFill="WHITE" />
+                                        <Label fx:id="bestLength" alignment="CENTER" layoutX="170.0" layoutY="22.0" prefHeight="21.0" prefWidth="73.0" text="0" textFill="WHITE" />
+                                        <Label fx:id="prunedTrees" alignment="CENTER" layoutX="169.0" layoutY="59.0" prefHeight="21.0" prefWidth="75.0" text="0" textFill="WHITE" />
+                                        <Label fx:id="nodesVisisted" alignment="CENTER" layoutX="170.0" layoutY="98.0" prefHeight="21.0" prefWidth="75.0" text="0" textFill="WHITE" />
+                                    </children>
+                                </AnchorPane>
+                            </children>
+                        </VBox>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+        <Label alignment="CENTER" layoutX="10.0" layoutY="10.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="661.0" text="Optimal Scheduling" textAlignment="CENTER" textFill="WHITE">
+            <styleClass>
+                <String fx:value="grayBackground" />
+                <String fx:value="heading" />
+            </styleClass></Label>
+        <AnchorPane layoutX="9.0" layoutY="537.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="70.0" prefWidth="661.0" styleClass="tileBackgroundColour">
+            <children>
+                <Label alignment="CENTER" layoutX="497.0" layoutY="22.0" prefHeight="26.0" prefWidth="150.0" styleClass="graphTaskToggle" text="Schedule" textFill="WHITE" />
+                <Label alignment="CENTER" contentDisplay="CENTER" layoutX="264.0" layoutY="22.0" prefHeight="27.0" prefWidth="150.0" styleClass="graphTaskToggle" text="Tree" textAlignment="RIGHT" textFill="WHITE" />
+                <ToggleSwitch fx:id="graphSwitch" layoutX="431.0" layoutY="21.0" onMouseClicked="#onSwitchTriggered" prefHeight="18.0" prefWidth="40.0" styleClass="graphTaskToggle" />
+                <Button fx:id="startButton" layoutX="103.0" layoutY="22.0" mnemonicParsing="false" onAction="#startAlgorithm" text="Start" />
+            </children>
+        </AnchorPane>
+    </children>
 </AnchorPane>
