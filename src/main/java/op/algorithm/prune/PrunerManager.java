@@ -51,8 +51,7 @@ public class PrunerManager {
 	 */
 	public List<Schedule> execute(List<Schedule> toPrune) {
 		if (!pruners.isEmpty()){
-			List<Schedule> pruned = new ArrayList<Schedule>();
-			pruned.addAll(toPrune);
+			List<Schedule> pruned = new ArrayList<Schedule>(toPrune);
 			for (Pruner p: pruners) {
 				pruned = p.prune(pruned);
 			}
