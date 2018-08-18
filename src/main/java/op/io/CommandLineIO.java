@@ -5,6 +5,7 @@ import op.algorithm.bound.CostFunction;
 import op.algorithm.bound.CostFunctionManager;
 import op.algorithm.prune.PrunerManager;
 
+import op.model.Schedule;
 import org.apache.commons.cli.*;
 import op.model.Arguments;
 
@@ -43,15 +44,15 @@ public class CommandLineIO {
     private static final String TO_VISUALIZE_DESCRIPTION = "visualise the search";
     private static final String OUTPUT_FILENAME_DESCRIPTION = "name of output file (default is <INPUT>-output.dot)";
     private static final String ALGORITHM_DESCRIPTION =
-            "the algorithm implementation to use for scheduling:" +
-                    System.lineSeparator() + "dfs | astar | greedy | simple";
+            "the algorithm implementation to use for scheduling. (if number of Cores [-p > 1], algorithm can only use dfs)." +
+                    System.lineSeparator() + "Acceptable Values: dfs | astar | greedy | simple";
     private static final String COST_FUNC_DESCRIPTION = "comma-separated list of cost functions to be used."
-            + System.lineSeparator() + "Acceptable values: bl | it ";
+            + System.lineSeparator() + "Acceptable values: bl | it";
     private static final String PRUNER_DESCRIPTION = "comma-separated list of pruners to be used."
     		+ System.lineSeparator() + "Acceptable values: es | ne";
 
     private static final String HELP_MESSAGE =
-            "<INPUT GRAPH FILENAME> <NUMBER OF PROCESSORS> [OPTIONS]";
+            "<INPUT GRAPH FILENAME> <NUMBER OF PROCESSORS> [OPTIONS] \n OPTIONS:";
 
     private static final String FILENAME_EXTENSION_INDICATOR = ".";
 
@@ -218,7 +219,11 @@ public class CommandLineIO {
         } else {
             for (Scheduler.Implementation a : Scheduler.Implementation.values()) {
                 if (alg.equals(a.getCmdRepresentation())) {
-                    return a;
+                    if (getNumCores(cmd) > 1 && alg.equals(Scheduler.Implementation.DFS.getCmdRepresentation())) {
+                        return Scheduler.Implementation.PARA;
+                    }
+                    printHelpAndThrowError("Number of cores is greater than 1. Please specify dfs algorithm");
+                    return null;
                 }
             }
             printHelpAndThrowError("Specified algorithm is not available. See available values above.");
