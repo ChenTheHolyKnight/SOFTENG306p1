@@ -20,7 +20,8 @@ public class CostFunctionManager {
     public enum Functions {
 
         BOTTOM_LEVEL("bl"),
-        IDLE_TIME("it");
+        IDLE_TIME("it"),
+        DATA_READY_TIME("drt");
 
         private String cmdRepresentation;
         Functions(String cmdRepresentation) {
@@ -46,6 +47,11 @@ public class CostFunctionManager {
 
     public void addBottomLevelFunction() {
         BottomLevelFunction f =  new BottomLevelFunction();
+        if (!costFunctions.contains(f)) costFunctions.add(f);
+    }
+
+    public void addDataReadyTimeFunction() {
+        DataReadyTimeFunction f =  new DataReadyTimeFunction(numProcessors);
         if (!costFunctions.contains(f)) costFunctions.add(f);
     }
 

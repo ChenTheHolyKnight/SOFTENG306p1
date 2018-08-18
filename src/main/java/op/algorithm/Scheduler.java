@@ -73,35 +73,4 @@ public abstract class Scheduler {
         return this.numProcessors;
     }
 
-    /**
-     * Gets the earliest possible time of a given task on a given processor, based on a (partial) schedule
-     * @param t the task to be scheduled
-     * @param s the schedule to be extended
-     * @param p the processor the task is to be scheduled on
-     * @return The earliest start time of the task on the given processor, based on the given schedule
-     */
-    protected int getEarliestStartTime(Schedule s, Task t, int p) {
-        List<Dependency> incomingEdges = t.getIncomingDependencies();
-
-        // Estimate the earliest start time of the task as the next available time on the processor
-        int startTime = s.getNextFreeTimeOfProcessor(p);
-
-        for (Dependency incomingEdge: incomingEdges) {
-            Task startTask = incomingEdge.getStartTask();
-
-            // If a dependent task is not scheduled on the same processor, the start time of this task
-            // cannot be earlier than the end time of the dependent task plus the communication cost
-            if (s.getScheduledTask(startTask).getProcessor() != p) {
-                int newStartTime = s.getScheduledTask(startTask).getStartTime()
-                        + startTask.getDuration()
-                        + incomingEdge.getWeight();
-
-                if (newStartTime > startTime) {
-                    startTime = newStartTime;
-                }
-            }
-        }
-        return startTime;
-    }
-
 }
