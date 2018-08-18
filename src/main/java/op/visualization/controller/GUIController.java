@@ -6,13 +6,10 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.StackedBarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -20,28 +17,18 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
-import op.algorithm.Scheduler;
 import op.algorithm.SchedulerListener;
 import op.model.Schedule;
 import op.model.ScheduledTask;
-import op.model.Task;
-import op.model.TaskGraph;
 import op.visualization.GanttChart;
 import op.Application;
 import op.visualization.SystemInfo;
 import op.visualization.VisualizerData;
-import op.visualization.messages.UpdateMessage;
 import org.controlsfx.control.ToggleSwitch;
-import org.controlsfx.control.action.Action;
 import org.graphstream.ui.fx_viewer.FxDefaultView;
 import org.graphstream.ui.fx_viewer.FxViewer;
 import org.graphstream.ui.graphicGraph.GraphicGraph;
 import org.graphstream.ui.view.GraphRenderer;
-import scala.xml.Null;
-
-import javax.swing.*;
-import java.net.URL;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.Timer;
 
@@ -86,19 +73,16 @@ public class GUIController implements SchedulerListener {
     @FXML
     private Button startButton;
 
-
-
     // Gantt chart components
-    final NumberAxis xAxis = new NumberAxis();
-    final CategoryAxis yAxis = new CategoryAxis();
-    final GanttChart<Number,String> chart = new GanttChart<>(xAxis,yAxis);
+    private final NumberAxis xAxis = new NumberAxis();
+    private final CategoryAxis yAxis = new CategoryAxis();
+    private final GanttChart<Number,String> chart = new GanttChart<>(xAxis,yAxis);
     private HashMap<Integer,XYChart.Series> seriesHashMap = new HashMap<>();
     private int coreNum = 1;
 
     private Timer timer;
 
     private VisualizerData visualizerData;
-
 
     /**
      * GUI should know the current best so it knows when to update (if the value is changed)
@@ -218,13 +202,15 @@ public class GUIController implements SchedulerListener {
      * @param pane the pane to fade
      */
     private void fadeTransition(boolean toFadeIn, Pane pane) {
-        FadeTransition fade = new FadeTransition(Duration.millis(500), pane); //fade in schedulePane
+        FadeTransition fade = new FadeTransition(Duration.millis(500), pane);
         fade.setFromValue(toFadeIn? 0.0: 1.0);
         fade.setToValue(toFadeIn? 1.0: 0.0);
-        fade.setOnFinished(event -> {
-            fade.stop();
+        Platform.runLater(() -> {
+            fade.setOnFinished(event -> {
+                fade.stop();
+            });
+            fade.playFromStart();
         });
-        fade.playFromStart();
     }
 
     /**
@@ -306,20 +292,17 @@ public class GUIController implements SchedulerListener {
     }
 
     private void initializeGanttChartXAxis() {
-        xAxis.setLabel("");
-        xAxis.setTickLabelFill(Color.CHOCOLATE); //need to change later on
+        xAxis.setLabel("Time");
         xAxis.setMinorTickCount(GANTT_CHART_X_AXIS_MINOR_TICK_COUNT);
     }
 
     private void initializeGanttChartYAxis() {
-        yAxis.setLabel("");
-        yAxis.setTickLabelFill(Color.CHOCOLATE); //need to change later on
         yAxis.setTickLabelGap(GANTT_CHART_Y_AXIS_TICK_LABEL_GAP);
 
         // Set the y-axis categories
         List<String> processors = new ArrayList<>();
         for(int i = 0; i < coreNum; i++){
-            processors.add("Processor" + (i+1));
+            processors.add("Processor " + (i+1));
             seriesHashMap.put(i, new XYChart.Series());
         }
         yAxis.setCategories(FXCollections.<String>observableArrayList(processors));
@@ -331,7 +314,7 @@ public class GUIController implements SchedulerListener {
         chart.setBlockHeight((schedulePane.getPrefHeight()-GANTT_CHART_GAP)/coreNum);
         chart.setPrefHeight(schedulePane.getPrefHeight());
         chart.setPrefWidth(schedulePane.getPrefWidth());
-        chart.getStylesheets().add("op/visualization/view/Styles/ganttchart.css");
+        chart.getStylesheets().add("op/visualization/controller/ganttchart.css");
     }
 
     /**
@@ -339,10 +322,11 @@ public class GUIController implements SchedulerListener {
      */
     private void addScheduledTaskToChart(ScheduledTask task){
         int weight=task.getTask().getDuration();
+        String id = task.getTask().getId();
         int processorNum=task.getProcessor();
         XYChart.Series series=seriesHashMap.get(processorNum-1);
         series.getData().add(new XYChart.Data<Number, String>(task.getStartTime(), yAxis.getCategories().get(processorNum-1),
-                new GanttChart.ExtraData( weight, "status-blue")));
+                new GanttChart.ExtraData(id, weight, "status-blue")));
 
     }
 

@@ -1,12 +1,15 @@
 package op.visualization;
 
+import javafx.application.Platform;
 import javafx.beans.NamedArg;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.chart.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -15,28 +18,22 @@ import java.util.List;
 public class GanttChart<X, Y> extends XYChart<X,Y> {
     public static class ExtraData {
 
-        public long length;
-        public String styleClass;
+        private String id;
+        private long length;
+        private String styleClass;
 
-
-        public ExtraData(long lengthMs, String styleClass) {
-            super();
+        public ExtraData(String id, long lengthMs, String styleClass) {
+            this.id = id;
             this.length = lengthMs;
             this.styleClass = styleClass;
         }
         public long getLength() {
             return length;
         }
-        public void setLength(long length) {
-            this.length = length;
-        }
         public String getStyleClass() {
             return styleClass;
         }
-        public void setStyleClass(String styleClass) {
-            this.styleClass = styleClass;
-        }
-
+        public String getId() {return id; }
 
     }
 
@@ -46,7 +43,8 @@ public class GanttChart<X, Y> extends XYChart<X,Y> {
         this(xAxis, yAxis, FXCollections.<Series<X, Y>>observableArrayList());
     }
 
-    public GanttChart(@NamedArg("xAxis") Axis<X> xAxis, @NamedArg("yAxis") Axis<Y> yAxis, @NamedArg("data") ObservableList<Series<X,Y>> data) {
+    public GanttChart(@NamedArg("xAxis") Axis<X> xAxis, @NamedArg("yAxis") Axis<Y> yAxis, @NamedArg("data")
+            ObservableList<Series<X,Y>> data) {
         super(xAxis, yAxis);
         if (!(xAxis instanceof ValueAxis && yAxis instanceof CategoryAxis)) {
             throw new IllegalArgumentException("Axis type incorrect, X and Y should both be NumberAxis");
@@ -58,8 +56,12 @@ public class GanttChart<X, Y> extends XYChart<X,Y> {
         return ((ExtraData) obj).getStyleClass();
     }
 
-    private static double getLength( Object obj) {
-        return ((ExtraData) obj).getLength();
+    private static double getLength( ExtraData data) {
+        return data.getLength();
+    }
+
+    private static String getId(ExtraData data) {
+        return data.getId();
     }
 
     @Override
@@ -79,18 +81,26 @@ public class GanttChart<X, Y> extends XYChart<X,Y> {
                 }
                 Node block = item.getNode();
                 Rectangle ellipse;
+                double width = getLength((ExtraData) item.getExtraValue()) * ((getXAxis() instanceof NumberAxis)
+                        ? Math.abs(((NumberAxis)getXAxis()).getScale()) : 1);
                 if (block != null) {
                     if (block instanceof StackPane) {
                         StackPane region = (StackPane)item.getNode();
                         if (region.getShape() == null) {
-                            ellipse = new Rectangle( getLength( item.getExtraValue()), getBlockHeight());
+                            ellipse = new Rectangle( getLength((ExtraData) item.getExtraValue()), getBlockHeight());
                         } else if (region.getShape() instanceof Rectangle) {
                             ellipse = (Rectangle)region.getShape();
                         } else {
                             return;
                         }
-                        ellipse.setWidth( getLength( item.getExtraValue()) * ((getXAxis() instanceof NumberAxis) ? Math.abs(((NumberAxis)getXAxis()).getScale()) : 1));
-                        ellipse.setHeight(getBlockHeight() * ((getYAxis() instanceof NumberAxis) ? Math.abs(((NumberAxis)getYAxis()).getScale()) : 1));
+                        if (region.getChildren().isEmpty()) {
+                            Text id = createTaskLabel(width, getId((ExtraData) item.getExtraValue()));
+                            region.getChildren().add(id);
+                            region.setAlignment(Pos.TOP_CENTER);
+                        }
+                        ellipse.setWidth(width);
+                        ellipse.setHeight(getBlockHeight() * ((getYAxis() instanceof NumberAxis) ?
+                                Math.abs(((NumberAxis)getYAxis()).getScale()) : 1));
                         y -= getBlockHeight() / 2.0;
 
                         region.setShape(null);
@@ -105,6 +115,24 @@ public class GanttChart<X, Y> extends XYChart<X,Y> {
                 }
             }
         }
+    }
+
+    /**
+     * Produces a label for a task that shows the task ID
+     * @param width the width the label must occupy
+     * @param id the task ID
+     * @return a Text object representing the label
+     */
+    private Text createTaskLabel(double width, String id) {
+        String idText = "";
+        String suffix = "ID: " + id;
+        int centre = (int)(width-suffix.length())/2;
+        StringBuilder builder = new StringBuilder(idText);
+        for (int i=0; i< centre; i++) {
+            builder.append(" ");
+        }
+        builder.append(suffix);
+        return new Text(builder.toString());
     }
 
     public double getBlockHeight() {
@@ -179,7 +207,8 @@ public class GanttChart<X, Y> extends XYChart<X,Y> {
                 for(Data<X,Y> data: series.getData()) {
                     if(xData != null) {
                         xData.add(data.getXValue());
-                        xData.add(xa.toRealValue(xa.toNumericValue(data.getXValue()) + getLength(data.getExtraValue())));
+                        xData.add(xa.toRealValue(xa.toNumericValue(data.getXValue()) +
+                                getLength((ExtraData)data.getExtraValue())));
                     }
                     if(yData != null){
                         yData.add(data.getYValue());
