@@ -6,6 +6,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -38,9 +39,11 @@ import org.graphstream.ui.graphicGraph.GraphicGraph;
 import org.graphstream.ui.view.GraphRenderer;
 import scala.xml.Null;
 
+import javax.swing.*;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.Timer;
 
 /**
  * The controller class to control the GUI*/
@@ -79,6 +82,9 @@ public class GUIController implements SchedulerListener {
 
     @FXML
     private Label nodesVisisted;
+
+    @FXML
+    private Button startButton;
 
 
 
@@ -145,6 +151,8 @@ public class GUIController implements SchedulerListener {
     /**
      * Starts running the algorithm concurrently with the visualization
      */
+
+    @FXML
     private void startAlgorithm() {
         Application.getInstance().startConcurrentAlgorithm();
     }
