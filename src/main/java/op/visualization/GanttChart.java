@@ -27,14 +27,8 @@ public class GanttChart<X, Y> extends XYChart<X,Y> {
         public long getLength() {
             return length;
         }
-        public void setLength(long length) {
-            this.length = length;
-        }
         public String getStyleClass() {
             return styleClass;
-        }
-        public void setStyleClass(String styleClass) {
-            this.styleClass = styleClass;
         }
 
 
@@ -46,7 +40,8 @@ public class GanttChart<X, Y> extends XYChart<X,Y> {
         this(xAxis, yAxis, FXCollections.<Series<X, Y>>observableArrayList());
     }
 
-    public GanttChart(@NamedArg("xAxis") Axis<X> xAxis, @NamedArg("yAxis") Axis<Y> yAxis, @NamedArg("data") ObservableList<Series<X,Y>> data) {
+    public GanttChart(@NamedArg("xAxis") Axis<X> xAxis, @NamedArg("yAxis") Axis<Y> yAxis, @NamedArg("data")
+            ObservableList<Series<X,Y>> data) {
         super(xAxis, yAxis);
         if (!(xAxis instanceof ValueAxis && yAxis instanceof CategoryAxis)) {
             throw new IllegalArgumentException("Axis type incorrect, X and Y should both be NumberAxis");
@@ -89,8 +84,10 @@ public class GanttChart<X, Y> extends XYChart<X,Y> {
                         } else {
                             return;
                         }
-                        ellipse.setWidth( getLength( item.getExtraValue()) * ((getXAxis() instanceof NumberAxis) ? Math.abs(((NumberAxis)getXAxis()).getScale()) : 1));
-                        ellipse.setHeight(getBlockHeight() * ((getYAxis() instanceof NumberAxis) ? Math.abs(((NumberAxis)getYAxis()).getScale()) : 1));
+                        ellipse.setWidth( getLength( item.getExtraValue()) * ((getXAxis() instanceof NumberAxis)
+                                ? Math.abs(((NumberAxis)getXAxis()).getScale()) : 1));
+                        ellipse.setHeight(getBlockHeight() * ((getYAxis() instanceof NumberAxis) ?
+                                Math.abs(((NumberAxis)getYAxis()).getScale()) : 1));
                         y -= getBlockHeight() / 2.0;
 
                         region.setShape(null);
