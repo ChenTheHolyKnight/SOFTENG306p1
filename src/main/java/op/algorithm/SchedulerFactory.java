@@ -62,8 +62,8 @@ public class SchedulerFactory {
                 scheduler = new DFSScheduler(numProcessors, prunerManager, costFunctionManager);
                 break;
             case ASTAR:
-                //TODO
-                throw new RuntimeException("AStar is not yet implemented");
+                scheduler = new AStarScheduler(numProcessors, prunerManager, costFunctionManager);
+                break;
             case GREEDY:
                 scheduler = new GreedyScheduler(numProcessors);
                 break;

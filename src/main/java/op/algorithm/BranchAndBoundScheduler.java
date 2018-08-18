@@ -107,4 +107,15 @@ public abstract class BranchAndBoundScheduler extends Scheduler {
         return freeTasks;
     }
 
+    /**
+     * Tells us when a partial schedule is worth pursuing any further.
+     * @return true if the cost function is less than the known best length; false if the cost function is greater than
+     * or equal to the known best, because all schedules based on this schedule are guaranteed to be worse than, or no
+     * better than our known best.
+     */
+    protected boolean costFunctionIsPromising(Schedule s, int bestSoFar) {
+
+        return SchedulerUtil.getTightestBound(s, getCostFunctionManager()) < bestSoFar;
+    }
+
 }

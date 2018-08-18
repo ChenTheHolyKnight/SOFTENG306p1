@@ -1,7 +1,7 @@
 package op.model;
 
 /**
- * 
+ *
  * @author Ravid
  *
  * A class representing an edge on a graph
@@ -9,10 +9,10 @@ package op.model;
 public class Dependency {
 	private Task startTask;
 	private Task endTask;
-	
+
 	private int weight;
 	private String id;
-	
+
 	public Dependency (Task startTask, Task endTask, int weight){
 		this.startTask = startTask;
 		this.endTask = endTask;
@@ -51,15 +51,15 @@ public class Dependency {
 
 		return true; // we made it past all checks so the dependencies are equal
 	}
-	
+
 	@Override
 	public int hashCode() {
 		int result = 17;
-		
+
 		result = 31 * result + startTask.getId().hashCode();
 		result = 31 * result + endTask.getId().hashCode();
 		result = 31 * result + weight;
-		
+
 		return result;
 	}
 }

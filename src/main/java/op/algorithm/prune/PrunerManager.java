@@ -34,12 +34,14 @@ public class PrunerManager {
 	
 	public void addEquivalentSchedulePruner() {
 		EquivalentSchedulePruner p = new EquivalentSchedulePruner();
-		if (!pruners.contains(p)) pruners.add(p);
+		if (!pruners.contains(p))
+			pruners.add(p);
 	}
 	
 	public void addNodeEquivalencePruner() {
 		NodeEquivalencePruner p =  new NodeEquivalencePruner();
-		if (!pruners.contains(p)) pruners.add(p);
+		if (!pruners.contains(p))
+			pruners.add(p);
 	}
 
 	/**
@@ -48,7 +50,7 @@ public class PrunerManager {
 	 * @return The newly pruned List of schedules
 	 */
 	public List<Schedule> execute(List<Schedule> toPrune) {
-		if (pruners.size() != 0){
+		if (!pruners.isEmpty()){
 			List<Schedule> pruned = new ArrayList<Schedule>();
 			pruned.addAll(toPrune);
 			for (Pruner p: pruners) {
