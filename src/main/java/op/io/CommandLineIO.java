@@ -41,13 +41,13 @@ public class CommandLineIO {
     private static final String NUM_CORES_DESCRIPTION =
             "number of cores to execute program on (default is 1 core)";
     private static final String TO_VISUALIZE_DESCRIPTION = "visualise the search";
-    private static final String OUTPUT_FILENAME_DESCRIPTION = "name of output file (default is INPUT-output.dot)";
+    private static final String OUTPUT_FILENAME_DESCRIPTION = "name of output file (default is <INPUT>-output.dot)";
     private static final String ALGORITHM_DESCRIPTION =
             "the algorithm implementation to use for scheduling:" +
-                    System.lineSeparator() + "parallel | dfs | astar | greedy | simple";
+                    System.lineSeparator() + "dfs | astar | greedy | simple";
     private static final String COST_FUNC_DESCRIPTION = "comma-separated list of cost functions to be used."
             + System.lineSeparator() + "Acceptable values: bl | it ";
-    private static final String PRUNER_DESCRIPTION = "Pruner to be used."
+    private static final String PRUNER_DESCRIPTION = "comma-separated list of pruners to be used."
     		+ System.lineSeparator() + "Acceptable values: es | ne";
 
     private static final String HELP_MESSAGE =
