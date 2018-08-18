@@ -9,7 +9,10 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Parallel DFS algorithm manager.
+ * Parallel DFS Scheduler. Run sequentially until there is enough schedules to switch to parallel. Once switched
+ * each thread runs from its own stack. When a thread finishes its stack it will switch over to its neighboring threads
+ * stack and these threads will work together on that stack. One best length is maintained across the threads so
+ * a thread does not hold a schedule worse than another thread's best schedule.
  * @author Sam Broadhead
  */
 public class DFSParallelScheduler extends BranchAndBoundScheduler {
@@ -19,11 +22,12 @@ public class DFSParallelScheduler extends BranchAndBoundScheduler {
     private AtomicInteger globalBestScheduleLength = new AtomicInteger(Integer.MAX_VALUE);
 
     /**
-     * Instantiates a DFSScheduler with the specified params
+     * Instantiates a DFSParallelScheduler with the specified params
      *
      * @param numProcessors The number of processors to schedule tasks on
      * @param pm            The pruner manager to use
      * @param cfm           The cost function manager to use
+     * @param numThreads    How many threads to run
      */
     public DFSParallelScheduler(int numProcessors, PrunerManager pm, CostFunctionManager cfm, int numThreads) {
         super(numProcessors, pm, cfm);
@@ -49,44 +53,44 @@ public class DFSParallelScheduler extends BranchAndBoundScheduler {
             }
         }
 
-        // initiate threads and run them in parallel
-        ExecutorService executor = Executors.newFixedThreadPool(numThreads);
-        List<Future<Schedule>> futures = new ArrayList<>();
+        // split the stack up into equal size stacks, one stack for each thread
         stacks = new ConcurrentLinkedDeque[numThreads];
-        for (int i = 0; i < numThreads; i++){
+        for (int i = 0; i < numThreads; i++) {
             stacks[i] = new ConcurrentLinkedDeque<>();
         }
-        int scheduleSize = scheduleStack.size(); // for loop iteration safety
-        for (int i = 0; i < scheduleSize; i++){
+        int scheduleSize = scheduleStack.size(); // ensure the whole stack gets emptied
+        for (int i = 0; i < scheduleSize; i++) {
             stacks[i%numThreads].push(scheduleStack.pop());
         }
+
+        // create a fixed thread pool and a list of futures for the results to be stored in
+        ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+        List<Future<Schedule>> futures = new ArrayList<>();
+
+        // submit a new callable to the thread pool and add its future to the futures list
         for (int i = 0; i < numThreads; i++) {
-            futures.add(executor.submit(new DFSScheduler(getNumProcessors(), getPrunerManager(), getCostFunctionManager(), stacks, i, globalBestScheduleLength)));
+            futures.add(executor.submit(new DFSScheduler(getNumProcessors(), getPrunerManager(),
+                    getCostFunctionManager(), stacks, i, globalBestScheduleLength)));
         }
-        executor.shutdown();
-        while(!executor.isTerminated()){
-           // System.out.println(((ThreadPoolExecutor) executor).getActiveCount());
-        }
+        executor.shutdown(); // shut down the executor once all tasks have finished
 
         List<Schedule> results = new ArrayList<>();
+
         for (Future<Schedule> f : futures) {
             try {
-                results.add(f.get());
+                results.add(f.get()); // wait if necessary and get result.
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
-                // the stack was emptied when a thread was trying to get a new schedule
-                // can ignore this because this means algorithm has already finished
+                e.printStackTrace();
             }
         }
+
+        // If the thread was unable to process a complete solution, remove it from our results
         results.removeAll(Collections.singleton(null));
 
         for (Schedule s : results) {
 
-            // if the thread was unable to process any complete schedules, ignore it
-            if(s.getLength() == 0){
-                continue;
-            }
             // get the best schedule from each of the threads
             if (s.getLength() < bestScheduleLength) {
                 bestSchedule = s;
