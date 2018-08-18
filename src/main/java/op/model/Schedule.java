@@ -117,7 +117,6 @@ public class Schedule {
      */
 	public int getLength() {
 
-	    //TODO change this to return cost function
         int length = 0;
         for (List<ScheduledTask> tasks: processorMap.values()) {
             ScheduledTask lastTask = tasks.get(tasks.size()-1);

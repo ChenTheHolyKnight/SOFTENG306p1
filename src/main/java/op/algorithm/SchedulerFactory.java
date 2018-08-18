@@ -48,6 +48,9 @@ public class SchedulerFactory {
                         break;
                     case BOTTOM_LEVEL:
                         costFunctionManager.addBottomLevelFunction();;
+                        break;
+                    case DATA_READY_TIME:
+                        costFunctionManager.addDataReadyTimeFunction();
                 }
             }
         }
