@@ -109,7 +109,7 @@ public class GUIController implements SchedulerListener {
      */
     @FXML
     public void initialize() {
-        System.out.println("Anchor Size+"+testing.getWidth()+"  :"+testing.getHeight());
+
         visualizerData = new VisualizerData();
         bestScheduleLength = Integer.MAX_VALUE;
         coreNum=Application.getInstance().getProcessNum();
@@ -123,7 +123,6 @@ public class GUIController implements SchedulerListener {
 
         schedulePane.setOpacity(0.0);
         graphPane.setOpacity(1.0);
-        percentageTile.setSkinType(Tile.SkinType.BAR_GAUGE);
 
         registerVisualizationDataAsListener();
         initializeVisualizationDataUpdate();

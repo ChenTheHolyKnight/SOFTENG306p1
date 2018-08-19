@@ -14,8 +14,7 @@
 <AnchorPane prefHeight="645.0" prefWidth="995.0" styleClass="background" stylesheets="@Styles/BackPanel.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="op.visualization.controller.GUIController">
     <children>
         <AnchorPane fx:id="schedulePane" layoutX="7.0" layoutY="76.0" opacity="0.51" prefHeight="425.0" prefWidth="667.0" styleClass="background" />
-        <AnchorPane fx:id="graphPane" layoutX="13.0" layoutY="75.0" opacity="0.51" prefHeight="425.0" prefWidth="653.0" styleClass="background" />
-        <VBox layoutX="10.0" layoutY="9.0" prefHeight="591.0" prefWidth="260.0" />
+        <AnchorPane fx:id="graphPane" layoutX="13.0" layoutY="75.0" onMouseClicked="#hideGraphLabel" opacity="0.51" prefHeight="425.0" prefWidth="653.0" styleClass="background" />
         <TabPane fx:id="tabPane" layoutX="680.0" layoutY="10.0" prefHeight="598.0" prefWidth="306.0" side="RIGHT" styleClass="background" stylesheets="@Styles/TabPane.css" tabClosingPolicy="UNAVAILABLE">
             <tabs>
                 <Tab text="Performance">
@@ -78,17 +77,17 @@
                 </Tab>
             </tabs>
         </TabPane>
-        <Label alignment="CENTER" layoutX="10.0" layoutY="5.0" prefHeight="60.0" prefWidth="661.0" text="Optimal Scheduling" textAlignment="CENTER" textFill="WHITE">
+        <Label alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="60.0" prefWidth="667.0" text="Optimal Scheduling" textAlignment="CENTER" textFill="WHITE">
             <styleClass>
                 <String fx:value="grayBackground" />
                 <String fx:value="heading" />
             </styleClass></Label>
-        <AnchorPane layoutX="10.0" layoutY="533.0" prefHeight="70.0" prefWidth="661.0" styleClass="tileBackgroundColour">
+        <AnchorPane layoutX="14.0" layoutY="518.0" prefHeight="90.0" prefWidth="661.0" styleClass="tileBackgroundColour">
             <children>
                 <Label alignment="CENTER" layoutX="433.0" layoutY="14.0" prefHeight="26.0" prefWidth="150.0" styleClass="subheading" text="Output Schedule" textFill="WHITE" />
                 <Label alignment="CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="13.0" prefHeight="27.0" prefWidth="250.0" styleClass="subheading" text="Input Task Dependency Graph" textAlignment="RIGHT" textFill="WHITE" />
                 <ToggleSwitch fx:id="graphSwitch" layoutX="315.0" layoutY="18.0" onMouseClicked="#onSwitchTriggered" prefHeight="15.0" prefWidth="32.0" />
-                <Button fx:id="startButton" layoutX="261.0" layoutY="55.0" mnemonicParsing="false" onMouseClicked="#startButtonClicked" prefHeight="34.0" prefWidth="141.0" stylesheets="@Styles/Button.css" text="Start Scheduling" />
+                <Button fx:id="startButton" layoutX="261.0" layoutY="44.0" mnemonicParsing="false" onMouseClicked="#startButtonClicked" prefHeight="34.0" prefWidth="141.0" stylesheets="@Styles/Button.css" text="Start Scheduling" />
             </children>
         </AnchorPane>
     </children>
