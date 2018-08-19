@@ -1,6 +1,7 @@
 package op.visualization;
 
 import eu.hansolo.tilesfx.Tile;
+import javafx.application.Platform;
 
 import java.util.TimerTask;
 
@@ -20,6 +21,9 @@ public class AlgorithmTimer extends TimerTask{
 
     @Override
     public void run() {
-        timerTile.setValue(getTime());
+        Platform.runLater(()->{
+            timerTile.setValue(getTime());
+        });
+
     }
 }

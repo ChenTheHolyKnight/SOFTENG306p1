@@ -105,7 +105,8 @@ public class GUIController implements SchedulerListener {
         initializeMemoryAndCPUPolling();
 
         schedulePane.setOpacity(0.0);
-        percentageTile.setSkinType(Tile.SkinType.BAR_GAUGE);
+        percentageTile.setSkinType(Tile.SkinType.TIMER_CONTROL);
+        percentageTile.setSecondsVisible(false);
 
         registerVisualizationDataAsListener();
         startAlgorithm();
