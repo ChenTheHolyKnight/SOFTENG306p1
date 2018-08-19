@@ -20,6 +20,7 @@ import javafx.util.Duration;
 import op.algorithm.SchedulerListener;
 import op.model.Schedule;
 import op.model.ScheduledTask;
+import op.visualization.AlgorithmTimer;
 import op.visualization.GanttChart;
 import op.Application;
 import op.visualization.SystemInfo;
@@ -59,7 +60,7 @@ public class GUIController implements SchedulerListener {
     private Tile memoryTile;
     
     @FXML 
-    private Tile percentageTile;
+    private Label percentageTile;
 
     @FXML
     private Label bestLength;
@@ -72,6 +73,9 @@ public class GUIController implements SchedulerListener {
 
     @FXML
     private Button startButton;
+
+    @FXML
+    private AnchorPane testing;
 
     // Gantt chart components
     private final NumberAxis xAxis = new NumberAxis();
@@ -94,7 +98,7 @@ public class GUIController implements SchedulerListener {
      */
     @FXML
     public void initialize() {
-
+        System.out.println("Anchor Size+"+testing.getWidth()+"  :"+testing.getHeight());
         visualizerData = new VisualizerData();
         bestScheduleLength = Integer.MAX_VALUE;
         coreNum=Application.getInstance().getProcessNum();
@@ -104,7 +108,8 @@ public class GUIController implements SchedulerListener {
         initializeMemoryAndCPUPolling();
 
         schedulePane.setOpacity(0.0);
-        percentageTile.setSkinType(Tile.SkinType.BAR_GAUGE);
+        //percentageTile.setSkinType(Tile.SkinType.BAR_GAUGE);
+
 
         registerVisualizationDataAsListener();
         initializeVisualizationDataUpdate();
@@ -135,7 +140,11 @@ public class GUIController implements SchedulerListener {
 
     @FXML
     private void startAlgorithm() {
-        Application.getInstance().startConcurrentAlgorithm();
+        Timer algorithmTimer=new Timer();
+        Platform.runLater(()->{
+            algorithmTimer.schedule(new AlgorithmTimer(percentageTile),0,1);
+        });
+        Application.getInstance().startConcurrentAlgorithm(algorithmTimer);
     }
 
     /**

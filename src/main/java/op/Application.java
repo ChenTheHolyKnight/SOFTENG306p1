@@ -16,6 +16,7 @@ import scala.App;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
 /**
  * Entry point for the optimal scheduling program
@@ -126,7 +127,7 @@ public class Application {
     /**
      * Starts the algorithm running concurrently with the calling thread
      */
-    public void startConcurrentAlgorithm() {
+    public void startConcurrentAlgorithm(Timer timer) {
         javafx.concurrent.Task<Void> task = new javafx.concurrent.Task<Void>() {
             private Schedule schedule;
 
@@ -134,6 +135,7 @@ public class Application {
             protected Void call() {
                 System.out.println("start");
                 schedule = Application.getInstance().produceSchedule();
+                System.out.println("in");
                 return null;
             }
 
@@ -141,6 +143,7 @@ public class Application {
             protected void succeeded() {
                 super.succeeded();
                 Application.getInstance().writeDot(schedule);
+                timer.cancel();
             }
         };
         new Thread(task).start();
