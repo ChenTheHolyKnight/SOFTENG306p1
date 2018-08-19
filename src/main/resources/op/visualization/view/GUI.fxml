@@ -34,8 +34,12 @@
                         <VBox>
                             <children>
                                 <Label alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="270.0" styleClass="grayBackground" text="Schedule Percentage" textAlignment="CENTER" textFill="WHITE" />
-                                <Tile fx:id="percentageTile" prefHeight="240.0" prefWidth="261.0" />
-                                <Label alignment="CENTER" prefHeight="60.0" prefWidth="270.0" styleClass="grayBackground" text="Statistics" textAlignment="CENTER" textFill="WHITE" />
+                        <AnchorPane prefHeight="309.0" prefWidth="298.0" styleClass="timerBackground">
+                           <children>
+                              <Label fx:id="percentageTile" alignment="CENTER_RIGHT" layoutX="94.0" layoutY="121.0" prefHeight="54.0" prefWidth="69.0" text="Label" textFill="#fcfcfc" />
+                              <Label fx:id="percentageTile1" layoutX="174.0" layoutY="121.0" prefHeight="54.0" prefWidth="69.0" text="ms" textFill="#eeeaea" />
+                           </children></AnchorPane>
+                                <Label alignment="CENTER" prefHeight="65.0" prefWidth="277.0" styleClass="grayBackground" text="Statistics" textAlignment="CENTER" textFill="WHITE" />
                                 <AnchorPane prefHeight="240.0" prefWidth="261.0" styleClass="tileBackgroundColour">
                                     <children>
                                         <Label alignment="CENTER" contentDisplay="CENTER" layoutX="50.0" layoutY="58.0" prefHeight="21.0" prefWidth="123.0" text="Pruned Trees :" textAlignment="JUSTIFY" textFill="WHITE" />

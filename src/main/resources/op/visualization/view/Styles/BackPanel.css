@@ -50,3 +50,8 @@
     -fx-background-color: #00003E, #000000;
     -fx-fill-mode: gradient-vertical;
 }
+
+.timerBackground{
+    -fx-background-image: url("image.jpg");
+    -fx-background-color: #2a2a2a
+}

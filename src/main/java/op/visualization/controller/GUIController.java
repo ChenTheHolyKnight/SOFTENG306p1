@@ -60,7 +60,7 @@ public class GUIController implements SchedulerListener {
     private Tile memoryTile;
     
     @FXML 
-    private Tile percentageTile;
+    private Label percentageTile;
 
     @FXML
     private Label bestLength;
@@ -105,7 +105,7 @@ public class GUIController implements SchedulerListener {
         initializeMemoryAndCPUPolling();
 
         schedulePane.setOpacity(0.0);
-        percentageTile.setSkinType(Tile.SkinType.BAR_GAUGE);
+        //percentageTile.setSkinType(Tile.SkinType.BAR_GAUGE);
 
 
         registerVisualizationDataAsListener();
