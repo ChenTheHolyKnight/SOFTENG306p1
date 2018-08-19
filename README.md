@@ -28,15 +28,17 @@ library, the build can take a couple minutes to package dependencies into the ja
 
 ## CLI Usage
 ```
-Usage: java -jar scheduler.jar <INPUT GRAPH FILENAME> <NUMBER OF PROCESSORS> [OPTIONS]
- -a <arg>   the algorithm implementation to use for scheduling:
-            parallel | dfs | astar | greedy | simple
+usage: <INPUT GRAPH FILENAME> <NUMBER OF PROCESSORS> [OPTIONS]
+ OPTIONS:
+ -a <arg>   the algorithm implementation to use for scheduling. (if number
+            of Cores [-p > 1], algorithm can only use dfs).
+            Acceptable Values: dfs | astar | greedy | simple
  -f <arg>   comma-separated list of cost functions to be used.
             Acceptable values: bl | it
- -o <arg>   name of output file (default is INPUT-output.dot)
+ -o <arg>   name of output file (default is <INPUT>-output.dot)
  -p <arg>   number of cores to execute program on (default is 1 core)
  -P <arg>   comma-separated list of pruners to be used.
-            Acceptable values: es | it | ne
+            Acceptable values: es | ne
  -v         visualise the search
 ```
 
