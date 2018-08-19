@@ -123,9 +123,7 @@ public class Application {
 
             @Override
             protected Void call() {
-                System.out.println("start");
                 schedule = Application.getInstance().produceSchedule();
-                System.out.println("in");
                 return null;
             }
 
