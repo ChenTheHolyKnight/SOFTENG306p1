@@ -22,6 +22,7 @@ public class AlgorithmTimer extends TimerTask{
     @Override
     public void run() {
         Platform.runLater(()->{
+            timerTile.setUnit("ms");
             timerTile.setValue(getTime());
         });
 
