@@ -44,13 +44,16 @@ public class DFSScheduler extends BranchAndBoundScheduler  implements Callable<S
      * @param numProcessors The number of processors to schedule tasks on
      * @param pm The pruner manager to use
      * @param cfm The cost function manager to use
+     * @param nodesVisited the reference to the nodes visited counter
+     * @param prunedTrees the reference to the pruned trees counter
      * @param globalStacks An array of deques for each thread to work on
      * @param position the position in the globalStacks array to begin work
      * @param globalBestLength the best known length across all threads
      */
-    public DFSScheduler(int numProcessors, PrunerManager pm, CostFunctionManager cfm, Deque<Schedule>[] globalStacks,
+    public DFSScheduler(int numProcessors, PrunerManager pm, CostFunctionManager cfm, AtomicInteger nodesVisited,
+                        AtomicInteger prunedTrees, Deque<Schedule>[] globalStacks,
                         int position, AtomicInteger globalBestLength) {
-        super(numProcessors, pm, cfm);
+        super(numProcessors, pm, cfm, nodesVisited, prunedTrees);
         this.scheduleStacks = globalStacks;
         this.scheduleStack = globalStacks[position];
         this.position = position;

@@ -24,7 +24,7 @@ public abstract class BranchAndBoundScheduler extends Scheduler {
     private AtomicInteger prunedTrees;
 
     /**
-     * Creates a BranchAndBoundScheduler instance with the specified Pruner implementation.
+     * Creates a BranchAndBoundScheduler instance
      * @param p The Pruner Manager to be used in the scheduling algorithm
      * @param numProcessors the number of processors to schedule tasks on
      * @param cfm a cost function manager to use for this scheduler
@@ -36,6 +36,25 @@ public abstract class BranchAndBoundScheduler extends Scheduler {
         this.nodesVisited = new AtomicInteger();
         this.prunedTrees = new AtomicInteger();
     }
+
+    /**
+     * Creates a BranchAndBoundScheduler instance. Allows us to explicitly set the reference to the counters,
+     * which means multiple instances of BranchAndBoundScheduler may use the same counters
+     * @param p The Pruner Manager to be used in the scheduling algorithm
+     * @param numProcessors the number of processors to schedule tasks on
+     * @param cfm a cost function manager to use for this scheduler
+     * @param nodesVisited the reference to the counter of visited nodes
+     * @param prunedTrees the reference to the counter of pruned trees
+     */
+    public BranchAndBoundScheduler(int numProcessors, PrunerManager p, CostFunctionManager cfm,
+                                   AtomicInteger nodesVisited, AtomicInteger prunedTrees) {
+        super(numProcessors);
+        this.prunerManager = p;
+        this.costFunctionManager = cfm;
+        this.nodesVisited = nodesVisited;
+        this.prunedTrees = prunedTrees;
+    }
+
 
     /**
      * Allows subclasses to update the number of nodes visited by a certain number
@@ -66,8 +85,17 @@ public abstract class BranchAndBoundScheduler extends Scheduler {
      * @return the cost function manager that has been set for this instance
      */
     protected CostFunctionManager getCostFunctionManager() { 
-    	return this.costFunctionManager; 
-    	}
+    	return this.costFunctionManager;
+    }
+
+
+    protected AtomicInteger getNodesVisited() {
+        return nodesVisited;
+    }
+
+    protected AtomicInteger getPrunedTrees() {
+        return prunedTrees;
+    }
 
     /**
      * Method that branch and bound implementations can use to get the children from a current schedule.
