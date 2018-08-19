@@ -7,17 +7,8 @@
     -fx-font-size: 12px;
 }
 
-.heading {
-    -fx-font-size: 26px;
-}
-
-.graphTaskToggle {
-    -fx-font-size: 18px;
-}
-
 .background {
     -fx-background-color: #fff;
-    /*686858*/
 }
 
 .textBackground{
@@ -25,14 +16,14 @@
 }
 
 .grayBackground{
-    /*-fx-background-color:#00003E;*/
     -fx-background-color:
             linear-gradient(#1F2226, #141518),
             radial-gradient(center 50% -40%, radius 200%, #1F2226 45%, #141518 50%);
-        -fx-background-radius: 6, 5;
-        -fx-background-insets: 0, 1;
-        -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );
-        -fx-text-fill: #ffffff;
+    -fx-background-radius: 6, 5;
+    -fx-background-insets: 0, 1;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
 }
 
 .tileBackgroundColour{
@@ -40,4 +31,3 @@
     -fx-background-radius: 6, 5;
     -fx-background-insets: 0, 1;
 }
-

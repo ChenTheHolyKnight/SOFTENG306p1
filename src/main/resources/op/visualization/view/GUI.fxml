@@ -8,22 +8,32 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.ToggleSwitch?>
 
 <AnchorPane prefHeight="645.0" prefWidth="995.0" styleClass="background" stylesheets="@Styles/BackPanel.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="op.visualization.controller.GUIController">
     <children>
-        <AnchorPane fx:id="schedulePane" layoutX="7.0" layoutY="76.0" opacity="0.51" prefHeight="455.0" prefWidth="667.0" />
-        <AnchorPane fx:id="graphPane" layoutX="7.0" layoutY="76.0" maxHeight="455.0" maxWidth="667.0" minHeight="249.0" minWidth="306.0" onMouseClicked="#hideGraphLabel" opacity="0.51" prefHeight="455.0" prefWidth="667.0" />
-        <TabPane layoutX="682.0" layoutY="5.0" prefHeight="598.0" prefWidth="306.0" side="RIGHT" stylesheets="@Styles/TabPane.css" tabClosingPolicy="UNAVAILABLE">
+        <AnchorPane fx:id="schedulePane" layoutX="7.0" layoutY="76.0" opacity="0.51" prefHeight="425.0" prefWidth="667.0" styleClass="background" />
+        <AnchorPane fx:id="graphPane" layoutX="13.0" layoutY="75.0" opacity="0.51" prefHeight="425.0" prefWidth="653.0" styleClass="background" />
+        <VBox layoutX="10.0" layoutY="9.0" prefHeight="591.0" prefWidth="260.0" />
+        <TabPane fx:id="tabPane" layoutX="680.0" layoutY="10.0" prefHeight="598.0" prefWidth="306.0" side="RIGHT" styleClass="background" stylesheets="@Styles/TabPane.css" tabClosingPolicy="UNAVAILABLE">
             <tabs>
                 <Tab text="Performance">
                     <content>
-                        <VBox prefHeight="585.0" prefWidth="270.0">
+                        <VBox maxWidth="-Infinity">
                             <children>
-                                <Label alignment="CENTER" prefHeight="60.0" prefWidth="783.0" styleClass="grayBackground" text="CPU Usage" textAlignment="CENTER" textFill="WHITE" />
-                                <Tile fx:id="cpuTile" prefHeight="240.0" prefWidth="270.0" />
-                                <Label alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="61.0" prefWidth="277.0" styleClass="grayBackground" text="Memory Usage" textAlignment="CENTER" textFill="WHITE" />
-                                <Tile fx:id="memoryTile" layoutX="10.0" layoutY="40.0" prefHeight="240.0" prefWidth="270.0" />
+                                <Label alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="270.0" text="CPU Usage" textAlignment="CENTER" textFill="WHITE">
+                           <styleClass>
+                              <String fx:value="grayBackground" />
+                              <String fx:value="subheading" />
+                           </styleClass></Label>
+                                <Tile fx:id="cpuTile" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="240.0" prefWidth="270.0" />
+                                <Label alignment="CENTER" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="270.0" text="Memory Usage" textAlignment="CENTER" textFill="WHITE">
+                           <styleClass>
+                              <String fx:value="grayBackground" />
+                              <String fx:value="subheading" />
+                           </styleClass></Label>
+                                <Tile fx:id="memoryTile" layoutX="10.0" layoutY="40.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="240.0" prefWidth="270.0" />
                             </children>
                         </VBox>
                     </content>
@@ -32,9 +42,26 @@
                     <content>
                         <VBox prefHeight="585.0" prefWidth="270.0">
                             <children>
-                                <Label alignment="CENTER" prefHeight="60.0" prefWidth="277.0" styleClass="grayBackground" text="Schedule Percentage" textAlignment="CENTER" textFill="WHITE" />
-                                <Tile fx:id="percentageTile" prefHeight="240.0" prefWidth="261.0" />
-                                <Label alignment="CENTER" prefHeight="60.0" prefWidth="277.0" styleClass="grayBackground" text="Statistics" textAlignment="CENTER" textFill="WHITE" />
+                                <Label alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="270.0" styleClass="grayBackground" text="Schedule Percentage" textAlignment="CENTER" textFill="WHITE" />
+                        <AnchorPane prefHeight="242.0" prefWidth="277.0" styleClass="timerBackgroundParent">
+                           <children>
+                              <AnchorPane fx:id="testing" layoutX="15.0" layoutY="10.0" prefHeight="218.0" prefWidth="240.0" styleClass="timerBackground">
+                                 <children>
+                                    <Label fx:id="percentageTile" alignment="CENTER_RIGHT" layoutX="55.0" layoutY="83.0" prefHeight="58.0" prefWidth="97.0" text="0.024" textFill="#fcfcfc">
+                                       <font>
+                                          <Font size="35.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="percentageTile1" layoutX="154.0" layoutY="85.0" prefHeight="58.0" prefWidth="48.0" text="s" textFill="#fcfcfc">
+                                       <font>
+                                          <Font size="30.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </AnchorPane>
+                                <Label alignment="CENTER" prefHeight="65.0" prefWidth="277.0" styleClass="grayBackground" text="Statistics" textAlignment="CENTER" textFill="WHITE" />
                                 <AnchorPane prefHeight="240.0" prefWidth="261.0" styleClass="tileBackgroundColour">
                                     <children>
                                         <Label alignment="CENTER" contentDisplay="CENTER" layoutX="50.0" layoutY="58.0" prefHeight="21.0" prefWidth="123.0" text="Pruned Trees :" textAlignment="JUSTIFY" textFill="WHITE" />
@@ -58,10 +85,10 @@
             </styleClass></Label>
         <AnchorPane layoutX="10.0" layoutY="533.0" prefHeight="70.0" prefWidth="661.0" styleClass="tileBackgroundColour">
             <children>
-                <Label alignment="CENTER" layoutX="497.0" layoutY="22.0" prefHeight="26.0" prefWidth="150.0" styleClass="graphTaskToggle" text="Output Schedule" textFill="WHITE" />
-                <Label alignment="CENTER" contentDisplay="CENTER" layoutX="164.0" layoutY="22.0" prefHeight="27.0" prefWidth="250.0" styleClass="graphTaskToggle" text="Input Task Dependency Graph" textAlignment="RIGHT" textFill="WHITE" />
-                <ToggleSwitch fx:id="graphSwitch" layoutX="431.0" layoutY="21.0" onMouseClicked="#onSwitchTriggered" prefHeight="18.0" prefWidth="40.0" styleClass="graphTaskToggle" />
-                <Button fx:id="startButton" layoutX="62.0" layoutY="22.0" mnemonicParsing="false" text="Start" />
+                <Label alignment="CENTER" layoutX="433.0" layoutY="14.0" prefHeight="26.0" prefWidth="150.0" styleClass="subheading" text="Output Schedule" textFill="WHITE" />
+                <Label alignment="CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="13.0" prefHeight="27.0" prefWidth="250.0" styleClass="subheading" text="Input Task Dependency Graph" textAlignment="RIGHT" textFill="WHITE" />
+                <ToggleSwitch fx:id="graphSwitch" layoutX="315.0" layoutY="18.0" onMouseClicked="#onSwitchTriggered" prefHeight="15.0" prefWidth="32.0" />
+                <Button fx:id="startButton" layoutX="261.0" layoutY="55.0" mnemonicParsing="false" onMouseClicked="#startButtonClicked" prefHeight="34.0" prefWidth="141.0" stylesheets="@Styles/Button.css" text="Start Scheduling" />
             </children>
         </AnchorPane>
     </children>
