@@ -44,3 +44,11 @@
             -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );
 
 }
+
+.heading {
+    -fx-font-size: 26px;
+}
+
+.subheading {
+    -fx-font-size: 18px;
+}
