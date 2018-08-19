@@ -1,6 +1,5 @@
 package op.io;
 
-import op.model.Arguments;
 import op.model.Dependency;
 import op.model.Schedule;
 import op.model.Task;
@@ -152,7 +151,6 @@ public class DotIO {
      * @throws IOException if anything with File IO goes wrong
      * @author Darcy Cox
      */
-
     public void dotOut(Schedule s, String outputGraphFilename) throws IOException {
 
         BufferedWriter bw = new BufferedWriter(new FileWriter(outputGraphFilename, false));
