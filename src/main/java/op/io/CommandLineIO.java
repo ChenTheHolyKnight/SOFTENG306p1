@@ -215,15 +215,12 @@ public class CommandLineIO {
         String alg = cmd.getOptionValue(ALGORITHM_FLAG);
         if (alg == null && getNumCores(cmd) == 1) {
             return ALGORITHM_IMPLEMENTATION; // return default value
-        } else {
+        } else if (alg == null && getNumCores(cmd) > 1) {
+			return Scheduler.Implementation.PARA;
+		} else {
             for (Scheduler.Implementation a : Scheduler.Implementation.values()) {
                 if (alg.equals(a.getCmdRepresentation())) {
-                    if (getNumCores(cmd) > 1
-                            && (alg.equals(Scheduler.Implementation.DFS.getCmdRepresentation()) || alg == null)) {
-                        return Scheduler.Implementation.PARA;
-                    }
-                    printHelpAndThrowError("Number of cores is greater than 1. Please specify dfs algorithm.");
-                    return null;
+                    return a;
                 }
             }
             printHelpAndThrowError("Specified algorithm is not available. See available values above.");

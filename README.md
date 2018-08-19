@@ -30,14 +30,16 @@ library, the build can take a couple minutes to package dependencies into the ja
 ```
 usage: <INPUT GRAPH FILENAME> <NUMBER OF PROCESSORS> [OPTIONS]
  OPTIONS:
- -a <arg>   the algorithm implementation to use for scheduling. (if number
-            of Cores [-p > 1], algorithm can only use dfs).
+ -a <arg>   the algorithm implementation to use for scheduling (default is
+            dfs) (if number of Cores [-p > 1], algorithm can only use dfs).
             Acceptable Values: dfs | astar | greedy | simple
- -f <arg>   comma-separated list of cost functions to be used.
-            Acceptable values: bl | it
+ -f <arg>   comma-separated list of cost functions to be used (default is
+            bl, it and drt)
+            Acceptable values: bl | it | drt
  -o <arg>   name of output file (default is <INPUT>-output.dot)
  -p <arg>   number of cores to execute program on (default is 1 core)
- -P <arg>   comma-separated list of pruners to be used.
+ -P <arg>   comma-separated list of pruners to be used (default is both es
+            and ne)
             Acceptable values: es | ne
  -v         visualise the search
 ```
