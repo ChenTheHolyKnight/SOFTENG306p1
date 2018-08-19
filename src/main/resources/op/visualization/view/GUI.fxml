@@ -35,18 +35,18 @@
                         <VBox>
                             <children>
                                 <Label alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="270.0" styleClass="grayBackground" text="Schedule Percentage" textAlignment="CENTER" textFill="WHITE" />
-                        <AnchorPane styleClass="timerBackgroundParent">
+                        <AnchorPane prefHeight="242.0" prefWidth="277.0" styleClass="timerBackgroundParent">
                            <children>
-                              <AnchorPane fx:id="testing" layoutX="15.0" prefHeight="240.0" prefWidth="240.0" styleClass="timerBackground">
+                              <AnchorPane fx:id="testing" layoutX="15.0" layoutY="10.0" prefHeight="218.0" prefWidth="240.0" styleClass="timerBackground">
                                  <children>
-                                    <Label fx:id="percentageTile" alignment="CENTER_RIGHT" layoutX="36.0" layoutY="83.0" prefHeight="58.0" prefWidth="89.0" text="100" textFill="#fcfcfc">
-                                       <font>
-                                          <Font size="40.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="percentageTile1" layoutX="127.0" layoutY="83.0" prefHeight="58.0" prefWidth="56.0" text="ms" textFill="#fcfcfc">
+                                    <Label fx:id="percentageTile" alignment="CENTER_RIGHT" layoutX="33.0" layoutY="83.0" prefHeight="58.0" prefWidth="97.0" text="100" textFill="#fcfcfc">
                                        <font>
                                           <Font size="35.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="percentageTile1" layoutX="132.0" layoutY="85.0" prefHeight="58.0" prefWidth="48.0" text="ms" textFill="#fcfcfc">
+                                       <font>
+                                          <Font size="30.0" />
                                        </font>
                                     </Label>
                                  </children>
