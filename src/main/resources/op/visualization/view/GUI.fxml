@@ -8,6 +8,7 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.ToggleSwitch?>
 
 <AnchorPane prefHeight="616.0" prefWidth="1005.0" styleClass="background" stylesheets="@Styles/BackPanel.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="op.visualization.controller.GUIController">
@@ -36,8 +37,15 @@
                                 <Label alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="270.0" styleClass="grayBackground" text="Schedule Percentage" textAlignment="CENTER" textFill="WHITE" />
                         <AnchorPane prefHeight="309.0" prefWidth="298.0" styleClass="timerBackground">
                            <children>
-                              <Label fx:id="percentageTile" alignment="CENTER_RIGHT" layoutX="94.0" layoutY="121.0" prefHeight="54.0" prefWidth="69.0" text="Label" textFill="#fcfcfc" />
-                              <Label fx:id="percentageTile1" layoutX="174.0" layoutY="121.0" prefHeight="54.0" prefWidth="69.0" text="ms" textFill="#eeeaea" />
+                              <Label fx:id="percentageTile" alignment="CENTER_RIGHT" layoutX="52.0" layoutY="121.0" prefHeight="58.0" prefWidth="111.0" text="100" textFill="#fcfcfc">
+                                 <font>
+                                    <Font size="40.0" />
+                                 </font></Label>
+                              <Label fx:id="percentageTile1" layoutX="165.0" layoutY="121.0" prefHeight="58.0" prefWidth="56.0" text="ms" textFill="#fcfcfc">
+                                 <font>
+                                    <Font size="35.0" />
+                                 </font>
+                              </Label>
                            </children></AnchorPane>
                                 <Label alignment="CENTER" prefHeight="65.0" prefWidth="277.0" styleClass="grayBackground" text="Statistics" textAlignment="CENTER" textFill="WHITE" />
                                 <AnchorPane prefHeight="240.0" prefWidth="261.0" styleClass="tileBackgroundColour">
