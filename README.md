@@ -1,6 +1,6 @@
 # SoftEng306Project1
 The wiki contains meeting agenda/minutes and algorithm research and implementations
-Our project plan can be found in the "docs" folder
+Our project plan can be found in the "docs" folder. Our final jar file is available under the FINAL release on this repository
 ## Project Description
 This project is about using artificial intelligence and parallel processing power to solve a difficult
 scheduling problem. It is about Speed! In this project of the SoftEng306 design course your client is
