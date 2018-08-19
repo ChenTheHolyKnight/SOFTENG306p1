@@ -47,7 +47,7 @@
                            <children>
                               <AnchorPane fx:id="testing" layoutX="15.0" layoutY="10.0" prefHeight="218.0" prefWidth="240.0" styleClass="timerBackground">
                                  <children>
-                                    <Label fx:id="percentageTile" alignment="CENTER_RIGHT" layoutX="55.0" layoutY="83.0" prefHeight="58.0" prefWidth="97.0" text="0.024" textFill="#fcfcfc">
+                                    <Label fx:id="percentageTile" alignment="CENTER_RIGHT" layoutX="55.0" layoutY="83.0" prefHeight="58.0" prefWidth="97.0" text="0.000" textFill="#fcfcfc">
                                        <font>
                                           <Font size="35.0" />
                                        </font>
