@@ -1,11 +1,9 @@
 package op.algorithm;
 
-import op.algorithm.bound.CostFunction;
 import op.algorithm.bound.CostFunctionManager;
 import op.model.Schedule;
 
 import java.util.Comparator;
-import java.util.List;
 
 /**
  * Orders schedules. A schedule is ordered before another schedule if the tightest bound of its cost functions is a

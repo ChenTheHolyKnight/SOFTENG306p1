@@ -1,6 +1,5 @@
 package op.algorithm;
 
-import op.algorithm.bound.CostFunction;
 import op.algorithm.bound.CostFunctionManager;
 import op.model.Dependency;
 import op.model.Schedule;

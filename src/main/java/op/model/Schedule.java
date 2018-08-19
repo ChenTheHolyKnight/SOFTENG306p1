@@ -37,7 +37,7 @@ public class Schedule {
         // the parent schedule. This is not necessary for the Task/ScheduledTask map because the values within
         // those objects cannot be changed by objects referencing them.
         for (int i : this.processorMap.keySet()) {
-            this.processorMap.put(i, new ArrayList<ScheduledTask>(this.processorMap.get(i)));
+            this.processorMap.put(i, new ArrayList<>(this.processorMap.get(i)));
         }
 
         this.addScheduledTask(stNew);
@@ -107,7 +107,7 @@ public class Schedule {
         } else {
             // create new list so code using the returned list cannot modify this schedule's
             // internal representation of the list.
-            return new ArrayList<ScheduledTask>(processorMap.get(processorNum));
+            return new ArrayList<>(processorMap.get(processorNum));
         }
     }
 

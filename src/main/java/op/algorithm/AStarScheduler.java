@@ -1,6 +1,5 @@
 package op.algorithm;
 
-import op.algorithm.bound.CostFunction;
 import op.algorithm.bound.CostFunctionManager;
 import op.algorithm.prune.PrunerManager;
 import op.model.Schedule;

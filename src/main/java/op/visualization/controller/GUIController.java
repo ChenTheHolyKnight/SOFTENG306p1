@@ -18,7 +18,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
-import op.algorithm.SchedulerListener;
 import op.model.Schedule;
 import op.model.ScheduledTask;
 import op.visualization.GanttChart;
@@ -59,8 +58,8 @@ public class GUIController {
 
     @FXML
     private Tile memoryTile;
-    
-    @FXML 
+
+    @FXML
     private Label percentageTile;
 
     @FXML
@@ -70,14 +69,14 @@ public class GUIController {
     private Label prunedTrees;
 
     @FXML
-    private Label nodesVisisted;
+    private Label nodesVisited;
 
     @FXML
     private Button startButton;
 
     @FXML
     private  Label graphView;
-  
+
     // Gantt chart components
     private final NumberAxis xAxis = new NumberAxis();
     private final CategoryAxis yAxis = new CategoryAxis();
@@ -93,7 +92,7 @@ public class GUIController {
 
     /**
      * GUI should know the current best so it knows when to update (if the value is changed)
-      */
+     */
     private int bestScheduleLength;
 
     /**
@@ -154,8 +153,7 @@ public class GUIController {
                 (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         double free=(double)operatingSystemMXBean.getFreePhysicalMemorySize();
         double total=(double) operatingSystemMXBean.getTotalPhysicalMemorySize();
-        double result=(total-free)/total*100;
-        return result;
+        return (total-free)/total*100;
     }
 
     /**
@@ -184,9 +182,7 @@ public class GUIController {
     private void initializePercentageTile() {
         time=System.currentTimeMillis();
         updateCounters = new Timeline(
-                new KeyFrame(Duration.millis(100), (ActionEvent ae) -> {
-                    percentageTile.setText(Double.toString(getTime()) + " s");
-                }
+                new KeyFrame(Duration.millis(100), (ActionEvent ae) -> percentageTile.setText(Double.toString(getTime()) + " s")
                 ));
         updateCounters.setCycleCount(Timeline.INDEFINITE);
         updateCounters.play();
@@ -205,14 +201,14 @@ public class GUIController {
 
     /**
      * Arrange for controller to query visualization data instance often and update the gui based on the data it reads.
-      */
+     */
     private void initializeVisualizationDataUpdate() {
         Timeline updateCounters = new Timeline(
                 new KeyFrame(Duration.millis(100), (ActionEvent ae) -> {
                     long numPrunedTrees = visualizerData.getNumPrunedTrees();
                     long numNodesVisited = visualizerData.getNumNodesVisited();
                     prunedTrees.setText(Long.toString(numPrunedTrees));
-                    nodesVisisted.setText(Long.toString(numNodesVisited));
+                    nodesVisited.setText(Long.toString(numNodesVisited));
                     if (visualizerData.getOptimalScheduleFound()) {
                         optimalScheduleFound();
                     }
@@ -249,9 +245,7 @@ public class GUIController {
         fade.setFromValue(1.0);
         fade.setToValue( 0.0);
         Platform.runLater(() -> {
-            fade.setOnFinished(event -> {
-                fade.stop();
-            });
+            fade.setOnFinished(event -> fade.stop());
             fade.playFromStart();
         });
         graphView.setVisible(false);
@@ -294,9 +288,7 @@ public class GUIController {
         fade.setFromValue(toFadeIn? 0.0: 1.0);
         fade.setToValue(toFadeIn? 1.0: 0.0);
         Platform.runLater(() -> {
-            fade.setOnFinished(event -> {
-                fade.stop();
-            });
+            fade.setOnFinished(event -> fade.stop());
             fade.playFromStart();
         });
     }
@@ -360,7 +352,7 @@ public class GUIController {
             processors.add("Processor " + (i+1));
             seriesHashMap.put(i, new XYChart.Series());
         }
-        yAxis.setCategories(FXCollections.<String>observableArrayList(processors));
+        yAxis.setCategories(FXCollections.observableArrayList(processors));
     }
 
     private void initializeGanttChartSettings() {
@@ -390,15 +382,13 @@ public class GUIController {
     public void mapScheduleToGanttChart(Schedule schedule){
         clearGanttChart();
         List<ScheduledTask> scheduledTasks=schedule.getAllScheduledTasks();
-        scheduledTasks.forEach(scheduledTask -> addScheduledTaskToChart(scheduledTask));
+        scheduledTasks.forEach(this::addScheduledTaskToChart);
     }
 
     /**
      * The helper method to clear the gantt chart after each new shedule is passed
      */
     private void clearGanttChart(){
-        chart.getData().forEach(series->{
-            series.getData().clear();
-        });
+        chart.getData().forEach(series-> series.getData().clear());
     }
 }
