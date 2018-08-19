@@ -199,8 +199,8 @@ public class GUIController {
      */
     private double getTime(){
         double currentTime=System.currentTimeMillis()-time;
-        double timeInTenthSecs = Math.round(currentTime/100.0);
-        return timeInTenthSecs/10.0;
+        double timeInTenthSecs = Math.round(currentTime/10.0);
+        return timeInTenthSecs/100.0;
     }
 
     /**
