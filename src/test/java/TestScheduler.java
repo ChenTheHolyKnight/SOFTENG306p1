@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 
+import op.algorithm.AStarScheduler;
 import op.algorithm.DFSScheduler;
 import op.algorithm.GreedyScheduler;
 import op.algorithm.SimpleScheduler;
@@ -181,8 +182,17 @@ public class TestScheduler {
         checkGreedyScheduler(PATH_TO_TEST);
     }
 
+	/**
+	 * Tests the schedule produced by the DFS Scheduler is valid
+	 */
     @Test
 	public void testDFSSchedulerWithTestGraph() { checkDFSScheduler(PATH_TO_TEST); }
+
+	/**
+	 * Tests the schedule produced by the A* Scheduler is valid
+	 */
+	@Test
+	public void testAStarSchedulerWithTestGraph() { checkAStarScheduler(PATH_TO_TEST); }
 
     /**
      * Tests GreedyScheduler is valid with Nodes_7_OutTree.dot as the input graph.
@@ -259,6 +269,17 @@ public class TestScheduler {
 		try {
 			setup(path);
 			s = (new DFSScheduler(arguments.getNumProcessors(), new PrunerManager(), new CostFunctionManager(1))).produceSchedule();
+			checkScheduleIsValid();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void checkAStarScheduler(String path) {
+		try {
+			setup(path);
+			s = (new AStarScheduler(arguments.getNumProcessors(), new PrunerManager(), new CostFunctionManager(1))).produceSchedule();
 			checkScheduleIsValid();
 
 		} catch (IOException e) {

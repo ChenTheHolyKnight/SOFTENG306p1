@@ -7,7 +7,7 @@
 .status-blue {
     -fx-background-color: rgba(55, 179, 252, 128);
     -fx-border-width: 1px;
-    -fx-border-color: #00003E;
+    -fx-border-color: #2a2a2a;
 }
 
 .chart-horizontal-grid-lines {
