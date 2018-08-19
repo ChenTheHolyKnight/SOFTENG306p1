@@ -69,8 +69,15 @@ public class DFSParallelScheduler extends BranchAndBoundScheduler {
 
         // submit a new callable to the thread pool and add its future to the futures list
         for (int i = 0; i < numThreads; i++) {
-            futures.add(executor.submit(new DFSScheduler(getNumProcessors(), getPrunerManager(),
-                    getCostFunctionManager(), stacks, i, globalBestScheduleLength)));
+            // each dfs callable needs to have the same counter variable reference,
+            // so we set it explicitly in the constructor
+            DFSScheduler dfs = new DFSScheduler(getNumProcessors(), getPrunerManager(), getCostFunctionManager(),
+                    getNodesVisited(), getPrunedTrees(),
+                    stacks, i, globalBestScheduleLength);
+            for (SchedulerListener sl : super.getListeners()) {
+                dfs.addListener(sl);
+            }
+            futures.add(executor.submit(dfs));
         }
         executor.shutdown(); // shut down the executor once all tasks have finished
 
