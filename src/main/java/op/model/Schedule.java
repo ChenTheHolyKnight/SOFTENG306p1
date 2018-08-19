@@ -12,7 +12,7 @@ public class Schedule {
 
     private HashMap<Integer,List<ScheduledTask>> processorMap; // stores all scheduled tasks on a given processor
     private HashMap<Task,ScheduledTask> taskMap; // stores the scheduled representation of tasks
-    
+
     private ScheduledTask mostRecentScheduledTask;
     /**
      * Constructs an empty schedule instance
@@ -42,7 +42,7 @@ public class Schedule {
 
         this.addScheduledTask(stNew);
     }
-  
+
     /**
      * Tells whether or not this Schedule instance is a complete schedule (all tasks allocated)
      * @return true if this Schedule is complete, false otherwise
@@ -67,7 +67,7 @@ public class Schedule {
     public void addScheduledTask(ScheduledTask scheduledTask){
         int processorNum = scheduledTask.getProcessor();
         if(processorMap.get(processorNum)!= null){
-	        processorMap.get(processorNum).add(scheduledTask);
+            processorMap.get(processorNum).add(scheduledTask);
         }else{
             List<ScheduledTask> tasks=new ArrayList<>();
             tasks.add(scheduledTask);
@@ -79,20 +79,20 @@ public class Schedule {
 
     /**
      * Gets a task's corresponding scheduled task in this schedule
-     * 
+     *
      * @param t the task to retrieve the relevant ScheduledTask for
      * @return the scheduled task representing the task in this schedule, null if the task is not yet scheduled
      */
     public ScheduledTask getScheduledTask(Task t) {
         return taskMap.get(t);
     }
-    
+
     /**
      * Gets the latest ScheduledTask added to this schedule
      * @return the latest ShceduledTask added to the schedule
      */
     public ScheduledTask getMostRecentScheduledTask(){
-    	return mostRecentScheduledTask;
+        return mostRecentScheduledTask;
     }
 
     /**
@@ -115,7 +115,7 @@ public class Schedule {
      * Calculates the length of the schedule or partial schedule
      * @return the time it would take for all scheduled tasks to be completed
      */
-	public int getLength() {
+    public int getLength() {
 
         int length = 0;
         for (List<ScheduledTask> tasks: processorMap.values()) {
@@ -155,41 +155,41 @@ public class Schedule {
         return scheduledTasks;
     }
 
-	/**
-	 * Checks if this schedule is equal to another object.
-	 * Two schedules are equal if and only if every processor in the schedule has the same
-	 * scheduling of scheduled tasks on any other processor in another schedule.
-	 */
-	@Override
-	public boolean equals(Object schedule){
-		int numProcessors = processorMap.size();
-		if (schedule instanceof Schedule){
-			schedule = (Schedule) schedule;
-		} else {
-			return false;
-		}
-		for (int i=1; i<=numProcessors; i++) {
-			if (!processorMap.values().contains(((Schedule) schedule).getScheduledTasksOfProcessor(i))) {
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	/**
-	 * gets the hashcode for this schedule.
-	 * The hashcode is calculated based off all the scheduled tasks on all processors.
-	 * If two Schedules have the same hashcode, they are considered equal. 
-	 */
-	@Override 
-	public int hashCode() {
-		int result = 17;
-		
-		for (List<ScheduledTask> scheduledTasks : processorMap.values()) {
-			for (ScheduledTask st : scheduledTasks) {
-				result = result + st.hashCode();
-			}
-		}
-		return result;
-	}
+    /**
+     * Checks if this schedule is equal to another object.
+     * Two schedules are equal if and only if every processor in the schedule has the same
+     * scheduling of scheduled tasks on any other processor in another schedule.
+     */
+    @Override
+    public boolean equals(Object schedule){
+        int numProcessors = processorMap.size();
+        if (schedule instanceof Schedule){
+            schedule = (Schedule) schedule;
+        } else {
+            return false;
+        }
+        for (int i=1; i<=numProcessors; i++) {
+            if (!processorMap.values().contains(((Schedule) schedule).getScheduledTasksOfProcessor(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * gets the hashcode for this schedule.
+     * The hashcode is calculated based off all the scheduled tasks on all processors.
+     * If two Schedules have the same hashcode, they are considered equal.
+     */
+    @Override
+    public int hashCode() {
+        int result = 17;
+
+        for (List<ScheduledTask> scheduledTasks : processorMap.values()) {
+            for (ScheduledTask st : scheduledTasks) {
+                result = result + st.hashCode();
+            }
+        }
+        return result;
+    }
 }

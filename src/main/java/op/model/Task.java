@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * 
+ *
  * @author Ravid, Sam
  * Class used to represent an input task.
  */
@@ -64,7 +64,7 @@ public class Task {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return The id of this task
 	 */
 	public String getId() {
@@ -72,13 +72,13 @@ public class Task {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return The duration of this task (time it takes to complete the task)
 	 */
 	public int getDuration() {
 		return weight;
 	}
-	
+
 	/**
 	 * Checks if this task object is equal to another object.
 	 * Two task objects are equal if they have identical id strings.
@@ -87,7 +87,7 @@ public class Task {
 	public boolean equals(Object task) {
 		return ((Task) task).getId().equals(id);
 	}
-	
+
 	/**
 	 * calculate the hashcode of this task based off of it's Id.
 	 */

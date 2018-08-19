@@ -21,9 +21,9 @@ public class SchedulerFactory {
     public Scheduler createScheduler(Scheduler.Implementation a, int numProcessors,
                                      int numCores, List<CostFunctionManager.Functions> costFuncs,
                                      List<PrunerManager.Pruners> pruners) {
-    	CostFunctionManager costFunctionManager = new CostFunctionManager(numProcessors);
+        CostFunctionManager costFunctionManager = new CostFunctionManager(numProcessors);
         PrunerManager prunerManager = new PrunerManager();
-        
+
         // build the PrunerManager for the scheduler to use, based on the provided Enum values
         if (!pruners.isEmpty()) {
             for (PrunerManager.Pruners pruner : pruners) {
@@ -32,13 +32,13 @@ public class SchedulerFactory {
                         prunerManager.addEquivalentSchedulePruner();
                         break;
                     case NODE_EQUIVALENCE:
-                    	prunerManager.addNodeEquivalencePruner();
-                    	break;
+                        prunerManager.addNodeEquivalencePruner();
+                        break;
                 }
             }
         }
-        
-        
+
+
         // build the list of cost functions for the scheduler to use, based on the provided Enum values
         if (!costFuncs.isEmpty()) {
             for (CostFunctionManager.Functions cf : costFuncs) {

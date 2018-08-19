@@ -9,7 +9,7 @@ import op.model.Schedule;
  * Prunes schedules which are equivalent to any other schedule in the list of schedules.
  * Two schedules are equivalent if and only if every processor in the schedule has the same
  * scheduling of scheduled tasks on any other processor in another schedule.
- * 
+ *
  * @author Ravid Aharon
  *
  */
@@ -29,7 +29,7 @@ public class EquivalentSchedulePruner implements Pruner{
 
 		return pruned;
 	}
-	
+
 	@Override
 	public boolean equals (Object o) {
 		if (o instanceof EquivalentSchedulePruner) {

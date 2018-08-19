@@ -16,5 +16,5 @@ public interface Pruner {
 	 * @param toPrune The list of schedules to prune
 	 * @return A subset of the list, containing the schedules which were not pruned.
 	 */
-    List<Schedule> prune(List<Schedule> toPrune);
+	List<Schedule> prune(List<Schedule> toPrune);
 }

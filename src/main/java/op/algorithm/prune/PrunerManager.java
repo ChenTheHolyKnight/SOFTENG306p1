@@ -11,33 +11,33 @@ import op.model.Schedule;
  *
  */
 public class PrunerManager {
-    
+
 	/**
-     * Enum defining the different implementations of pruners available
-     */
-    public enum Pruners {
+	 * Enum defining the different implementations of pruners available
+	 */
+	public enum Pruners {
 
-        EQUIVALENT_SCHEDULE("es"),
-        NODE_EQUIVALENCE("ne");
+		EQUIVALENT_SCHEDULE("es"),
+		NODE_EQUIVALENCE("ne");
 
-        private String cmdRepresentation;
-        Pruners(String cmdRepresentation) {
-            this.cmdRepresentation = cmdRepresentation;
-        }
+		private String cmdRepresentation;
+		Pruners(String cmdRepresentation) {
+			this.cmdRepresentation = cmdRepresentation;
+		}
 
-        public String getCmdRepresentation() {
-            return this.cmdRepresentation;
-        }
-    }
-	
+		public String getCmdRepresentation() {
+			return this.cmdRepresentation;
+		}
+	}
+
 	private List<Pruner> pruners = new ArrayList<Pruner>();
-	
+
 	public void addEquivalentSchedulePruner() {
 		EquivalentSchedulePruner p = new EquivalentSchedulePruner();
 		if (!pruners.contains(p))
 			pruners.add(p);
 	}
-	
+
 	public void addNodeEquivalencePruner() {
 		NodeEquivalencePruner p =  new NodeEquivalencePruner();
 		if (!pruners.contains(p))

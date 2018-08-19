@@ -28,7 +28,7 @@ public class TestDotIO {
     private static final String SAMPLE_7 = BASE_DIR + "Nodes_7_OutTree.dot";
     private static final String SAMPLE_8 = BASE_DIR + "Nodes_8_Random.dot";
     private static final String SAMPLE_9 = BASE_DIR + "Nodes_9_SeriesParallel.dot";
-    private static final String SAMPLE_10 = BASE_DIR + "Nodes_10_Random.dot"; 
+    private static final String SAMPLE_10 = BASE_DIR + "Nodes_10_Random.dot";
     private static final String SAMPLE_11 = BASE_DIR + "Nodes_11_OutTree.dot";
     private static final String BASIC = BASE_DIR + "test.dot";
 

@@ -84,8 +84,8 @@ public abstract class BranchAndBoundScheduler extends Scheduler {
      * Called by subclasses to access the CostFunction implementations
      * @return the cost function manager that has been set for this instance
      */
-    protected CostFunctionManager getCostFunctionManager() { 
-    	return this.costFunctionManager;
+    protected CostFunctionManager getCostFunctionManager() {
+        return this.costFunctionManager;
     }
 
 
