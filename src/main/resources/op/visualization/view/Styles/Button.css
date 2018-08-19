@@ -1,0 +1,16 @@
+.button {
+     -fx-background-color:
+        linear-gradient(white, #9FA2A6),
+        radial-gradient(center 50% -40%, radius 200%, white 45%, #9FA2A6 50%);
+    -fx-background-radius: 6, 5;
+    -fx-background-insets: 0, 1;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );
+    -fx-text-fill: black;
+    -fx-font-size: 14px;
+}
+
+.button:disabled {
+    -fx-background-color:
+            linear-gradient(#BFC2C6, #8F9296),
+            radial-gradient(center 50% -40%, radius 200%, #9FA2A6 45%, #6F7276 50%);
+}

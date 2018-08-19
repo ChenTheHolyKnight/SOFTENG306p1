@@ -165,7 +165,7 @@ public class TestScheduler {
 	    try {
 
             setup(PATH_TO_TEST);
-            s = (new SimpleScheduler()).produceSchedule();
+            s = (new SimpleScheduler().produceSchedule());
             checkScheduleIsValid();
         } catch (IOException e) {
 	        e.printStackTrace();

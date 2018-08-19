@@ -1,15 +1,10 @@
 package op.visualization.controller;
 
-import org.graphstream.graph.Edge;
-import org.graphstream.graph.Graph;
-import org.graphstream.graph.Node;
+import op.model.TaskGraphToStringConverter;
 import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.ui.graphicGraph.GraphicGraph;
-import org.graphstream.ui.view.Viewer;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * A singleton class representing the display for the Graphstream graph.
@@ -19,74 +14,90 @@ import java.util.stream.Collectors;
  */
 public class GraphController {
 	
-	private static final String STYLE_CLASS = "ui.class";
+	private static final String LABEL = "ui.label";
+	private static final int X_MIN = -100;
+	private static final int X_MAX = 100;
+    private static final int Y_START = -50;
+    private static final int Y_INCREMENT = 15;
+    private int y_count = 0;
+
 	private static GraphController instance = new GraphController();
 	private GraphicGraph graph;
+	private Random random;
 	
 	private GraphController () {
 		graph =  new GraphicGraph("graph");
 		graph.setAttribute("ui.stylesheet", GRAPH_DISPLAY_STYLESHEET);
+		random = new Random();
 	}
-	
+
 	/**
-	 * Gets the singleton instance of GraphDisplay
+	 * Gets the singleton instance of GraphController
 	 * 
-	 * @return the singleton instance of GraphDisplay
+	 * @return the singleton instance of GraphController
 	 */
 	public static GraphController getInstance(){
 		return instance;
 	}
-	
-	/**
-	 * Adds a node to the graph visualisation
-	 * 
-	 * @param newNodeId the Id of the node to add
-	 */
-	public void addNode(String parentNodeId, String newNodeId) {
-		if (graph.getNode(parentNodeId) == null) {
-			graph.addNode(parentNodeId);
-		}
-		if (graph.getNode(newNodeId) == null) {
-			graph.addNode(newNodeId);
-		}
-		
-		graph.addEdge(parentNodeId + newNodeId, parentNodeId, newNodeId, true);
-	}
 
     /**
-     * Removes the descendants of a given node from the solution tree
-     * @param nodeId
+     * Sets up the graph to display the input task graph
      */
-	public void eliminateChildren (String nodeId) {
-		Node n = graph.getNode(nodeId);
-		n.setAttribute(STYLE_CLASS, "eliminated");
-		for (Edge e : n.leavingEdges().collect(Collectors.toList())){
-			e.setAttribute(STYLE_CLASS, "eliminated");
-			eliminateChildren(e.getTargetNode().getId());
-		}
-	}
+	public void initializeGraph() {
+        TaskGraphToStringConverter converter = new TaskGraphToStringConverter();
+        addNodes(converter.createNodes());
+        addEdges(converter.createEdges());
+    }
 
     /**
-     * Marks the given nodes as the optimal solution
-     * @param nodeIds the nodes that represent the optimal solution
+     * Adds nodes to the graph
+     * @param nodeIds IDs of nodes to add
      */
-	public void setOptimalSolution(List<String> nodeIds) {
-	    for (String nodeId : nodeIds) {
-            Node n = graph.getNode(nodeId);
-            n.setAttribute(STYLE_CLASS, "optimal");
-            for (Edge e : n.leavingEdges().collect(Collectors.toList())){
-                if (nodeIds.contains(e.getTargetNode().getId())) {
-                    e.setAttribute(STYLE_CLASS, "optimal");
-                    eliminateChildren(e.getTargetNode().getId());
-                }
-
+    private void addNodes(Set<String> nodeIds) {
+        for (String nodeId: nodeIds) {
+            // Add the child node if it does not exist
+            if (graph.getNode(nodeId) == null) {
+                placeNode(nodeId);
             }
         }
     }
-	
-	public void update() {
-		
-	}
+
+    /**
+     * Adds edges to the graph
+     * @param edges a map of nodes to a list of their child nodes
+     */
+    private void addEdges(Map<String, List<String>> edges) {
+        for (Map.Entry<String, List<String>> edge: edges.entrySet()) {
+            for (String child: edge.getValue()) {
+                // Add the edge if it does not exist
+                if (graph.getEdge(createEdgeId(edge.getKey(), child)) == null) {
+                    graph.addEdge(createEdgeId(edge.getKey(), child), edge.getKey(), child, true);
+                }
+            }
+        }
+    }
+
+    /**
+     * Produces an ID for an edge between two nodes
+     * @param sourceNodeId ID of the source node
+     * @param targetNodeId ID of the target node
+     * @return the edge ID
+     */
+    private String createEdgeId(String sourceNodeId, String targetNodeId) {
+	    return sourceNodeId + ":" + targetNodeId;
+    }
+
+    /**
+     * Adds a new node to the graph by choosing co-ordinates for the node
+     * @param nodeId
+     */
+    private void placeNode(String nodeId) {
+        graph.addNode(nodeId);
+        graph.getNode(nodeId).setAttribute(LABEL, nodeId);
+        //graph.getNode(nodeId).setAttribute("layout.frozen");
+        //graph.getNode(nodeId).setAttribute("x", newNodeXPosition());
+        //graph.getNode(nodeId).setAttribute("y", newNodeYPosition());
+    }
 
     /**
      * @return a reference to the visualization graph
@@ -96,13 +107,20 @@ public class GraphController {
     }
 	
 	private static final String GRAPH_DISPLAY_STYLESHEET =
-		"node.eliminated { "
-			+ "shape: cross; "
-			+ "fill-color: red; "
-		+ "}"
-				
-		+ "edge.eliminated { "
-			+ "fill-color: red;"
-		+ " }";
-	
+            "graph {"
+                + "fill-color: #FFFFFF;"
+            + "}"
+
+            + "node {"
+                + "fill-color: #37b3fc;"
+                    + "text-color: #FFFFFF;"
+                    + "text-style: bold;"
+                    + "text-size: 16;"
+                    + "size: 25px, 25px;"
+            + "}"
+                    + "edge {"
+                        + "fill-color: #3A3A3A;"
+                        + "arrow-shape: arrow;"
+                        + "arrow-size: 10px, 6px;"
+                    + "}";
 }

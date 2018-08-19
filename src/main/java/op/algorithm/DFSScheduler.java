@@ -3,7 +3,6 @@ package op.algorithm;
 import op.algorithm.bound.CostFunctionManager;
 import op.algorithm.prune.PrunerManager;
 import op.model.Schedule;
-
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
@@ -77,15 +76,26 @@ public class DFSScheduler extends BranchAndBoundScheduler  implements Callable<S
                 if (currentSchedule.getLength() < bestScheduleLength.get()) {
                     bestSchedule = currentSchedule;
                     bestScheduleLength.set(currentSchedule.getLength());
+                    super.fireNewScheduleUpdate(bestSchedule);
+                    super.fireBestScheduleLengthUpdate(bestScheduleLength.get());
                 }
             } else {
                 // not a complete schedule so add children to the stack to be processed later
-                List<Schedule> pruned = getPrunerManager().execute(super.getChildrenOfSchedule(currentSchedule));
+                List<Schedule> children = super.getChildrenOfSchedule(currentSchedule);
+                super.fireNodesVisitedUpdate(super.addToNodesVisited(children.size()));
+
+                List<Schedule> pruned = getPrunerManager().execute(children);
+                int numRemovedByCostFunc = pruned.size();
+
                 for (Schedule s: pruned){
                     if (getCostFunctionManager().calculate(s)< bestScheduleLength.get()) {
                         scheduleStack.push(s);
+                        numRemovedByCostFunc--;
                     }
                 }
+
+                int treesPruned = children.size() - pruned.size() + numRemovedByCostFunc;
+                super.fireNumPrunedTreesUpdate(super.addToPrunedTrees(treesPruned));
             }
 
             // if the scheduler finishes its allocated stack and there are other stacks available
@@ -93,7 +103,7 @@ public class DFSScheduler extends BranchAndBoundScheduler  implements Callable<S
                 getNewStack();
             }
         }
-
+        fireOptimalSolutionFound();
         return bestSchedule;
     }
 

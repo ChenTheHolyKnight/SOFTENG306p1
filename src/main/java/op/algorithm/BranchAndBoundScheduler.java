@@ -8,6 +8,7 @@ import op.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Base class for all branch and bound implementations of the scheduling algorithm. Instantiated with a Pruner
@@ -19,6 +20,8 @@ public abstract class BranchAndBoundScheduler extends Scheduler {
     private PrunerManager prunerManager;
     // a branch and bound scheduler may use any combination of cost functions.
     private CostFunctionManager costFunctionManager;
+    private AtomicInteger nodesVisited;
+    private AtomicInteger prunedTrees;
 
     /**
      * Creates a BranchAndBoundScheduler instance with the specified Pruner implementation.
@@ -30,6 +33,24 @@ public abstract class BranchAndBoundScheduler extends Scheduler {
         super(numProcessors);
         this.prunerManager = p;
         this.costFunctionManager = cfm;
+        this.nodesVisited = new AtomicInteger();
+        this.prunedTrees = new AtomicInteger();
+    }
+
+    /**
+     * Allows subclasses to update the number of nodes visited by a certain number
+     * @return the updated value of visited nodes
+     */
+    protected int addToNodesVisited(int toAdd) {
+        return nodesVisited.addAndGet(toAdd);
+    }
+
+    /**
+     * Allows subclasses to update the number of pruned sub trees
+     * @return the updated value of pruned sub trees
+     */
+    protected int addToPrunedTrees(int toAdd) {
+        return prunedTrees.addAndGet(toAdd);
     }
 
     /**
@@ -59,63 +80,17 @@ public abstract class BranchAndBoundScheduler extends Scheduler {
         List<Schedule> children = new ArrayList<Schedule>();
         TaskGraph tg = TaskGraph.getInstance();
 
-        List<Task> freeTasks = getFreeTasks(tg, s);
+        List<Task> freeTasks = SchedulerUtil.getFreeTasks(tg, s);
 
         // build a new schedule for every valid free task to processor allocation and add to the list of children
         for (Task t : freeTasks) {
             for (int i = 1; i <= super.getNumProcessors(); i++) {
-                int startTime = super.getEarliestStartTime(s, t, i);
+                int startTime = SchedulerUtil.getEarliestStartTime(s, t, i);
                 children.add(new Schedule(s, new ScheduledTask(t, startTime, i)));
             }
         }
 
         return children;
-    }
-
-
-    // gets all free tasks based on a task graph and a (partial) schedule
-    // a free task is one whose dependencies are already scheduled, and is not scheduled itself
-    private List<Task> getFreeTasks(TaskGraph tg, Schedule s) {
-
-        List<Task> freeTasks = new ArrayList<Task>();
-        for (Task t : tg.getAllTasks()) {
-
-            if (s.getScheduledTask(t) == null) {
-                // the current task is not yet scheduled, check its dependencies
-                List<Dependency> deps = t.getIncomingDependencies();
-
-                if (deps.isEmpty()) {
-                    freeTasks.add(t); // no dependencies so this task must be free
-
-                } else {
-
-                    boolean dependenciesAllScheduled = true;
-                    for (Dependency d : deps) {
-                        Task startTask = d.getStartTask();
-                        if (s.getScheduledTask(startTask) == null) {
-                            // if even one of the tasks dependencies is not scheduled, it is not free
-                            dependenciesAllScheduled = false;
-                        }
-                    }
-                    if (dependenciesAllScheduled) {
-                        freeTasks.add(t);
-                    }
-                }
-            }
-        }
-
-        return freeTasks;
-    }
-
-    /**
-     * Tells us when a partial schedule is worth pursuing any further.
-     * @return true if the cost function is less than the known best length; false if the cost function is greater than
-     * or equal to the known best, because all schedules based on this schedule are guaranteed to be worse than, or no
-     * better than our known best.
-     */
-    protected boolean costFunctionIsPromising(Schedule s, int bestSoFar) {
-
-        return SchedulerUtil.getTightestBound(s, getCostFunctionManager()) < bestSoFar;
     }
 
 }
