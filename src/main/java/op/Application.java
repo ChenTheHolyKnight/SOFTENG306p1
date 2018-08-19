@@ -16,16 +16,16 @@ import java.io.IOException;
  * Entry point for the optimal scheduling program
  */
 public class Application {
-	private Arguments arguments;
-	private Scheduler scheduler;
-	private Visualizer visualizer;
-	private static DotIO dotParser;
-	private static Application application;
-	private static Arguments arg;
+    private Arguments arguments;
+    private Scheduler scheduler;
+    private Visualizer visualizer;
+    private static DotIO dotParser;
+    private static Application application;
+    private static Arguments arg;
 
 
-	private Application(){
-	    application = this;
+    private Application(){
+        application = this;
     }
 
     /**
@@ -33,14 +33,14 @@ public class Application {
      */
     public static Application getInstance(){
 
-	    if (application == null) {
-	        application = new Application();
+        if (application == null) {
+            application = new Application();
         }
         return application;
     }
 
     public int getProcessNum(){
-	    return arg.getNumProcessors();
+        return arg.getNumProcessors();
     }
 
     public static void main(String[] args) {
@@ -142,7 +142,7 @@ public class Application {
     private Schedule produceSchedule() {
 
         System.out.println("Starting " + arguments.getAlgorithm().getCmdRepresentation()
-                            + " scheduler implementation...");
+                + " scheduler implementation...");
         System.out.println("Using cost functions: ");
         for (CostFunctionManager.Functions cf : arguments.getCostFunctions()) {
             System.out.println(cf);

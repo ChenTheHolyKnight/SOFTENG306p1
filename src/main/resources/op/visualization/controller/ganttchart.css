@@ -18,9 +18,9 @@
 }
 
 .axis {
-  -fx-tick-label-fill: #000000;
+    -fx-tick-label-fill: #000000;
 }
 
 .axis-label {
-   -fx-text-fill: #000000;
+    -fx-text-fill: #000000;
 }

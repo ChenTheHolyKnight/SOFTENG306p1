@@ -165,7 +165,7 @@ public class GanttChart<X, Y> extends XYChart<X,Y> {
 
     /**
      * helper method to get block height
-     * @return
+     * @return Block height
      */
     public double getBlockHeight() {
         return blockHeight;
@@ -173,7 +173,7 @@ public class GanttChart<X, Y> extends XYChart<X,Y> {
 
     /**
      * helper method to set block height
-     * @param blockHeight
+     * @param blockHeight new block height
      */
     public void setBlockHeight( double blockHeight) {
         this.blockHeight = blockHeight;
@@ -270,8 +270,8 @@ public class GanttChart<X, Y> extends XYChart<X,Y> {
 
         List<X> xData = null;
         List<Y> yData = null;
-        if(xa.isAutoRanging()) xData = new ArrayList<X>();
-        if(ya.isAutoRanging()) yData = new ArrayList<Y>();
+        if(xa.isAutoRanging()) xData = new ArrayList<>();
+        if(ya.isAutoRanging()) yData = new ArrayList<>();
 
         if(xData != null || yData != null) {
             for(Series<X,Y> series : getData()) {

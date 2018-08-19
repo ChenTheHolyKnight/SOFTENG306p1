@@ -11,7 +11,6 @@ public class Dependency {
 	private Task endTask;
 
 	private int weight;
-	private String id;
 
 	public Dependency (Task startTask, Task endTask, int weight){
 		this.startTask = startTask;

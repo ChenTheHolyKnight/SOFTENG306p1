@@ -56,22 +56,22 @@ public class TaskGraph {
     }
 
     /**
-	 * Gets all the tasks in the graph
-	 * @return The all the tasks in the graph.
-	 */
-	public List<Task> getAllTasks() {
-		return TASKS;
-	}
+     * Gets all the tasks in the graph
+     * @return The all the tasks in the graph.
+     */
+    public List<Task> getAllTasks() {
+        return TASKS;
+    }
 
     /**
      * Gets the title of the TaskGraph instance
      * @return title
      */
-	public String getTitle() {
-	    return TITLE;
+    public String getTitle() {
+        return TITLE;
     }
-	
-	// the private constructor for this singleton
+
+    // the private constructor for this singleton
     private TaskGraph (List<Task> tasks, String title){
         this.TASKS = Collections.unmodifiableList(tasks);
         this.TITLE = title;

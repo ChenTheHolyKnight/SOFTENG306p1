@@ -41,7 +41,7 @@ public class NodeEquivalencePruner implements Pruner{
 		pruned.removeAll(Collections.singleton(null));
 		return pruned;
 	}
-	
+
 	/*
 	 * returns true if two tasks are equivalent. two tasks are equivalent if they have the same weight,
 	 * same incoming and outgoing dependency nodes, and same incoming and outgoing dependency weights.
@@ -50,7 +50,7 @@ public class NodeEquivalencePruner implements Pruner{
 	private boolean areEquivalentTasks(ScheduledTask st1, ScheduledTask st2){
 		Task t1 = st1.getTask();
 		Task t2 = st2.getTask();
-		
+
 		if (t1.getDuration() != t2.getDuration()) {
 			return false;
 		}
@@ -92,7 +92,7 @@ public class NodeEquivalencePruner implements Pruner{
 		if (!t1OutTasks.equals(t2OutTasks)) {
 			return false;
 		}
-		
+
 		return true;
 	}
 

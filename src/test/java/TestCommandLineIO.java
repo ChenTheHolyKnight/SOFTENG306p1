@@ -12,7 +12,7 @@ import org.junit.Test;
  * @author Victoria Skeggs
  */
 public class TestCommandLineIO {
-	private Arguments arguments;
+    private Arguments arguments;
 
     /**
      * Tests that CommandLineIO returns a Arguments object with correct field values when given a valid user input with
@@ -55,7 +55,7 @@ public class TestCommandLineIO {
         args[1] = "10";
 
         try {
-        	arguments = commandLineIO.parseArgs(args.clone());
+            arguments = commandLineIO.parseArgs(args.clone());
             assertCommandIsCorrect(args[0], Integer.parseInt(args[1]), 1, false,
                     "inputq9837-output.dot");
         } catch (InvalidUserInputException e) {
@@ -132,7 +132,7 @@ public class TestCommandLineIO {
         }
     }
 
-   
+
     /**
      * Tests that CommandLineIO throws an InvalidUserInputException when a mandatory argument is missing.
      */
@@ -220,20 +220,20 @@ public class TestCommandLineIO {
 
         }
     }
-    
-    private void assertCommandIsCorrect(String expectedInputFilename, int expectedNumProcessors, int expectedNumCores,
-    		boolean expectedToVisualise, String expectedOutputFilename) {
 
-    	Assert.assertEquals("Arguments object returns incorrect input filename", expectedInputFilename,
-    			arguments.getInputGraphFilename());
-    	Assert.assertEquals("Arguments object returns incorrect number of processors",
-    			expectedNumProcessors, arguments.getNumProcessors());
-    	Assert.assertEquals("Arguments object returns incorrect number of cores",
-    			expectedNumCores, arguments.getNumCores());
-    	Assert.assertEquals("Arguments object does not return that visualisation has been turned on",
-    			expectedToVisualise, arguments.getToVisualize());
-    	Assert.assertEquals("Arguments object returns incorrect output filename", expectedOutputFilename,
-    			arguments.getOutputGraphFilename());
+    private void assertCommandIsCorrect(String expectedInputFilename, int expectedNumProcessors, int expectedNumCores,
+                                        boolean expectedToVisualise, String expectedOutputFilename) {
+
+        Assert.assertEquals("Arguments object returns incorrect input filename", expectedInputFilename,
+                arguments.getInputGraphFilename());
+        Assert.assertEquals("Arguments object returns incorrect number of processors",
+                expectedNumProcessors, arguments.getNumProcessors());
+        Assert.assertEquals("Arguments object returns incorrect number of cores",
+                expectedNumCores, arguments.getNumCores());
+        Assert.assertEquals("Arguments object does not return that visualisation has been turned on",
+                expectedToVisualise, arguments.getToVisualize());
+        Assert.assertEquals("Arguments object returns incorrect output filename", expectedOutputFilename,
+                arguments.getOutputGraphFilename());
     }
 
 }

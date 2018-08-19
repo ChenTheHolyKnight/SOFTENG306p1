@@ -1,8 +1,6 @@
 package op.algorithm;
 
-import op.algorithm.bound.CostFunction;
 import op.algorithm.bound.CostFunctionManager;
-import op.algorithm.prune.Pruner;
 import op.algorithm.prune.PrunerManager;
 import op.model.*;
 
@@ -84,8 +82,8 @@ public abstract class BranchAndBoundScheduler extends Scheduler {
      * Called by subclasses to access the CostFunction implementations
      * @return the cost function manager that has been set for this instance
      */
-    protected CostFunctionManager getCostFunctionManager() { 
-    	return this.costFunctionManager;
+    protected CostFunctionManager getCostFunctionManager() {
+        return this.costFunctionManager;
     }
 
 

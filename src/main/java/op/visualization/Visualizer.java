@@ -1,17 +1,12 @@
 package op.visualization;
 
-import eu.hansolo.tilesfx.Tile;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import op.algorithm.GreedyScheduler;
 import op.visualization.controller.GUIController;
-import op.visualization.messages.UpdateMessage;
 
-import java.io.IOException;
-import java.util.Timer;
 
 /**
  * Interface that any visualisation implementation must conform to.

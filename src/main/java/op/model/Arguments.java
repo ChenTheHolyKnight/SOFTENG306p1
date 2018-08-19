@@ -65,18 +65,18 @@ public class Arguments {
      *
      * @return the algorithm implementation to run
      */
-    public Scheduler.Implementation getAlgorithm() { 
-    	return algorithm; 
+    public Scheduler.Implementation getAlgorithm() {
+        return algorithm;
     }
 
-    public List<CostFunctionManager.Functions> getCostFunctions() { 
-    	return costFunctions; 
+    public List<CostFunctionManager.Functions> getCostFunctions() {
+        return costFunctions;
     }
-    
+
     public List<PrunerManager.Pruners> getPruners() {
-    	return pruners;
+        return pruners;
     }
-    
+
     /**
      * Creates a new Arguments object.
      * @param inputFilename
@@ -90,8 +90,8 @@ public class Arguments {
      */
     public Arguments(String inputFilename, int numProcessors, int numCores,
                      boolean toVisualize, String outputFilename,
-                     Scheduler.Implementation algorithm, 
-                     List<CostFunctionManager.Functions> costFunctions, 
+                     Scheduler.Implementation algorithm,
+                     List<CostFunctionManager.Functions> costFunctions,
                      List<PrunerManager.Pruners> pruners) {
         this.inputGraphFilename = inputFilename;
         this.numProcessors = numProcessors;

@@ -1,6 +1,5 @@
 package op.algorithm;
 
-import op.algorithm.bound.CostFunction;
 import op.algorithm.bound.CostFunctionManager;
 import op.model.Dependency;
 import op.model.Schedule;
@@ -20,19 +19,23 @@ public class SchedulerUtil {
      * @return a list of tasks that sorted in topological order
      */
     public static List<Task> createTopologicalOrder(List<Task> tasks) {
-        List<Task> tasks1=new ArrayList<>(tasks);
-        List<Dependency> dependencies=new ArrayList<>();
-        tasks1.forEach(task -> dependencies.addAll(task.getOutgoingDependencies()));
         List<Task> removedTasks;
-        List<Dependency> removedDep=new ArrayList<>();
+        List<Task> tasks1 = new ArrayList<>(tasks);
+        List<Dependency> dependencies = new ArrayList<>();
 
+        tasks1.forEach(task -> dependencies.addAll(task.getOutgoingDependencies()));
+        List<Dependency> removedDep=new ArrayList<>();
         List<Task> outputList=new ArrayList<>();
+
         while (!tasks1.isEmpty()){
             removedTasks=findEntryPoints(tasks1,dependencies);
             removedTasks.forEach(task -> removedDep.addAll(task.getOutgoingDependencies()));
+
             outputList.addAll(removedTasks);
+
             tasks1.removeAll(removedTasks);
             dependencies.removeAll(removedDep);
+
             removedDep.clear();
             removedTasks.clear();
         }

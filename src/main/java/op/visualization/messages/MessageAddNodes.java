@@ -1,11 +1,10 @@
 package op.visualization.messages;
 
-import java.util.List;
 import java.util.Set;
 
 /**
  * Message to add new nodes to the graph display
- * 
+ *
  * @author Ravid
  *
  */
@@ -21,11 +20,11 @@ public class MessageAddNodes implements UpdateMessage {
 		this.parentNodeId = parentNodeId;
 		this.childNodeIds = childNodeIds;
 	}
-	
+
 	public String getParentNodeId() {
 		return parentNodeId;
 	}
-	
+
 	public Set<String> getChildNodeIds() {
 		return childNodeIds;
 	}
