@@ -1,12 +1,16 @@
+import op.algorithm.bound.BottomLevelFunction;
 import op.algorithm.bound.IdleTimeFunction;
+import op.io.DotIO;
 import op.model.Schedule;
 import op.model.ScheduledTask;
 import op.model.Task;
 import op.model.TaskGraph;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -15,23 +19,15 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * Test class for checking that cost functions are performing as expected
+ * @author Darcy Cox
  */
 public class TestCostFunction {
 
-    @BeforeClass
-    public static void initTaskGraph() {
-        List<Task> tasks = new ArrayList<Task>();
-        Collections.addAll(tasks,
-                new Task("1", 2),
-                new Task("2", 3),
-                new Task("3", 5),
-                new Task("4", 1)
-        );
-        TaskGraph.initialize(tasks, null);
-    }
+    private static final String BASE_DIR = "src/main/resources/sample_inputs/";
+    private static final String SAMPLE_7 = BASE_DIR + "Nodes_7_OutTree.dot";
 
-    @AfterClass
-    public static void resetTaskGraph() {
+    @After
+    public void resetTaskGraph() {
         try {
             TestSingletonUtil.resetTaskGraph();
         } catch (NoSuchFieldException e) {
@@ -43,6 +39,7 @@ public class TestCostFunction {
 
     @Test
     public void testIdleTimeCostFunctionOneProcessor() {
+        initSimpleTaskGraph();
         IdleTimeFunction func = new IdleTimeFunction(1);
 
         Schedule s = new Schedule();
@@ -62,6 +59,7 @@ public class TestCostFunction {
 
     @Test
     public void testIdleTimeCostFunctionTwoProcessors() {
+        initSimpleTaskGraph();
         IdleTimeFunction func = new IdleTimeFunction(2);
 
         Schedule s = new Schedule();
@@ -77,5 +75,53 @@ public class TestCostFunction {
 
         // idle time is 8 so func = ((2 + 3 + 5 + 1) + 8) / 2 = 9
         assertEquals(9, func.calculate(s));
+    }
+
+    @Test
+    public void testBottomLevelCostFunction() {
+
+        initNodes7Graph();
+        List<Task> tasks = TaskGraph.getInstance().getAllTasks();
+
+        BottomLevelFunction blf = new BottomLevelFunction();
+
+        // test empty schedule
+        Schedule s = new Schedule();
+        assertEquals(0, blf.calculate(s));
+
+        Task t = tasks.get(tasks.indexOf(new Task("0", 5)));
+        s.addScheduledTask(new ScheduledTask(t, 0, 1)); // bl = 18
+        t = tasks.get(tasks.indexOf(new Task("1", 6)));
+        s.addScheduledTask(new ScheduledTask(t, 5, 1)); // bl = 13
+        t = tasks.get(tasks.indexOf(new Task("2", 5)));
+        s.addScheduledTask(new ScheduledTask(t, 11, 1)); // bl = 5
+        // should be the maximum of start time + bottom level of scheduled tasks
+        assertEquals(18, blf.calculate(s));
+    }
+
+    @Test
+    public void testDataReadyTimeCostFunction() {
+        initNodes7Graph();
+
+    }
+
+
+    private static void initSimpleTaskGraph() {
+        List<Task> tasks = new ArrayList<Task>();
+        Collections.addAll(tasks,
+                new Task("1", 2),
+                new Task("2", 3),
+                new Task("3", 5),
+                new Task("4", 1)
+        );
+        TaskGraph.initialize(tasks, null);
+    }
+
+    private static void initNodes7Graph() {
+        try {
+            new DotIO().dotIn(SAMPLE_7);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
