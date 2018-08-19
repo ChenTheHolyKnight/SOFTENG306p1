@@ -50,9 +50,9 @@
                            <children>
                               <AnchorPane fx:id="testing" layoutX="15.0" layoutY="10.0" prefHeight="218.0" prefWidth="240.0" styleClass="timerBackground">
                                  <children>
-                                    <Label fx:id="percentageTile" alignment="CENTER" layoutX="39.0" layoutY="83.0" prefHeight="58.0" prefWidth="157.0" text="0.00 s" textFill="#fcfcfc">
+                                    <Label fx:id="percentageTile" alignment="CENTER" layoutX="39.0" layoutY="83.0" prefHeight="58.0" prefWidth="157.0" text="00:00:00:000" textFill="#fcfcfc">
                                        <font>
-                                          <Font size="35.0" />
+                                          <Font size="20.0" />
                                        </font>
                                     </Label>
                                  </children>

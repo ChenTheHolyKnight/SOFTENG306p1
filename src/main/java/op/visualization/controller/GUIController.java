@@ -32,7 +32,9 @@ import org.graphstream.ui.graphicGraph.GraphicGraph;
 import org.graphstream.ui.view.GraphRenderer;
 
 import java.lang.management.ManagementFactory;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The controller class to control the GUI*/
@@ -185,7 +187,7 @@ public class GUIController {
         time=System.currentTimeMillis();
         updateCounters = new Timeline(
                 new KeyFrame(Duration.millis(100), (ActionEvent ae) -> {
-                    percentageTile.setText(Double.toString(getTime()) + " s");
+                    percentageTile.setText(getTime());
                 }
                 ));
         updateCounters.setCycleCount(Timeline.INDEFINITE);
@@ -197,10 +199,16 @@ public class GUIController {
      * A helper method for the timer tile.
      * @return time in seconds since the algorithm started running
      */
-    private double getTime(){
-        double currentTime=System.currentTimeMillis()-time;
-        double timeInTenthSecs = Math.round(currentTime/10.0);
-        return timeInTenthSecs/100.0;
+    private String getTime(){
+        long currentTime=System.currentTimeMillis()-time;
+        String s=String.format("%02d:%02d:%02d:%03d",
+                TimeUnit.MILLISECONDS.toHours(currentTime),
+                TimeUnit.MILLISECONDS.toMinutes(currentTime) -
+                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(currentTime)),
+                TimeUnit.MILLISECONDS.toSeconds(currentTime) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(currentTime)),
+                currentTime%1000);
+        return s;
     }
 
     /**
