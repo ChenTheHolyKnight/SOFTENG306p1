@@ -120,9 +120,7 @@ public class GUIController implements SchedulerListener {
         timer = new Timer();
         memoryTile.setSkinType(Tile.SkinType.BAR_GAUGE);
         cpuTile.setSkinType(Tile.SkinType.BAR_GAUGE);
-        Platform.runLater(() -> {
-            timer.schedule(new SystemInfo(cpuTile, memoryTile), 0, 100);
-        });
+        timer.schedule(new SystemInfo(cpuTile, memoryTile), 0, 100);
     }
 
     /**
@@ -327,7 +325,6 @@ public class GUIController implements SchedulerListener {
         XYChart.Series series=seriesHashMap.get(processorNum-1);
         series.getData().add(new XYChart.Data<Number, String>(task.getStartTime(), yAxis.getCategories().get(processorNum-1),
                 new GanttChart.ExtraData(id, weight, "status-blue")));
-
     }
 
     /**

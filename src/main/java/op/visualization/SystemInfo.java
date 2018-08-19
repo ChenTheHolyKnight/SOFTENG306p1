@@ -2,10 +2,9 @@ package op.visualization;
 
 import com.sun.management.OperatingSystemMXBean;
 import eu.hansolo.tilesfx.Tile;
+import javafx.application.Platform;
 
-import java.io.File;
 import java.lang.management.ManagementFactory;
-import java.text.NumberFormat;
 import java.util.TimerTask;
 
 public class SystemInfo extends TimerTask{
@@ -41,14 +40,16 @@ public class SystemInfo extends TimerTask{
 
     @Override
     public void run() {
-        try{
-        cpuTile.setUnit("%");
-        cpuTile.setValue(this.getCPU());
-        if(memoryTile.getUnit()!=null)
-            memoryTile.setUnit("%");
-        memoryTile.setValue(this.getMemory());
-        }catch (Exception e){
-            //try catch here to ignore concurrency problem. ie: prevent system crashes even though it's not a problem.
-        }
+        Platform.runLater(() -> {
+            try{
+                cpuTile.setUnit("%");
+                cpuTile.setValue(this.getCPU());
+                if(memoryTile.getUnit()!=null)
+                    memoryTile.setUnit("%");
+                memoryTile.setValue(this.getMemory());
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        });
     }
 }
