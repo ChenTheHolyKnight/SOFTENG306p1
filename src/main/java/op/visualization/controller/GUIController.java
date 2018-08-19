@@ -61,8 +61,8 @@ public class GUIController {
 
     @FXML
     private Tile memoryTile;
-    
-    @FXML 
+
+    @FXML
     private Label percentageTile;
 
     @FXML
@@ -72,14 +72,14 @@ public class GUIController {
     private Label prunedTrees;
 
     @FXML
-    private Label nodesVisisted;
+    private Label nodesVisited;
 
     @FXML
     private Button startButton;
 
     @FXML
     private  Label graphView;
-  
+
     // Gantt chart components
     private final NumberAxis xAxis = new NumberAxis();
     private final CategoryAxis yAxis = new CategoryAxis();
@@ -95,7 +95,7 @@ public class GUIController {
 
     /**
      * GUI should know the current best so it knows when to update (if the value is changed)
-      */
+     */
     private int bestScheduleLength;
 
     /**
@@ -213,14 +213,14 @@ public class GUIController {
 
     /**
      * Arrange for controller to query visualization data instance often and update the gui based on the data it reads.
-      */
+     */
     private void initializeVisualizationDataUpdate() {
         Timeline updateCounters = new Timeline(
                 new KeyFrame(Duration.millis(100), (ActionEvent ae) -> {
                     long numPrunedTrees = visualizerData.getNumPrunedTrees();
                     long numNodesVisited = visualizerData.getNumNodesVisited();
                     prunedTrees.setText(Long.toString(numPrunedTrees));
-                    nodesVisisted.setText(Long.toString(numNodesVisited));
+                    nodesVisited.setText(Long.toString(numNodesVisited));
                     if (visualizerData.getOptimalScheduleFound()) {
                         optimalScheduleFound();
                     }

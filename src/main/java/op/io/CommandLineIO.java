@@ -48,7 +48,7 @@ public class CommandLineIO {
     private static final String COST_FUNC_DESCRIPTION = "comma-separated list of cost functions to be used (default is bl, it and drt)"
             + System.lineSeparator() + "Acceptable values: bl | it | drt";
     private static final String PRUNER_DESCRIPTION = "comma-separated list of pruners to be used (default is both es and ne)"
-    		+ System.lineSeparator() + "Acceptable values: es | ne";
+            + System.lineSeparator() + "Acceptable values: es | ne";
 
     private static final String HELP_MESSAGE =
             "<INPUT GRAPH FILENAME> <NUMBER OF PROCESSORS> [OPTIONS] \n OPTIONS:";
@@ -107,14 +107,14 @@ public class CommandLineIO {
                 .desc(COST_FUNC_DESCRIPTION)
                 .build();
         options.addOption(costFuncOption);
-        
+
         // build and set the pruner option
         Option prunerOption = Option.builder(PRUNER_FLAG)
-        		.hasArgs()
+                .hasArgs()
                 .valueSeparator(',')
-        		.required(false)
-        		.desc(PRUNER_DESCRIPTION)
-        		.build();
+                .required(false)
+                .desc(PRUNER_DESCRIPTION)
+                .build();
         options.addOption(prunerOption);
     }
 
@@ -155,7 +155,7 @@ public class CommandLineIO {
                 toVisualize, outputFilename, algorithm, costFunctions, pruners);
     }
 
-	private int getNumCores(CommandLine cmd) throws InvalidUserInputException {
+    private int getNumCores(CommandLine cmd) throws InvalidUserInputException {
         String numCoresRaw = cmd.getOptionValue(NUM_CORES_FLAG);
         if (numCoresRaw == null) {
             return NUM_CORES_DEFAULT;
@@ -216,8 +216,8 @@ public class CommandLineIO {
         if (alg == null && getNumCores(cmd) == 1) {
             return ALGORITHM_IMPLEMENTATION; // return default value
         } else if (alg == null && getNumCores(cmd) > 1) {
-			return Scheduler.Implementation.PARA;
-		} else {
+            return Scheduler.Implementation.PARA;
+        } else {
             for (Scheduler.Implementation a : Scheduler.Implementation.values()) {
                 if (alg.equals(a.getCmdRepresentation())) {
                     return a;
@@ -232,9 +232,9 @@ public class CommandLineIO {
         String[] values = cmd.getOptionValues(COST_FUNCTION_FLAG);
         List<CostFunctionManager.Functions> funcs = new ArrayList<>();
         if (values == null) {
-        	funcs.add(CostFunctionManager.Functions.BOTTOM_LEVEL);
-        	funcs.add(CostFunctionManager.Functions.DATA_READY_TIME);
-        	funcs.add(CostFunctionManager.Functions.IDLE_TIME);
+            funcs.add(CostFunctionManager.Functions.BOTTOM_LEVEL);
+            funcs.add(CostFunctionManager.Functions.DATA_READY_TIME);
+            funcs.add(CostFunctionManager.Functions.IDLE_TIME);
             return funcs; // Add defaults if nothing is specified
         } else {
             for (String func : values) {
@@ -255,16 +255,16 @@ public class CommandLineIO {
             return funcs;
         }
     }
-    
+
     private List<PrunerManager.Pruners> getPruners(CommandLine cmd) throws InvalidUserInputException {
-    	String[] values = cmd.getOptionValues(PRUNER_FLAG);
+        String[] values = cmd.getOptionValues(PRUNER_FLAG);
         List<PrunerManager.Pruners> funcs = new ArrayList<>();
-    	if (values == null) {
-    	    funcs.add(PrunerManager.Pruners.EQUIVALENT_SCHEDULE);
-    	    funcs.add(PrunerManager.Pruners.NODE_EQUIVALENCE);
-    		return funcs;
-    	} else { 
-    		for (String func : values) {
+        if (values == null) {
+            funcs.add(PrunerManager.Pruners.EQUIVALENT_SCHEDULE);
+            funcs.add(PrunerManager.Pruners.NODE_EQUIVALENCE);
+            return funcs;
+        } else {
+            for (String func : values) {
                 // add the appropriate cost function to the list, or throw an error if unacceptable value
                 boolean validSpecifier = false;
                 for (PrunerManager.Pruners pruner : PrunerManager.Pruners.values()) {
@@ -282,7 +282,7 @@ public class CommandLineIO {
             return funcs;
         }
     }
-    
+
     /**
      * Checks the user has entered the correct number of arguments
      * @param cmd represents the command line
