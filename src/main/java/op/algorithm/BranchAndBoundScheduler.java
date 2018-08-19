@@ -8,6 +8,7 @@ import op.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Base class for all branch and bound implementations of the scheduling algorithm. Instantiated with a Pruner
@@ -19,6 +20,8 @@ public abstract class BranchAndBoundScheduler extends Scheduler {
     private PrunerManager prunerManager;
     // a branch and bound scheduler may use any combination of cost functions.
     private CostFunctionManager costFunctionManager;
+    private AtomicInteger nodesVisited;
+    private AtomicInteger prunedTrees;
 
     /**
      * Creates a BranchAndBoundScheduler instance with the specified Pruner implementation.
@@ -30,6 +33,24 @@ public abstract class BranchAndBoundScheduler extends Scheduler {
         super(numProcessors);
         this.prunerManager = p;
         this.costFunctionManager = cfm;
+        this.nodesVisited = new AtomicInteger();
+        this.prunedTrees = new AtomicInteger();
+    }
+
+    /**
+     * Allows subclasses to update the number of nodes visited by a certain number
+     * @return the updated value of visited nodes
+     */
+    protected int addToNodesVisited(int toAdd) {
+        return nodesVisited.addAndGet(toAdd);
+    }
+
+    /**
+     * Allows subclasses to update the number of pruned sub trees
+     * @return the updated value of pruned sub trees
+     */
+    protected int addToPrunedTrees(int toAdd) {
+        return prunedTrees.addAndGet(toAdd);
     }
 
     /**

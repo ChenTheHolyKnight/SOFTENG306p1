@@ -1,18 +1,16 @@
 package op.visualization.messages;
 
-import java.util.List;
-
 /**
  * This message is to be used when
  */
 public class MessageSetOptimalSolution implements UpdateMessage {
-    private List<String> optimalDescendantLine;
+    private String optimalSolution;
 
-    public MessageSetOptimalSolution(List<String> nodesIds) {
-        this.optimalDescendantLine = nodesIds;
+    public MessageSetOptimalSolution(String nodeId) {
+        this.optimalSolution = nodeId;
     }
 
-    public List<String> getOptimalDescendantLine() {
-        return optimalDescendantLine;
+    public String getOptimalSolution() {
+        return optimalSolution;
     }
 }
