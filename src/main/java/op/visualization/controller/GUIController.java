@@ -18,6 +18,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
+import op.algorithm.SchedulerListener;
 import op.model.Schedule;
 import op.model.ScheduledTask;
 import op.visualization.GanttChart;
@@ -31,7 +32,9 @@ import org.graphstream.ui.graphicGraph.GraphicGraph;
 import org.graphstream.ui.view.GraphRenderer;
 
 import java.lang.management.ManagementFactory;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The controller class to control the GUI*/
@@ -58,8 +61,8 @@ public class GUIController {
 
     @FXML
     private Tile memoryTile;
-
-    @FXML
+    
+    @FXML 
     private Label percentageTile;
 
     @FXML
@@ -69,14 +72,14 @@ public class GUIController {
     private Label prunedTrees;
 
     @FXML
-    private Label nodesVisited;
+    private Label nodesVisisted;
 
     @FXML
     private Button startButton;
 
     @FXML
     private  Label graphView;
-
+  
     // Gantt chart components
     private final NumberAxis xAxis = new NumberAxis();
     private final CategoryAxis yAxis = new CategoryAxis();
@@ -92,7 +95,7 @@ public class GUIController {
 
     /**
      * GUI should know the current best so it knows when to update (if the value is changed)
-     */
+      */
     private int bestScheduleLength;
 
     /**
@@ -153,7 +156,8 @@ public class GUIController {
                 (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
         double free=(double)operatingSystemMXBean.getFreePhysicalMemorySize();
         double total=(double) operatingSystemMXBean.getTotalPhysicalMemorySize();
-        return (total-free)/total*100;
+        double result=(total-free)/total*100;
+        return result;
     }
 
     /**
@@ -182,7 +186,9 @@ public class GUIController {
     private void initializePercentageTile() {
         time=System.currentTimeMillis();
         updateCounters = new Timeline(
-                new KeyFrame(Duration.millis(100), (ActionEvent ae) -> percentageTile.setText(Double.toString(getTime()) + " s")
+                new KeyFrame(Duration.millis(100), (ActionEvent ae) -> {
+                    percentageTile.setText(getTime());
+                }
                 ));
         updateCounters.setCycleCount(Timeline.INDEFINITE);
         updateCounters.play();
@@ -193,22 +199,28 @@ public class GUIController {
      * A helper method for the timer tile.
      * @return time in seconds since the algorithm started running
      */
-    private double getTime(){
-        double currentTime=System.currentTimeMillis()-time;
-        double timeInTenthSecs = Math.round(currentTime/10.0);
-        return timeInTenthSecs/100.0;
+    private String getTime(){
+        long currentTime=System.currentTimeMillis()-time;
+        String s=String.format("%02d:%02d:%02d:%03d",
+                TimeUnit.MILLISECONDS.toHours(currentTime),
+                TimeUnit.MILLISECONDS.toMinutes(currentTime) -
+                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(currentTime)),
+                TimeUnit.MILLISECONDS.toSeconds(currentTime) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(currentTime)),
+                currentTime%1000);
+        return s;
     }
 
     /**
      * Arrange for controller to query visualization data instance often and update the gui based on the data it reads.
-     */
+      */
     private void initializeVisualizationDataUpdate() {
         Timeline updateCounters = new Timeline(
                 new KeyFrame(Duration.millis(100), (ActionEvent ae) -> {
                     long numPrunedTrees = visualizerData.getNumPrunedTrees();
                     long numNodesVisited = visualizerData.getNumNodesVisited();
                     prunedTrees.setText(Long.toString(numPrunedTrees));
-                    nodesVisited.setText(Long.toString(numNodesVisited));
+                    nodesVisisted.setText(Long.toString(numNodesVisited));
                     if (visualizerData.getOptimalScheduleFound()) {
                         optimalScheduleFound();
                     }
@@ -245,7 +257,9 @@ public class GUIController {
         fade.setFromValue(1.0);
         fade.setToValue( 0.0);
         Platform.runLater(() -> {
-            fade.setOnFinished(event -> fade.stop());
+            fade.setOnFinished(event -> {
+                fade.stop();
+            });
             fade.playFromStart();
         });
         graphView.setVisible(false);
@@ -288,7 +302,9 @@ public class GUIController {
         fade.setFromValue(toFadeIn? 0.0: 1.0);
         fade.setToValue(toFadeIn? 1.0: 0.0);
         Platform.runLater(() -> {
-            fade.setOnFinished(event -> fade.stop());
+            fade.setOnFinished(event -> {
+                fade.stop();
+            });
             fade.playFromStart();
         });
     }
@@ -352,7 +368,7 @@ public class GUIController {
             processors.add("Processor " + (i+1));
             seriesHashMap.put(i, new XYChart.Series());
         }
-        yAxis.setCategories(FXCollections.observableArrayList(processors));
+        yAxis.setCategories(FXCollections.<String>observableArrayList(processors));
     }
 
     private void initializeGanttChartSettings() {
@@ -382,13 +398,15 @@ public class GUIController {
     public void mapScheduleToGanttChart(Schedule schedule){
         clearGanttChart();
         List<ScheduledTask> scheduledTasks=schedule.getAllScheduledTasks();
-        scheduledTasks.forEach(this::addScheduledTaskToChart);
+        scheduledTasks.forEach(scheduledTask -> addScheduledTaskToChart(scheduledTask));
     }
 
     /**
      * The helper method to clear the gantt chart after each new shedule is passed
      */
     private void clearGanttChart(){
-        chart.getData().forEach(series-> series.getData().clear());
+        chart.getData().forEach(series->{
+            series.getData().clear();
+        });
     }
 }

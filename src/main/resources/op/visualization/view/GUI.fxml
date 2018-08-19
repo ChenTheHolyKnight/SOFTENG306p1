@@ -22,16 +22,16 @@
                         <VBox maxWidth="-Infinity">
                             <children>
                                 <Label alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="277.0" text="CPU Usage" textAlignment="CENTER" textFill="WHITE">
-                                    <styleClass>
-                                        <String fx:value="grayBackground" />
-                                        <String fx:value="subheading" />
-                                    </styleClass></Label>
+                           <styleClass>
+                              <String fx:value="grayBackground" />
+                              <String fx:value="subheading" />
+                           </styleClass></Label>
                                 <Tile fx:id="cpuTile" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="240.0" prefWidth="277.0" />
                                 <Label alignment="CENTER" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="277.0" text="Memory Usage" textAlignment="CENTER" textFill="WHITE">
-                                    <styleClass>
-                                        <String fx:value="grayBackground" />
-                                        <String fx:value="subheading" />
-                                    </styleClass></Label>
+                           <styleClass>
+                              <String fx:value="grayBackground" />
+                              <String fx:value="subheading" />
+                           </styleClass></Label>
                                 <Tile fx:id="memoryTile" layoutX="10.0" layoutY="40.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="240.0" prefWidth="277.0" />
                             </children>
                         </VBox>
@@ -42,28 +42,28 @@
                         <VBox prefHeight="585.0" prefWidth="270.0">
                             <children>
                                 <Label alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="277.0" text="Schedule Timer" textAlignment="CENTER" textFill="WHITE">
-                                    <styleClass>
-                                        <String fx:value="grayBackground" />
-                                        <String fx:value="subheading" />
-                                    </styleClass></Label>
-                                <AnchorPane prefHeight="242.0" prefWidth="277.0" styleClass="timerBackgroundParent">
-                                    <children>
-                                        <AnchorPane fx:id="testing" layoutX="15.0" layoutY="10.0" prefHeight="218.0" prefWidth="240.0" styleClass="timerBackground">
-                                            <children>
-                                                <Label fx:id="percentageTile" alignment="CENTER" layoutX="39.0" layoutY="83.0" prefHeight="58.0" prefWidth="157.0" text="0.00 s" textFill="#fcfcfc">
-                                                    <font>
-                                                        <Font size="35.0" />
-                                                    </font>
-                                                </Label>
-                                            </children>
-                                        </AnchorPane>
-                                    </children>
-                                </AnchorPane>
+                           <styleClass>
+                              <String fx:value="grayBackground" />
+                              <String fx:value="subheading" />
+                           </styleClass></Label>
+                        <AnchorPane prefHeight="242.0" prefWidth="277.0" styleClass="timerBackgroundParent">
+                           <children>
+                              <AnchorPane fx:id="testing" layoutX="15.0" layoutY="10.0" prefHeight="218.0" prefWidth="240.0" styleClass="timerBackground">
+                                 <children>
+                                    <Label fx:id="percentageTile" alignment="CENTER" layoutX="39.0" layoutY="83.0" prefHeight="58.0" prefWidth="157.0" text="00:00:00:000" textFill="#fcfcfc">
+                                       <font>
+                                          <Font size="20.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </AnchorPane>
                                 <Label alignment="CENTER" prefHeight="65.0" prefWidth="277.0" text="Statistics" textAlignment="CENTER" textFill="WHITE">
-                                    <styleClass>
-                                        <String fx:value="grayBackground" />
-                                        <String fx:value="subheading" />
-                                    </styleClass></Label>
+                           <styleClass>
+                              <String fx:value="grayBackground" />
+                              <String fx:value="subheading" />
+                           </styleClass></Label>
                                 <AnchorPane prefHeight="240.0" prefWidth="261.0" styleClass="tileBackgroundColour">
                                     <children>
                                         <Label alignment="CENTER" contentDisplay="CENTER" layoutX="50.0" layoutY="58.0" prefHeight="21.0" prefWidth="123.0" text="Pruned Trees :" textAlignment="JUSTIFY" textFill="WHITE" />
@@ -71,7 +71,7 @@
                                         <Label alignment="CENTER" layoutX="35.0" layoutY="86.0" prefHeight="44.0" prefWidth="150.0" text="Nodes Visited :" textFill="WHITE" />
                                         <Label fx:id="bestLength" alignment="CENTER" layoutX="170.0" layoutY="22.0" prefHeight="21.0" prefWidth="73.0" text="0" textFill="WHITE" />
                                         <Label fx:id="prunedTrees" alignment="CENTER" layoutX="169.0" layoutY="59.0" prefHeight="21.0" prefWidth="75.0" text="0" textFill="WHITE" />
-                                        <Label fx:id="nodesVisited" alignment="CENTER" layoutX="170.0" layoutY="98.0" prefHeight="21.0" prefWidth="75.0" text="0" textFill="WHITE" />
+                                        <Label fx:id="nodesVisisted" alignment="CENTER" layoutX="170.0" layoutY="98.0" prefHeight="21.0" prefWidth="75.0" text="0" textFill="WHITE" />
                                     </children>
                                 </AnchorPane>
                             </children>

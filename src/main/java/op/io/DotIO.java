@@ -151,7 +151,6 @@ public class DotIO {
      * @throws IOException if anything with File IO goes wrong
      * @author Darcy Cox
      */
-
     public void dotOut(Schedule s, String outputGraphFilename) throws IOException {
 
         BufferedWriter bw = new BufferedWriter(new FileWriter(outputGraphFilename, false));
