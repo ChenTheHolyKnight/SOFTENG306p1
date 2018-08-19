@@ -107,7 +107,6 @@ public class GUIController implements SchedulerListener {
         percentageTile.setSkinType(Tile.SkinType.BAR_GAUGE);
 
         registerVisualizationDataAsListener();
-        startAlgorithm();
         initializeVisualizationDataUpdate();
         initializeBestScheduleUpdate();
 
@@ -192,6 +191,15 @@ public class GUIController implements SchedulerListener {
             fadeTransition(false, graphPane);
         }
 
+    }
+
+    /**
+     * When the 'start algorithm' button is clicked, the algorithm is started.
+     */
+    @FXML
+    public void startButtonClicked() {
+        startButton.setDisable(true);
+        startAlgorithm();
     }
 
     /**
@@ -307,7 +315,7 @@ public class GUIController implements SchedulerListener {
     }
 
     private void initializeGanttChartSettings() {
-        chart.setTitle("Scheduling Visualization");
+        chart.setTitle("Gantt Chart");
         chart.setLegendVisible(false);
         chart.setBlockHeight((schedulePane.getPrefHeight()-GANTT_CHART_GAP)/coreNum);
         chart.setPrefHeight(schedulePane.getPrefHeight());
