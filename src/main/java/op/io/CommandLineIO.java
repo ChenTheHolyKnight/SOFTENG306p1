@@ -32,7 +32,6 @@ public class CommandLineIO {
     private static final int NUM_CORES_DEFAULT = 1;
     private static final String OUTPUT_FILENAME_APPENDER_DEFAULT = "-output.dot";
     private static final Scheduler.Implementation ALGORITHM_IMPLEMENTATION = Scheduler.Implementation.DFS;
-    private static final List<CostFunctionManager.Functions> COST_FUNCTIONS = new ArrayList<>(); // no cost funcs is default
 
     // Order of command line arguments with no flags
     private static final short INPUT_FILENAME_POSITION = 0;
@@ -46,9 +45,9 @@ public class CommandLineIO {
     private static final String ALGORITHM_DESCRIPTION =
             "the algorithm implementation to use for scheduling (default is dfs) (if number of Cores [-p > 1], algorithm can only use dfs)." +
                     System.lineSeparator() + "Acceptable Values: dfs | astar | greedy | simple";
-    private static final String COST_FUNC_DESCRIPTION = "comma-separated list of cost functions to be used"
-            + System.lineSeparator() + "Acceptable values: bl | it";
-    private static final String PRUNER_DESCRIPTION = "comma-separated list of pruners to be used (Default is both es and ne)"
+    private static final String COST_FUNC_DESCRIPTION = "comma-separated list of cost functions to be used (default is bl, it and drt)"
+            + System.lineSeparator() + "Acceptable values: bl | it | drt";
+    private static final String PRUNER_DESCRIPTION = "comma-separated list of pruners to be used (default is both es and ne)"
     		+ System.lineSeparator() + "Acceptable values: es | ne";
 
     private static final String HELP_MESSAGE =
@@ -236,7 +235,10 @@ public class CommandLineIO {
         String[] values = cmd.getOptionValues(COST_FUNCTION_FLAG);
         List<CostFunctionManager.Functions> funcs = new ArrayList<>();
         if (values == null) {
-            return funcs; // empty list to represent no cost functions specified
+        	funcs.add(CostFunctionManager.Functions.BOTTOM_LEVEL);
+        	funcs.add(CostFunctionManager.Functions.DATA_READY_TIME);
+        	funcs.add(CostFunctionManager.Functions.IDLE_TIME);
+            return funcs; // Add defaults if nothing is specified
         } else {
             for (String func : values) {
                 // add the appropriate cost function to the list, or throw an error if unacceptable value
