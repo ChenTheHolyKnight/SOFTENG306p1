@@ -1,5 +1,6 @@
 package op.visualization.controller;
 
+import com.sun.management.OperatingSystemMXBean;
 import eu.hansolo.tilesfx.Tile;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
@@ -8,39 +9,30 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 import op.algorithm.SchedulerListener;
 import op.model.Schedule;
 import op.model.ScheduledTask;
-import op.visualization.AlgorithmTimer;
 import op.visualization.GanttChart;
 import op.Application;
-import op.visualization.SystemInfo;
 import op.visualization.VisualizerData;
 import org.controlsfx.control.ToggleSwitch;
-import org.graphstream.stream.ProxyPipe;
 import org.graphstream.ui.fx_viewer.FxDefaultView;
 import org.graphstream.ui.fx_viewer.FxViewPanel;
 import org.graphstream.ui.fx_viewer.FxViewer;
 import org.graphstream.ui.graphicGraph.GraphicGraph;
-import org.graphstream.ui.layout.Layout;
-import org.graphstream.ui.layout.LayoutRunner;
-import org.graphstream.ui.layout.springbox.implementations.SpringBox;
 import org.graphstream.ui.view.GraphRenderer;
+
+import java.lang.management.ManagementFactory;
 import java.util.*;
-import java.util.Timer;
 
 /**
  * The controller class to control the GUI*/
@@ -85,8 +77,6 @@ public class GUIController implements SchedulerListener {
 
     @FXML
     private  Label graphView;
-
-    private AnchorPane testing;
   
     // Gantt chart components
     private final NumberAxis xAxis = new NumberAxis();
@@ -95,7 +85,7 @@ public class GUIController implements SchedulerListener {
     private HashMap<Integer,XYChart.Series> seriesHashMap = new HashMap<>();
     private int coreNum = 1;
 
-    private Timer timer;
+    private long time;
 
     private VisualizerData visualizerData;
 
@@ -134,10 +124,47 @@ public class GUIController implements SchedulerListener {
      * Allow the CPU and memory tiles to poll the system to find CPU and memory usage
      */
     private void initializeMemoryAndCPUPolling() {
-        timer = new Timer();
+
+        // Style the memory and CPU tiles
         memoryTile.setSkinType(Tile.SkinType.BAR_GAUGE);
         cpuTile.setSkinType(Tile.SkinType.BAR_GAUGE);
-        timer.schedule(new SystemInfo(cpuTile, memoryTile), 0, 100);
+
+        // Poll memory and CPU usage and display on the tiles
+        Timeline updateCounters = new Timeline(
+                new KeyFrame(Duration.millis(100), (ActionEvent ae) -> {
+                    cpuTile.setUnit("%");
+                    cpuTile.setValue(this.getCPU());
+                    if(memoryTile.getUnit()!=null)
+                        memoryTile.setUnit("%");
+                    memoryTile.setValue(this.getMemory());
+                }
+                ));
+        updateCounters.setCycleCount(Timeline.INDEFINITE);
+        updateCounters.play();
+    }
+
+    /**
+     * A helper method for initializeMemoryAndCPUPolling().
+     * @return the current memory usage of the system
+     */
+    private double getMemory() {
+        OperatingSystemMXBean operatingSystemMXBean=
+                (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+        double free=(double)operatingSystemMXBean.getFreePhysicalMemorySize();
+        double total=(double) operatingSystemMXBean.getTotalPhysicalMemorySize();
+        double result=(total-free)/total*100;
+        return result;
+    }
+
+    /**
+     * A helper method for initializeMemoryAndCPUPolling().
+     * @return the current CPU usage of the system
+     */
+    private double getCPU(){
+        OperatingSystemMXBean operatingSystemMXBean =
+                (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+
+        return operatingSystemMXBean.getProcessCpuLoad()*100;
     }
 
     /**
@@ -148,16 +175,29 @@ public class GUIController implements SchedulerListener {
     }
 
     /**
-     * Starts running the algorithm concurrently with the visualization
+     * Starts running the algorithm concurrently with the visualization. The timer tile keeps record of time since
+     * the algorithm started running.
      */
-
     @FXML
-    private void startAlgorithm() {
-        Timer algorithmTimer=new Timer();
-        Platform.runLater(()->{
-            algorithmTimer.schedule(new AlgorithmTimer(percentageTile),0,1);
-        });
-        Application.getInstance().startConcurrentAlgorithm(algorithmTimer);
+    private void initializePercentageTile() {
+        time=System.currentTimeMillis();
+        Timeline updateCounters = new Timeline(
+                new KeyFrame(Duration.millis(100), (ActionEvent ae) -> {
+                    percentageTile.setText(Double.toString(getTime()));
+                }
+                ));
+        updateCounters.setCycleCount(Timeline.INDEFINITE);
+        updateCounters.play();
+        Application.getInstance().startConcurrentAlgorithm();
+    }
+
+    /**
+     * A helper method for the timer tile.
+     * @return time in seconds since the algorithm started running
+     */
+    private double getTime(){
+        double currentTime=System.currentTimeMillis();
+        return (currentTime-time)/1000.0;
     }
 
     /**
@@ -234,7 +274,7 @@ public class GUIController implements SchedulerListener {
     @FXML
     public void startButtonClicked() {
         startButton.setDisable(true);
-        startAlgorithm();
+        initializePercentageTile();
     }
 
     /**
@@ -393,13 +433,5 @@ public class GUIController implements SchedulerListener {
         bestLength.setText(Integer.toString(blNum));
         prunedTrees.setText(Integer.toString(ptNum));
     }
-
-    /**
-     * Stops the timer
-     */
-    public void cancelTimer() {
-        timer.cancel();
-    }
-
 
 }

@@ -45,10 +45,6 @@ public class Application {
         return application;
     }
 
-    public DotIO getDotParser(){
-	    return dotParser;
-    }
-
     public int getProcessNum(){
 	    return arg.getNumProcessors();
     }
@@ -127,7 +123,7 @@ public class Application {
     /**
      * Starts the algorithm running concurrently with the calling thread
      */
-    public void startConcurrentAlgorithm(Timer timer) {
+    public void startConcurrentAlgorithm() {
         javafx.concurrent.Task<Void> task = new javafx.concurrent.Task<Void>() {
             private Schedule schedule;
 
@@ -143,7 +139,6 @@ public class Application {
             protected void succeeded() {
                 super.succeeded();
                 Application.getInstance().writeDot(schedule);
-                timer.cancel();
             }
         };
         new Thread(task).start();
