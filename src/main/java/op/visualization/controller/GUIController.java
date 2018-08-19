@@ -74,6 +74,9 @@ public class GUIController implements SchedulerListener {
     @FXML
     private Button startButton;
 
+    @FXML
+    private AnchorPane testing;
+
     // Gantt chart components
     private final NumberAxis xAxis = new NumberAxis();
     private final CategoryAxis yAxis = new CategoryAxis();
@@ -95,7 +98,7 @@ public class GUIController implements SchedulerListener {
      */
     @FXML
     public void initialize() {
-
+        System.out.println("Anchor Size+"+testing.getWidth()+"  :"+testing.getHeight());
         visualizerData = new VisualizerData();
         bestScheduleLength = Integer.MAX_VALUE;
         coreNum=Application.getInstance().getProcessNum();

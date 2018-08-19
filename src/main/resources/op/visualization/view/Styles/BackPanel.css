@@ -52,6 +52,10 @@
 }
 
 .timerBackground{
-    -fx-background-image: url("image.jpg");
+    -fx-background-image: url("image.png");
+    -fx-background-color: #2a2a2a
+}
+
+.timerBackgroundParent{
     -fx-background-color: #2a2a2a
 }
