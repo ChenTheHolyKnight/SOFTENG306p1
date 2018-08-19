@@ -46,7 +46,6 @@ public abstract class Scheduler {
     // objects that are interested in being updated by the Scheduler
     private List<SchedulerListener> listeners;
     private int numProcessors;
-    private boolean toVisualize;
 
     /**
      * Constructor for a Scheduler instance
@@ -62,7 +61,6 @@ public abstract class Scheduler {
      * @param sl the listener to register
      */
     public void addListener(SchedulerListener sl) {
-        System.out.println("new listener: " + sl);
         this.listeners.add(sl);
     }
 
@@ -109,6 +107,10 @@ public abstract class Scheduler {
         for (SchedulerListener listener : listeners) {
             listener.optimalScheduleFound();
         }
+    }
+
+    protected List<SchedulerListener> getListeners() {
+        return listeners;
     }
 
 
