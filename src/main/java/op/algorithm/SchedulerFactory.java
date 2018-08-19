@@ -44,10 +44,10 @@ public class SchedulerFactory {
             for (CostFunctionManager.Functions cf : costFuncs) {
                 switch (cf) {
                     case IDLE_TIME:
-                        costFunctionManager.addIdleTimeFunction();;
+                        costFunctionManager.addIdleTimeFunction();
                         break;
                     case BOTTOM_LEVEL:
-                        costFunctionManager.addBottomLevelFunction();;
+                        costFunctionManager.addBottomLevelFunction();
                         break;
                     case DATA_READY_TIME:
                         costFunctionManager.addDataReadyTimeFunction();
