@@ -16,7 +16,7 @@
 }
 
 .background {
-    -fx-background-color: linear-gradient(#00003E, black);
+    -fx-background-color: #fff;
     /*686858*/
 }
 
@@ -41,12 +41,3 @@
     -fx-background-insets: 0, 1;
 }
 
-.tabBackgroundColour{
-     background: white;
-    -fx-text-fill: white;
-}
-
-.scheduleBackground{
-    -fx-background-color: #00003E, #000000;
-    -fx-fill-mode: gradient-vertical;
-}

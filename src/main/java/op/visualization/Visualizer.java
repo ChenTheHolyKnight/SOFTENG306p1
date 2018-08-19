@@ -49,6 +49,7 @@ public class Visualizer extends Application{
         stage.setHeight(SCENE_HEIGHT);
         stage.setWidth(SCENE_WIDTH);
         stage.setResizable(false);
+        stage.setTitle("Optimize Prime");
         stage.centerOnScreen();
 
         stage.setScene(scene);

@@ -8,14 +8,18 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 import op.algorithm.SchedulerListener;
 import op.model.Schedule;
@@ -25,9 +29,14 @@ import op.Application;
 import op.visualization.SystemInfo;
 import op.visualization.VisualizerData;
 import org.controlsfx.control.ToggleSwitch;
+import org.graphstream.stream.ProxyPipe;
 import org.graphstream.ui.fx_viewer.FxDefaultView;
+import org.graphstream.ui.fx_viewer.FxViewPanel;
 import org.graphstream.ui.fx_viewer.FxViewer;
 import org.graphstream.ui.graphicGraph.GraphicGraph;
+import org.graphstream.ui.layout.Layout;
+import org.graphstream.ui.layout.LayoutRunner;
+import org.graphstream.ui.layout.springbox.implementations.SpringBox;
 import org.graphstream.ui.view.GraphRenderer;
 import java.util.*;
 import java.util.Timer;
@@ -73,6 +82,9 @@ public class GUIController implements SchedulerListener {
     @FXML
     private Button startButton;
 
+    @FXML
+    private  Label graphView;
+
     // Gantt chart components
     private final NumberAxis xAxis = new NumberAxis();
     private final CategoryAxis yAxis = new CategoryAxis();
@@ -99,11 +111,15 @@ public class GUIController implements SchedulerListener {
         bestScheduleLength = Integer.MAX_VALUE;
         coreNum=Application.getInstance().getProcessNum();
 
+        graphPane.setPrefSize(661,455);
+        graphPane.setMaxSize(graphPane.getPrefWidth(),graphPane.getPrefHeight());
+        graphPane.setMinSize(graphPane.getPrefWidth(),graphPane.getPrefHeight());
         embedGraph();
         initializeGanttChart();
         initializeMemoryAndCPUPolling();
 
         schedulePane.setOpacity(0.0);
+        graphPane.setOpacity(1.0);
         percentageTile.setSkinType(Tile.SkinType.BAR_GAUGE);
 
         registerVisualizationDataAsListener();
@@ -120,9 +136,7 @@ public class GUIController implements SchedulerListener {
         timer = new Timer();
         memoryTile.setSkinType(Tile.SkinType.BAR_GAUGE);
         cpuTile.setSkinType(Tile.SkinType.BAR_GAUGE);
-        Platform.runLater(() -> {
-            timer.schedule(new SystemInfo(cpuTile, memoryTile), 0, 100);
-        });
+        Platform.runLater(() -> timer.schedule(new SystemInfo(cpuTile, memoryTile), 0, 100));
     }
 
     /**
@@ -177,6 +191,19 @@ public class GUIController implements SchedulerListener {
         updateBestSchedule.setCycleCount(Timeline.INDEFINITE);
         updateBestSchedule.play();
     }
+    @FXML
+    public void hideGraphLabel(){
+        FadeTransition fade = new FadeTransition(Duration.millis(500), graphView);
+        fade.setFromValue(1.0);
+        fade.setToValue( 0.0);
+        Platform.runLater(() -> {
+            fade.setOnFinished(event -> {
+                fade.stop();
+            });
+            fade.playFromStart();
+        });
+        graphView.setVisible(false);
+    }
 
     /**
      * When the toggle switch is triggered, switch display from the graph to the Gantt chart
@@ -216,14 +243,21 @@ public class GUIController implements SchedulerListener {
     /**
      * Embeds the visualization graph in the graph anchor pane
      */
-    private void embedGraph() {
+    private void embedGraph(){
         GraphController.getInstance().initializeGraph();
         GraphicGraph graph = GraphController.getInstance().getGraph();
         FxViewer viewer = new FxViewer(graph);
+        viewer.enableAutoLayout();
         GraphRenderer renderer = viewer.newDefaultGraphRenderer();
-        FxDefaultView view = new FxDefaultView(viewer, GRAPH_IDENTIFIER, renderer);
-        view.getCamera().setViewPercent(1.5);
+        FxViewPanel view = new FxDefaultView(viewer, GRAPH_IDENTIFIER, renderer);
+        view.setMaxSize(graphPane.getMaxWidth(),graphPane.getMaxHeight());
+        view.setMinSize(graphPane.getMaxWidth(),graphPane.getMaxHeight());
+        view.setPrefSize(graphPane.getMaxWidth(),graphPane.getMaxHeight());
         graphPane.getChildren().add(view);
+        graphView = new Label("Click to show graph");
+        graphPane.getChildren().add(graphView);
+        graphView.setFont(new Font(24));
+
     }
 
     /**
@@ -232,9 +266,7 @@ public class GUIController implements SchedulerListener {
      */
     @Override
     public void newSchedule(Schedule s) {
-        Platform.runLater(() -> {
-            mapScheduleToGanttChart(s);
-        });
+        Platform.runLater(() -> mapScheduleToGanttChart(s));
 
     }
 
@@ -245,9 +277,7 @@ public class GUIController implements SchedulerListener {
      */
     @Override
     public void updateNumPrunedTrees(int numPrunedTrees) {
-        Platform.runLater(() -> {
-            prunedTrees.setText(Integer.toString(numPrunedTrees));
-        });
+        Platform.runLater(() -> prunedTrees.setText(Integer.toString(numPrunedTrees)));
     }
 
     /**
@@ -256,9 +286,7 @@ public class GUIController implements SchedulerListener {
      */
     @Override
     public void updateNodesVisited(int numNodesVisited) {
-        Platform.runLater(() -> {
-            nodesVisisted.setText(Integer.toString(numNodesVisited));
-        });
+        Platform.runLater(() -> nodesVisisted.setText(Integer.toString(numNodesVisited)));
     }
 
     /**
@@ -267,9 +295,7 @@ public class GUIController implements SchedulerListener {
      */
     @Override
     public void updateBestScheduleLength(int scheduleLength) {
-        Platform.runLater(() -> {
-            bestLength.setText(Integer.toString(scheduleLength));
-        });
+        Platform.runLater(() -> bestLength.setText(Integer.toString(scheduleLength)));
     }
 
     /**
@@ -283,9 +309,7 @@ public class GUIController implements SchedulerListener {
         initializeGanttChartSettings();
 
         // Map data to the chart
-        seriesHashMap.keySet().forEach(key->{
-            chart.getData().add(seriesHashMap.get(key));
-        });
+        seriesHashMap.keySet().forEach(key-> chart.getData().add(seriesHashMap.get(key)));
 
         // Add chart to the pane
         schedulePane.getChildren().add(chart);
@@ -336,9 +360,7 @@ public class GUIController implements SchedulerListener {
     public void mapScheduleToGanttChart(Schedule schedule){
         clearGanttChart();
         List<ScheduledTask> scheduledTasks=schedule.getAllScheduledTasks();
-        scheduledTasks.forEach(scheduledTask -> {
-            addScheduledTaskToChart(scheduledTask);
-        });
+        scheduledTasks.forEach(scheduledTask -> addScheduledTaskToChart(scheduledTask));
     }
 
     /**
