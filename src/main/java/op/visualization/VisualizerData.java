@@ -14,6 +14,7 @@ public class VisualizerData implements SchedulerListener {
     private long numPrunedTrees = 0;
     private long numNodesVisited = 0;
     private int bestScheduleLength = 0;
+    private boolean optimalScheduleFound = false;
 
     @Override
     public void newSchedule(Schedule s) {
@@ -37,7 +38,7 @@ public class VisualizerData implements SchedulerListener {
 
     @Override
     public void optimalScheduleFound() {
-
+        optimalScheduleFound = true;
     }
 
     public Schedule getNewestSchedule() {
@@ -54,5 +55,9 @@ public class VisualizerData implements SchedulerListener {
 
     public int getBestScheduleLength() {
         return bestScheduleLength;
+    }
+
+    public boolean getOptimalScheduleFound() {
+        return optimalScheduleFound;
     }
 }

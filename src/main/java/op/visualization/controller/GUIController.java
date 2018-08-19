@@ -36,7 +36,7 @@ import java.util.*;
 
 /**
  * The controller class to control the GUI*/
-public class GUIController implements SchedulerListener {
+public class GUIController {
 
     // Constants
     private final String GRAPH_IDENTIFIER = "graph";
@@ -213,6 +213,9 @@ public class GUIController implements SchedulerListener {
                     long numNodesVisited = visualizerData.getNumNodesVisited();
                     prunedTrees.setText(Long.toString(numPrunedTrees));
                     nodesVisisted.setText(Long.toString(numNodesVisited));
+                    if (visualizerData.getOptimalScheduleFound()) {
+                        optimalScheduleFound();
+                    }
                 }
                 ));
         updateCounters.setCycleCount(Timeline.INDEFINITE);
@@ -319,47 +322,8 @@ public class GUIController implements SchedulerListener {
     }
 
     /**
-     * When there's a new schedule, map it to the Gantt chart
-     * @param s the new schedule
-     */
-    @Override
-    public void newSchedule(Schedule s) {
-        Platform.runLater(() -> mapScheduleToGanttChart(s));
-
-    }
-
-    /**
-     * Display the new number of possible schedules that spawn from a partial schedule that the algorithm is no longer
-     * considering
-     * @param numPrunedTrees number of partial schedules whose children will no longer be considered
-     */
-    @Override
-    public void updateNumPrunedTrees(int numPrunedTrees) {
-        Platform.runLater(() -> prunedTrees.setText(Integer.toString(numPrunedTrees)));
-    }
-
-    /**
-     * Display the new number of schedules considered
-     * @param numNodesVisited number of schedules visited so far
-     */
-    @Override
-    public void updateNodesVisited(int numNodesVisited) {
-        Platform.runLater(() -> nodesVisisted.setText(Integer.toString(numNodesVisited)));
-    }
-
-    /**
-     * Update the best schedule length found so far
-     * @param scheduleLength best schedule length so far
-     */
-    @Override
-    public void updateBestScheduleLength(int scheduleLength) {
-        Platform.runLater(() -> bestLength.setText(Integer.toString(scheduleLength)));
-    }
-
-    /**
      * Stop the schedule timer
      */
-    @Override
     public void optimalScheduleFound() {
         Platform.runLater(() ->
                 updateCounters.stop());
