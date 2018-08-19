@@ -8,7 +8,7 @@
 }
 
 .background {
-    -fx-background-color: linear-gradient(#00003E, black);
+    -fx-background-color: #fff;
 }
 
 .textBackground{
@@ -30,35 +30,4 @@
     -fx-background-color:#2a2a2a;
     -fx-background-radius: 6, 5;
     -fx-background-insets: 0, 1;
-}
-
-.tabBackgroundColour{
-     background: white;
-    -fx-text-fill: white;
-}
-
-.scheduleBackground{
-    -fx-background-color: #00003E, #000000;
-    -fx-fill-mode: gradient-vertical;
-}
-
-.heading {
-    -fx-font-size: 26px;
-}
-
-.subheading {
-    -fx-font-size: 18px;
-}
-
-.timerBackground{
-    -fx-background-image: url("image.png");
-    -fx-background-color: #2a2a2a
-}
-
-.timerBackgroundParent{
-    -fx-background-color: #2a2a2a;
-    -fx-background-radius: 6, 5;
-            -fx-background-insets: 0, 1;
-            -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );
-
 }

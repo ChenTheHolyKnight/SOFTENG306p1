@@ -94,7 +94,7 @@ public class GanttChart<X, Y> extends XYChart<X,Y> {
                             return;
                         }
                         if (region.getChildren().isEmpty()) {
-                            Text id = createTaskLabel(width, getId((ExtraData) item.getExtraValue()));
+                            Text id = createTaskLabel(width/2, getId((ExtraData) item.getExtraValue()));
                             region.getChildren().add(id);
                             region.setAlignment(Pos.TOP_CENTER);
                         }

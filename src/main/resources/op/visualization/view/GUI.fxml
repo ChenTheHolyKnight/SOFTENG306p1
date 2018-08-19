@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.ToggleSwitch?>
 
-<AnchorPane prefHeight="616.0" prefWidth="1005.0" styleClass="background" stylesheets="@Styles/BackPanel.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="op.visualization.controller.GUIController">
+<AnchorPane prefHeight="645.0" prefWidth="995.0" styleClass="background" stylesheets="@Styles/BackPanel.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="op.visualization.controller.GUIController">
     <children>
         <AnchorPane fx:id="schedulePane" layoutX="7.0" layoutY="76.0" opacity="0.51" prefHeight="425.0" prefWidth="667.0" styleClass="background" />
         <AnchorPane fx:id="graphPane" layoutX="13.0" layoutY="75.0" opacity="0.51" prefHeight="425.0" prefWidth="653.0" styleClass="background" />
@@ -40,7 +40,7 @@
                 </Tab>
                 <Tab text="Statistics">
                     <content>
-                        <VBox>
+                        <VBox prefHeight="585.0" prefWidth="270.0">
                             <children>
                                 <Label alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="270.0" styleClass="grayBackground" text="Schedule Percentage" textAlignment="CENTER" textFill="WHITE" />
                         <AnchorPane prefHeight="242.0" prefWidth="277.0" styleClass="timerBackgroundParent">
@@ -78,12 +78,12 @@
                 </Tab>
             </tabs>
         </TabPane>
-        <Label alignment="CENTER" layoutX="10.0" layoutY="10.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="661.0" text="Optimal Scheduling" textAlignment="CENTER" textFill="WHITE">
+        <Label alignment="CENTER" layoutX="10.0" layoutY="5.0" prefHeight="60.0" prefWidth="661.0" text="Optimal Scheduling" textAlignment="CENTER" textFill="WHITE">
             <styleClass>
                 <String fx:value="grayBackground" />
                 <String fx:value="heading" />
             </styleClass></Label>
-        <AnchorPane layoutX="9.0" layoutY="511.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="96.0" prefWidth="661.0" styleClass="tileBackgroundColour">
+        <AnchorPane layoutX="10.0" layoutY="533.0" prefHeight="70.0" prefWidth="661.0" styleClass="tileBackgroundColour">
             <children>
                 <Label alignment="CENTER" layoutX="433.0" layoutY="14.0" prefHeight="26.0" prefWidth="150.0" styleClass="subheading" text="Output Schedule" textFill="WHITE" />
                 <Label alignment="CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="13.0" prefHeight="27.0" prefWidth="250.0" styleClass="subheading" text="Input Task Dependency Graph" textAlignment="RIGHT" textFill="WHITE" />

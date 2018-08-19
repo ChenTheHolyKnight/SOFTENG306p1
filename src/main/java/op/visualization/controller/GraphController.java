@@ -94,27 +94,9 @@ public class GraphController {
     private void placeNode(String nodeId) {
         graph.addNode(nodeId);
         graph.getNode(nodeId).setAttribute(LABEL, nodeId);
-        graph.getNode(nodeId).setAttribute("x", newNodeXPosition());
-        graph.getNode(nodeId).setAttribute("y", newNodeYPosition());
-    }
-
-    /**
-     * Finds an x co-ordinate to place a new node on the graph
-     * @return x co-ordinate
-     */
-    private double newNodeXPosition() {
-
-        return random.nextDouble()*(X_MAX - X_MIN) + X_MIN;
-    }
-
-    /**
-     * Finds a y co-ordinate to place a new node on the graph
-     * @return y co-ordinate
-     */
-    private double newNodeYPosition() {
-
-        y_count++;
-        return Y_START + Y_INCREMENT*y_count;
+        //graph.getNode(nodeId).setAttribute("layout.frozen");
+        //graph.getNode(nodeId).setAttribute("x", newNodeXPosition());
+        //graph.getNode(nodeId).setAttribute("y", newNodeYPosition());
     }
 
     /**
@@ -126,58 +108,19 @@ public class GraphController {
 	
 	private static final String GRAPH_DISPLAY_STYLESHEET =
             "graph {"
-                + "fill-color: #00003E, #000000;"
-                    + "fill-mode: gradient-vertical;"
+                + "fill-color: #FFFFFF;"
             + "}"
 
             + "node {"
-                + "fill-color: #EEEEEE, #404070;"
-                    + "fill-mode: gradient-radial;"
-                    + "shadow-color: #5F5F87, rgba(0, 0, 0, 0);"
-                    + "shadow-mode: gradient-radial;"
-                    + "shadow-width: 8;"
-                    + "shadow-offset: 0;"
-                    + "text-alignment: left; "
-                    + "text-color: white;"
+                + "fill-color: #37b3fc;"
+                    + "text-color: #FFFFFF;"
                     + "text-style: bold;"
-                    + "text-background-mode: rounded-box; "
-                    + "text-background-color: rgba(80, 80, 80, 255);"
-                    + "text-padding: 5px, 4px; "
-                    + "text-offset: -12px, 0px;"
                     + "text-size: 16;"
+                    + "size: 25px, 25px;"
             + "}"
-
                     + "edge {"
-                        + "fill-color: rgb(64, 64, 112);"
-                        + "fill-mode: plain;"
-                        + "shadow-color: rgba(64, 64, 112, 128), rgba(0, 0, 0, 0);"
-                        + "shadow-mode: gradient-horizontal;"
-                        + "shadow-width: 1;"
-                        + "shadow-offset: 0;"
+                        + "fill-color: #3A3A3A;"
                         + "arrow-shape: arrow;"
-                        + "arrow-size: 10px, 10px;"
-                    + "}"
-
-            + "node.eliminated { "
-			    + "shape: cross; "
-                    + "fill-color: #CCCCCC, #704040;"
-                    + "shadow-color: #875F5F, rgba(0, 0, 0, 0);"
-		    + "}"
-				
-		    + "edge.eliminated { "
-			    + "fill-color: rgba(112, 64, 64, 128);"
-                    + "shadow-color: rgba(112, 64, 64, 128), rgba(0, 0, 0, 0);"
-		    + " }"
-
-            + "node.optimal {"
-                    + "fill-color: #CCCCCC, #407040;"
-                    + "shadow-color: #5F875F, rgba(0, 0, 0, 0);"
-                    + "size: 15px, 15px;"
-            + "}"
-
-            + "edge.optimal {"
-                    + "fill-color: rgba(64, 112, 64, 128);"
-                    + "shadow-color: rgba(64, 112, 64, 128), rgba(0, 0, 0, 0);"
-            + "}";
-	
+                        + "arrow-size: 10px, 6px;"
+                    + "}";
 }

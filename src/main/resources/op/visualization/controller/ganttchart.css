@@ -14,13 +14,13 @@
     -fx-stroke: black;
 }
 .chart-title{
-    -fx-text-fill: white;
+    -fx-text-fill: #000000;
 }
 
 .axis {
-  -fx-tick-label-fill: white;
+  -fx-tick-label-fill: #000000;
 }
 
 .axis-label {
-   -fx-text-fill: white;
+   -fx-text-fill: #000000;
 }
