@@ -41,7 +41,11 @@
                     <content>
                         <VBox prefHeight="585.0" prefWidth="270.0">
                             <children>
-                                <Label alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="277.0" styleClass="grayBackground" text="Schedule Timer" textAlignment="CENTER" textFill="WHITE" />
+                                <Label alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="277.0" text="Schedule Timer" textAlignment="CENTER" textFill="WHITE">
+                           <styleClass>
+                              <String fx:value="grayBackground" />
+                              <String fx:value="subheading" />
+                           </styleClass></Label>
                         <AnchorPane prefHeight="242.0" prefWidth="277.0" styleClass="timerBackgroundParent">
                            <children>
                               <AnchorPane fx:id="testing" layoutX="15.0" layoutY="10.0" prefHeight="218.0" prefWidth="240.0" styleClass="timerBackground">
@@ -60,7 +64,11 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                                <Label alignment="CENTER" prefHeight="65.0" prefWidth="277.0" styleClass="grayBackground" text="Statistics" textAlignment="CENTER" textFill="WHITE" />
+                                <Label alignment="CENTER" prefHeight="65.0" prefWidth="277.0" text="Statistics" textAlignment="CENTER" textFill="WHITE">
+                           <styleClass>
+                              <String fx:value="grayBackground" />
+                              <String fx:value="subheading" />
+                           </styleClass></Label>
                                 <AnchorPane prefHeight="240.0" prefWidth="261.0" styleClass="tileBackgroundColour">
                                     <children>
                                         <Label alignment="CENTER" contentDisplay="CENTER" layoutX="50.0" layoutY="58.0" prefHeight="21.0" prefWidth="123.0" text="Pruned Trees :" textAlignment="JUSTIFY" textFill="WHITE" />
