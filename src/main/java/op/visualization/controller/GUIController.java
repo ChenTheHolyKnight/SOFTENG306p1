@@ -20,6 +20,7 @@ import javafx.util.Duration;
 import op.algorithm.SchedulerListener;
 import op.model.Schedule;
 import op.model.ScheduledTask;
+import op.visualization.AlgorithmTimer;
 import op.visualization.GanttChart;
 import op.Application;
 import op.visualization.SystemInfo;
@@ -138,7 +139,11 @@ public class GUIController implements SchedulerListener {
 
     @FXML
     private void startAlgorithm() {
-        Application.getInstance().startConcurrentAlgorithm();
+        Timer algorithmTimer=new Timer();
+        Platform.runLater(()->{
+            algorithmTimer.schedule(new AlgorithmTimer(percentageTile),0,100);
+        });
+        Application.getInstance().startConcurrentAlgorithm(algorithmTimer);
     }
 
     /**
