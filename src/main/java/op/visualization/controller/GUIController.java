@@ -183,7 +183,7 @@ public class GUIController implements SchedulerListener {
         time=System.currentTimeMillis();
         Timeline updateCounters = new Timeline(
                 new KeyFrame(Duration.millis(100), (ActionEvent ae) -> {
-                    percentageTile.setText(Double.toString(getTime()));
+                    percentageTile.setText(Double.toString(getTime()) + " s");
                 }
                 ));
         updateCounters.setCycleCount(Timeline.INDEFINITE);
@@ -196,8 +196,9 @@ public class GUIController implements SchedulerListener {
      * @return time in seconds since the algorithm started running
      */
     private double getTime(){
-        double currentTime=System.currentTimeMillis();
-        return (currentTime-time)/1000.0;
+        double currentTime=System.currentTimeMillis()-time;
+        double timeInTenthSecs = Math.round(currentTime/100.0);
+        return timeInTenthSecs/10.0;
     }
 
     /**
