@@ -15,8 +15,7 @@ public class AlgorithmTimer extends TimerTask{
 
     private double getTime(){
         double currentTime=System.currentTimeMillis();
-        System.out.println((currentTime-time)*1000);
-        return (currentTime-time)*1000;
+        return (currentTime-time);
     }
 
     @Override

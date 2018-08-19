@@ -141,7 +141,7 @@ public class GUIController implements SchedulerListener {
     private void startAlgorithm() {
         Timer algorithmTimer=new Timer();
         Platform.runLater(()->{
-            algorithmTimer.schedule(new AlgorithmTimer(percentageTile),0,100);
+            algorithmTimer.schedule(new AlgorithmTimer(percentageTile),0,1);
         });
         Application.getInstance().startConcurrentAlgorithm(algorithmTimer);
     }
