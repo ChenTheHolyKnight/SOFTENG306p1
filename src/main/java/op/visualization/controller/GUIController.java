@@ -85,7 +85,9 @@ public class GUIController implements SchedulerListener {
     private HashMap<Integer,XYChart.Series> seriesHashMap = new HashMap<>();
     private int coreNum = 1;
 
+    // Time tile components
     private long time;
+    private Timeline updateCounters;
 
     private VisualizerData visualizerData;
 
@@ -181,7 +183,7 @@ public class GUIController implements SchedulerListener {
     @FXML
     private void initializePercentageTile() {
         time=System.currentTimeMillis();
-        Timeline updateCounters = new Timeline(
+        updateCounters = new Timeline(
                 new KeyFrame(Duration.millis(100), (ActionEvent ae) -> {
                     percentageTile.setText(Double.toString(getTime()) + " s");
                 }
@@ -237,6 +239,7 @@ public class GUIController implements SchedulerListener {
         updateBestSchedule.setCycleCount(Timeline.INDEFINITE);
         updateBestSchedule.play();
     }
+
     @FXML
     public void hideGraphLabel(){
         FadeTransition fade = new FadeTransition(Duration.millis(500), graphView);
@@ -354,6 +357,15 @@ public class GUIController implements SchedulerListener {
     }
 
     /**
+     * Stop the schedule timer
+     */
+    @Override
+    public void optimalScheduleFound() {
+        Platform.runLater(() ->
+                updateCounters.stop());
+    }
+
+    /**
      * Set up the Gantt chart display
      */
     private void initializeGanttChart(){
@@ -425,14 +437,4 @@ public class GUIController implements SchedulerListener {
             series.getData().clear();
         });
     }
-
-    /**
-     * The method to get the stats ps: feel free to change the params
-     */
-    public void setStats(int nvNum,int blNum,int ptNum){
-        nodesVisisted.setText(Integer.toString(nvNum));
-        bestLength.setText(Integer.toString(blNum));
-        prunedTrees.setText(Integer.toString(ptNum));
-    }
-
 }

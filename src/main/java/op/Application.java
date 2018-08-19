@@ -1,7 +1,6 @@
 package op;
 
 import op.algorithm.*;
-import op.algorithm.bound.CostFunction;
 import op.algorithm.bound.CostFunctionManager;
 import op.algorithm.prune.PrunerManager;
 import op.io.InvalidUserInputException;
@@ -11,13 +10,8 @@ import op.io.DotIO;
 import op.model.Arguments;
 import op.visualization.Visualizer;
 import op.visualization.controller.GUIController;
-import scala.App;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-
 /**
  * Entry point for the optimal scheduling program
  */

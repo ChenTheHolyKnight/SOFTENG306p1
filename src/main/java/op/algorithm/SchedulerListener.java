@@ -32,4 +32,9 @@ public interface SchedulerListener {
      */
     void updateBestScheduleLength(int scheduleLength);
 
+    /**
+     * Tells the listener what the optimal schedule has been found
+     */
+    void optimalScheduleFound();
+
 }

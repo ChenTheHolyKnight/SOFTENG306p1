@@ -66,6 +66,51 @@ public abstract class Scheduler {
         this.listeners.add(sl);
     }
 
+    /**
+     * Informs registered listeners of a new schedule that has been created
+     */
+    protected void fireNewScheduleUpdate(Schedule s) {
+        for (SchedulerListener listener: listeners) {
+            listener.newSchedule(s);
+        }
+    }
+
+    /**
+     * Informs registered listeners of the number of nodes visited in the search space.
+     */
+    protected void fireNodesVisitedUpdate(int numNodesVisited) {
+        for (SchedulerListener listener : listeners) {
+            listener.updateNodesVisited(numNodesVisited);
+        }
+    }
+
+    /**
+     * Informs registered listeners of the new number of pruned trees that are updated
+     */
+    protected void fireNumPrunedTreesUpdate(int numPrunedTrees) {
+        for (SchedulerListener listener : listeners) {
+            listener.updateNumPrunedTrees(numPrunedTrees);
+        }
+    }
+
+    /**
+     * Informs registered listeners of a new best schedule length
+     */
+    protected void fireBestScheduleLengthUpdate(int bestLength) {
+        for (SchedulerListener listener : listeners) {
+            listener.updateBestScheduleLength(bestLength);
+        }
+    }
+
+    /**
+     * Informs registered listeners that the optimal schedule has been found
+     */
+    protected void fireOptimalSolutionFound() {
+        for (SchedulerListener listener : listeners) {
+            listener.optimalScheduleFound();
+        }
+    }
+
 
     /**
      * Produces a valid schedule of the task graph by allocating each task to a given number of processors,
@@ -75,97 +120,10 @@ public abstract class Scheduler {
     public abstract Schedule produceSchedule();
 
     /**
-     * @return the list of registered listeners of this schedule
-     */
-    protected List<SchedulerListener> getListeners() {
-        return this.listeners;
-    }
-
-    /**
      *
      * @return the number of processors to schedule tasks on
      */
     protected int getNumProcessors() {
         return this.numProcessors;
     }
-
-    /**
-     * Gets the earliest possible time of a given task on a given processor, based on a (partial) schedule
-     * @param t the task to be scheduled
-     * @param s the schedule to be extended
-     * @param p the processor the task is to be scheduled on
-     * @return The earliest start time of the task on the given processor, based on the given schedule
-     */
-    protected int getEarliestStartTime(Schedule s, Task t, int p) {
-        List<Dependency> incomingEdges = t.getIncomingDependencies();
-
-        // Estimate the earliest start time of the task as the next available time on the processor
-        int startTime = s.getNextFreeTimeOfProcessor(p);
-
-        for (Dependency incomingEdge: incomingEdges) {
-            Task startTask = incomingEdge.getStartTask();
-
-            // If a dependent task is not scheduled on the same processor, the start time of this task
-            // cannot be earlier than the end time of the dependent task plus the communication cost
-            if (s.getScheduledTask(startTask).getProcessor() != p) {
-                int newStartTime = s.getScheduledTask(startTask).getStartTime()
-                        + startTask.getDuration()
-                        + incomingEdge.getWeight();
-
-                if (newStartTime > startTime) {
-                    startTime = newStartTime;
-                }
-            }
-        }
-        return startTime;
-    }
-
-//    /**
-//     * Informs listeners that new schedules have been created
-//     * @param schedule
-//     * @param children
-//     */
-//    protected void newSchedulesUpdate(Schedule schedule, List<Schedule> children) {
-//        if (!toVisualize) {
-//            return;
-//        }
-//        Set<String> childIds = new HashSet<>();
-//        if (children != null) {
-//            for (Schedule child: children) {
-//                childIds.add(child.toString());
-//            }
-//        }
-//        informListenersOfUpdate(new MessageAddNodes(schedule.toString(), childIds));
-//    }
-//
-//    /**
-//     * Informs listeners that schedules have been removed
-//     * @param remaining
-//     * @param all
-//     */
-//    protected void removedSchedulesUpdate(List<Schedule> remaining, List<Schedule> all) {
-//        if (!toVisualize) {
-//            return;
-//        }
-//        Set<String> removedIds = new HashSet<>();
-//        all.removeAll(remaining);
-//        if (all != null) {
-//            for (Schedule schedule: all) {
-//                removedIds.add(schedule.toString());
-//            }
-//        }
-//        informListenersOfUpdate(new MessageEliminateNodes(removedIds));
-//    }
-//
-//    /**
-//     * Informs listeners that the optimal solution has been found
-//     * @param optimal
-//     */
-//    protected void optimalSolutionUpdate(Schedule optimal) {
-//        if (!toVisualize) {
-//            return;
-//        }
-//        informListenersOfUpdate(new MessageSetOptimalSolution(optimal.toString()));
-//    }
-
 }

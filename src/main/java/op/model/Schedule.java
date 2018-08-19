@@ -39,8 +39,7 @@ public class Schedule {
         for (int i : this.processorMap.keySet()) {
             this.processorMap.put(i, new ArrayList<ScheduledTask>(this.processorMap.get(i)));
         }
-        
-        this.mostRecentScheduledTask = stNew;
+
         this.addScheduledTask(stNew);
     }
   
@@ -75,6 +74,7 @@ public class Schedule {
             processorMap.put(processorNum,tasks);
         }
         taskMap.put(scheduledTask.getTask(), scheduledTask);
+        this.mostRecentScheduledTask = scheduledTask;
     }
 
     /**
@@ -117,7 +117,6 @@ public class Schedule {
      */
 	public int getLength() {
 
-	    //TODO change this to return cost function
         int length = 0;
         for (List<ScheduledTask> tasks: processorMap.values()) {
             ScheduledTask lastTask = tasks.get(tasks.size()-1);

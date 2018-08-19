@@ -35,6 +35,11 @@ public class VisualizerData implements SchedulerListener {
         bestScheduleLength = scheduleLength;
     }
 
+    @Override
+    public void optimalScheduleFound() {
+
+    }
+
     public Schedule getNewestSchedule() {
         return newestSchedule;
     }

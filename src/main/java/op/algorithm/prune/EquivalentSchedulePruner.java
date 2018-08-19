@@ -1,9 +1,7 @@
 package op.algorithm.prune;
 
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import op.model.Schedule;
 
@@ -16,19 +14,20 @@ import op.model.Schedule;
  *
  */
 public class EquivalentSchedulePruner implements Pruner{
-	private Set<Schedule> seenSchedules = new HashSet<Schedule>();	
-	
+	private Set<Schedule> seenSchedules = Collections.newSetFromMap(new ConcurrentHashMap<>());
+
 	@Override
 	public List<Schedule> prune(List<Schedule> toPrune) {
-		Set<Schedule> set = new LinkedHashSet<Schedule>(toPrune);
-		
-		toPrune.clear();
+		List<Schedule> pruned = new ArrayList<>(toPrune);
+		Set<Schedule> set = new LinkedHashSet<Schedule>(pruned);
+
+		pruned.clear();
 		set.removeAll(seenSchedules);
-		toPrune.addAll(set);
-		
-		seenSchedules.addAll(toPrune);
-		
-		return toPrune;
+		pruned.addAll(set);
+
+		seenSchedules.addAll(pruned);
+
+		return pruned;
 	}
 	
 	@Override

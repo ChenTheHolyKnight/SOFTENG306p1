@@ -34,23 +34,24 @@ public class PrunerManager {
 	
 	public void addEquivalentSchedulePruner() {
 		EquivalentSchedulePruner p = new EquivalentSchedulePruner();
-		if (!pruners.contains(p)) pruners.add(p);
+		if (!pruners.contains(p))
+			pruners.add(p);
 	}
 	
 	public void addNodeEquivalencePruner() {
 		NodeEquivalencePruner p =  new NodeEquivalencePruner();
-		if (!pruners.contains(p)) pruners.add(p);
+		if (!pruners.contains(p))
+			pruners.add(p);
 	}
-	
+
 	/**
 	 * Executes the prune method of every added pruner to the pruner manager on the list of Schedules passed in.
 	 * @param toPrune The list of schedules to prune
 	 * @return The newly pruned List of schedules
 	 */
 	public List<Schedule> execute(List<Schedule> toPrune) {
-		if (pruners.size() != 0){
-			List<Schedule> pruned = new ArrayList<Schedule>();
-			pruned.addAll(toPrune);
+		if (!pruners.isEmpty()){
+			List<Schedule> pruned = new ArrayList<Schedule>(toPrune);
 			for (Pruner p: pruners) {
 				pruned = p.prune(pruned);
 			}
