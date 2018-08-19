@@ -37,7 +37,8 @@ public class NodeEquivalencePruner implements Pruner{
 				}
 			}
 		}
-		pruned.removeAll(Collections.singleton(null)); // remove all elements that were marked for deletion (null)
+		// remove all elements that were marked for deletion (null)
+		pruned.removeAll(Collections.singleton(null));
 		return pruned;
 	}
 	
@@ -53,9 +54,10 @@ public class NodeEquivalencePruner implements Pruner{
 		if (t1.getDuration() != t2.getDuration()) {
 			return false;
 		}
-
+		
+		// if these tasks have the same id, they are not what we define "equivalent" in this context
 		if (t1.equals(t2)) {
-			return false; // if these tasks have the same id, they are not what we define "equivalent" in this context
+			return false;
 		}
 
 		List<Task> t1InTasks = new ArrayList<>();
@@ -68,9 +70,10 @@ public class NodeEquivalencePruner implements Pruner{
 		for (Dependency incoming : t2.getIncomingDependencies()) {
 			t2InTasks.add(incoming.getStartTask());
 		}
-
+		
+		// start tasks of incoming dependencies must be the same for the tasks to be equivalent
 		if (!t1InTasks.equals(t2InTasks)) {
-			return false; // start tasks of incoming dependencies must be the same for the tasks to be equivalent
+			return false;
 		}
 
 
@@ -84,9 +87,10 @@ public class NodeEquivalencePruner implements Pruner{
 		for (Dependency outgoing : t2.getOutgoingDependencies()) {
 			t2OutTasks.add(outgoing.getEndTask());
 		}
-
+		
+		// end tasks of outgoing dependencies must be the same for the tasks to be equivalent
 		if (!t1OutTasks.equals(t2OutTasks)) {
-			return false; // end tasks of outgoing dependencies must be the same for the tasks to be equivalent
+			return false;
 		}
 		
 		return true;
