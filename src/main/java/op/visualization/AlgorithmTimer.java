@@ -15,16 +15,16 @@ public class AlgorithmTimer extends TimerTask{
         this.timerTile=timerTile;
     }
 
-    private int getTime(){
+    private double getTime(){
         double currentTime=System.currentTimeMillis();
-        return (int)(currentTime-time);
+        return (currentTime-time)/1000.0;
     }
 
     @Override
     public void run() {
         Platform.runLater(()->{
             //timerTile.setUnit("ms");
-            timerTile.setText(Integer.toString(getTime()));
+            timerTile.setText(Double.toString(getTime()));
         });
 
     }
