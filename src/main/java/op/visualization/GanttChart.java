@@ -94,9 +94,9 @@ public class GanttChart<X, Y> extends XYChart<X,Y> {
                             return;
                         }
                         if (region.getChildren().isEmpty()) {
-                            Text id = createTaskLabel(width/2, getId((ExtraData) item.getExtraValue()));
+                            Text id = new Text(" " + getId((ExtraData) item.getExtraValue()));
                             region.getChildren().add(id);
-                            region.setAlignment(Pos.TOP_CENTER);
+                            region.setAlignment(Pos.TOP_LEFT);
                         }
                         ellipse.setWidth(width);
                         ellipse.setHeight(getBlockHeight() * ((getYAxis() instanceof NumberAxis) ?
@@ -115,24 +115,6 @@ public class GanttChart<X, Y> extends XYChart<X,Y> {
                 }
             }
         }
-    }
-
-    /**
-     * Produces a label for a task that shows the task ID
-     * @param width the width the label must occupy
-     * @param id the task ID
-     * @return a Text object representing the label
-     */
-    private Text createTaskLabel(double width, String id) {
-        String idText = "";
-        String suffix = "ID: " + id;
-        int centre = (int)(width-suffix.length())/2;
-        StringBuilder builder = new StringBuilder(idText);
-        for (int i=0; i< centre; i++) {
-            builder.append(" ");
-        }
-        builder.append(suffix);
-        return new Text(builder.toString());
     }
 
     public double getBlockHeight() {
